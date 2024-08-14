@@ -4,7 +4,7 @@ on:
     branches:
       - main
       - 'develop/'
-      - dd-24-setup-ci
+
   pull_request:
     branches:
       - main
