@@ -1,4 +1,4 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 npx lint-staged
-ng test --no-watch --no-progress --browsers=ChromeHeadless
+npm run test:ci
