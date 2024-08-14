@@ -5,3 +5,5 @@ dist/
 !**/*.ts
 
 *.config.js
+
+setup-jest.ts
