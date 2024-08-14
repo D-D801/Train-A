@@ -7,11 +7,14 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "lint": "ng lint",
-    "lint:fix": "ng lint --fix",
+    "test:ci": "ng test --no-watch --no-progress --browsers=ChromeHeadless",
     "prepare": "husky install",
-    "stylelint": "stylelint './src/**/*.{css,scss}' && prettier --write './src/**/*.{css,scss}'",
-    "stylelint:fix": "stylelint './src/**/*.{css,scss}' --fix && prettier --write './src/**/*.{css,scss}'"
+    "stylelint": "stylelint './src/**/*.{css,scss}'",
+    "stylelint:fix": "stylelint './src/**/*.{css,scss}' --fix",
+    "lint": "eslint ./src/**/*.{ts,html}",
+    "lint:fix": "eslint ./src/**/*.{ts,html} --fix",
+    "format": "prettier --write ./src",
+    "format:check": "prettier --check ./src"
   },
   "private": true,
   "dependencies": {

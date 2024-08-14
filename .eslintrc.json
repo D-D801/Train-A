@@ -18,25 +18,36 @@
         "eslint:recommended",
         "airbnb-base",
         "airbnb-typescript/base",
-        "plugin:prettier/recommended",
-        "prettier",
         "plugin:@typescript-eslint/recommended",
         "plugin:@angular-eslint/recommended",
-        "plugin:@angular-eslint/template/process-inline-templates"
+        "plugin:@angular-eslint/template/process-inline-templates",
+        "plugin:prettier/recommended",
+        "prettier"
       ],
       "rules": {
-        "linebreak-style": "off",
-        "no-debugger": "off",
-        "no-console": 0,
-        "class-methods-use-this": "off",
-        "import/extensions": "off",
+        "no-console": [
+          "error",
+          {
+            "allow": [
+              "error"
+            ]
+          }
+        ],
+        "class-methods-use-this": [
+          "error",
+          {
+            "exceptMethods": [
+              "transform"
+            ]
+          }
+        ],
         "@typescript-eslint/no-explicit-any": 2,
         "import/prefer-default-export": "off",
         "@angular-eslint/directive-selector": [
           "error",
           {
             "type": "attribute",
-            "prefix": "app",
+            "prefix": "dd",
             "style": "camelCase"
           }
         ],
@@ -44,7 +55,7 @@
           "error",
           {
             "type": "element",
-            "prefix": "app",
+            "prefix": "dd",
             "style": "kebab-case"
           }
         ]
@@ -56,9 +67,20 @@
       ],
       "extends": [
         "plugin:@angular-eslint/template/recommended",
-        "plugin:@angular-eslint/template/accessibility"
+        "plugin:@angular-eslint/template/accessibility",
+        "plugin:prettier/recommended"
       ],
-      "rules": {}
+      "excludedFiles": [
+        "*inline-template-*.component.html"
+      ],
+      "rules": {
+        "prettier/prettier": [
+          "error",
+          {
+            "parser": "angular"
+          }
+        ]
+      }
     }
   ]
 }

@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
-  selector: 'app-root',
+  selector: 'dd-root',
   standalone: true,
   imports: [RouterOutlet, TuiRoot],
   templateUrl: './app.component.html',
