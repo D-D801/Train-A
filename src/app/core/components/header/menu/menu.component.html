@@ -1,9 +1,10 @@
 <nav tuiNavigationNav class="nav">
   <a [routerLink]="['/home']">Home</a>
-  <a *ngIf="isLoggedIn" [routerLink]="['/profile']">Profile</a>
-  <a *ngIf="isAdminIn || isLoggedIn" [routerLink]="['/orders']">My orders</a>
-  <a *ngIf="isAdminIn" [routerLink]="['/admin']">Admin</a>
-  <a [routerLink]="['/login']">Sign In</a>
+  <a *ngIf="isLoggedIn()" [routerLink]="['/profile']">Profile</a>
+  <a *ngIf="isAdminIn() || isLoggedIn()" [routerLink]="['/orders']">My orders</a>
+  <a *ngIf="isAdminIn()" [routerLink]="['/admin']">Admin</a>
+  <a *ngIf="!isLoggedIn()" [routerLink]="['/login']">Sign In</a>
   <!-- <button appearance="primary" tuiButton>Sign In</button> -->
-  <button appearance="primary" tuiButton [routerLink]="['/registration']">Sign Up</button>
+  <button *ngIf="!isLoggedIn()" appearance="primary" tuiButton [routerLink]="['/registration']">Sign Up</button>
+  <button *ngIf="isLoggedIn()" appearance="primary" tuiButton (click)="logout()">Logout</button>
 </nav>
