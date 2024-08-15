@@ -1,6 +1,9 @@
 <nav tuiNavigationNav class="nav">
-  <a>Home</a>
-  <a>Sign In</a>
+  <a [routerLink]="['/home']">Home</a>
+  <a [routerLink]="['/profile']">Profile</a>
+  <a [routerLink]="['/orders']">My orders</a>
+  <a [routerLink]="['/admin']">Admin</a>
+  <a [routerLink]="['/login']">Sign In</a>
   <!-- <button appearance="primary" tuiButton>Sign In</button> -->
-  <button appearance="primary" tuiButton>Sign Up</button>
+  <button appearance="primary" tuiButton [routerLink]="['/registration']">Sign Up</button>
 </nav>
