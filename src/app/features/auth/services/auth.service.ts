@@ -1,4 +1,4 @@
-import { Injectable, signal, WritableSignal } from '@angular/core';
+import { inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { LocalStorageService } from '@core/services/local-storage.service';
 import { AuthApiService } from './auth-api.service';
 
@@ -8,14 +8,15 @@ const KEY_USER_TOKEN = 'userToken';
   providedIn: 'root',
 })
 export class AuthService {
+  private authApiService = inject(AuthApiService);
+
+  private localStorage: LocalStorageService = inject(LocalStorageService);
+
   public isLoggedIn: WritableSignal<boolean>;
 
   public isAdminIn = signal(false);
 
-  constructor(
-    private authApiService: AuthApiService,
-    private localStorage: LocalStorageService
-  ) {
+  constructor() {
     this.isLoggedIn = signal(this.getAuthStatus());
   }
 
