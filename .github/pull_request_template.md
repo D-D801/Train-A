@@ -1,8 +1,9 @@
 # Task
 
-<!-- Please add link(s) to Jira task(s) related to this PR -->
+<!-- Please add link(s) to Jira task(s) related to this PR. Leave here task card number -->
 
-[Task name](https://divas801801.atlassian.net/jira/software/projects/DD/boards/2?selectedIssue=DD-25)
+[Task](https://divas801801.atlassian.net/jira/software/projects/DD/boards/2?selectedIssue=DD-25)
+
 
 # Description
 
