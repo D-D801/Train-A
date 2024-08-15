@@ -5,6 +5,8 @@
   <a *ngIf="isAdminIn()" [routerLink]="['/admin']">Admin</a>
   <a *ngIf="!isLoggedIn()" [routerLink]="['/login']">Sign In</a>
   <!-- <button appearance="primary" tuiButton>Sign In</button> -->
-  <button *ngIf="!isLoggedIn()" appearance="primary" tuiButton [routerLink]="['/registration']">Sign Up</button>
-  <button *ngIf="isLoggedIn()" appearance="primary" tuiButton (click)="logout()">Logout</button>
+  <button *ngIf="!isLoggedIn()" appearance="primary" size="s" tuiButton [routerLink]="['/registration']">
+    Sign Up
+  </button>
+  <button *ngIf="isLoggedIn()" appearance="primary" size="s" tuiButton (click)="logout()">Logout</button>
 </nav>
