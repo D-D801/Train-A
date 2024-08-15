@@ -15,17 +15,4 @@ export class AppComponent {
   title = 'train-a';
 
   constructor(private authService: AuthService) {}
-
-  signin() {
-    this.authService.signin();
-  }
-
-  signup() {
-    this.authService.signup();
-  }
-
-  admin() {
-    this.authService.isLoggedIn.set(true);
-    this.authService.isAdminIn.set(true);
-  }
 }

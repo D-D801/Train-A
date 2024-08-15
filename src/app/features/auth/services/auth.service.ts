@@ -1,15 +1,8 @@
 import { Injectable, signal, WritableSignal } from '@angular/core';
 import { LocalStorageService } from '@core/services/local-storage.service';
-// import { catchError } from 'rxjs/operators';
-// import { throwError } from 'rxjs';
 import { AuthApiService } from './auth-api.service';
 
 const KEY_USER_TOKEN = 'userToken';
-
-// interface ErrorResponse {
-//   status: number;
-//   reason: string;
-// }
 
 @Injectable({
   providedIn: 'root',
@@ -19,14 +12,6 @@ export class AuthService {
 
   public isAdminIn = signal(false);
 
-  // public isLoginned(): boolean {
-  //   return this.isLoggedIn();
-  // }
-
-  // public isAdmin(): boolean {
-  //   return this.isAdminIn();
-  // }
-
   constructor(
     private authApiService: AuthApiService,
     private localStorage: LocalStorageService
@@ -34,38 +19,14 @@ export class AuthService {
     this.isLoggedIn = signal(this.getAuthStatus());
   }
 
-  public signin(/* email: string, password: string */) {
+  public signin(/* email: string = 'test', password: string= 'test' */) {
     this.isLoggedIn.set(true);
     this.localStorage.setItem(KEY_USER_TOKEN, 'mockToken');
-    // this.authApiService
-    //   .signin({ email, password })
-    //   .pipe(
-    //     catchError((error: ErrorResponse) => {
-    //       console.warn('Login error:', error);
-    //       return throwError(() => new Error(error.reason));
-    //     })
-    //   )
-    //   .subscribe((response: any) => {
-    //     this.isLoggedIn.set(true);
-    //     this.localStorage.setItem(KEY_USER_TOKEN, response.token);
-    //   });
   }
 
-  public signup(/* email: string, password: string */) {
+  public signup(/* email: string = 'test', password: string= 'test' */) {
     this.isLoggedIn.set(true);
     this.localStorage.setItem(KEY_USER_TOKEN, 'mockToken');
-    // this.authApiService
-    //   .signup({ email, password })
-    //   .pipe(
-    //     catchError((error: ErrorResponse) => {
-    //       console.warn('Login error:', error);
-    //       return throwError(() => new Error(error.reason));
-    //     })
-    //   )
-    //   .subscribe((response: any) => {
-    //     this.isLoggedIn.set(true);
-    //     this.localStorage.setItem(KEY_USER_TOKEN, response.token);
-    //   });
   }
 
   public logout() {
