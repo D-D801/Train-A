@@ -2,6 +2,7 @@ import { TuiRoot } from '@taiga-ui/core';
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from '@core/components/header/header/header.component';
+import { AuthService } from '@features/auth/services/auth.service';
 
 @Component({
   selector: 'dd-root',
@@ -12,4 +13,19 @@ import { HeaderComponent } from '@core/components/header/header/header.component
 })
 export class AppComponent {
   title = 'train-a';
+
+  constructor(private authService: AuthService) {}
+
+  signin() {
+    this.authService.signin();
+  }
+
+  signup() {
+    this.authService.signup();
+  }
+
+  admin() {
+    this.authService.isLoggedIn.set(true);
+    this.authService.isAdminIn.set(true);
+  }
 }

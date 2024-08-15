@@ -1,6 +1,6 @@
 import { NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { ChangeDetectionStrategy, Component, WritableSignal } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '@features/auth/services/auth.service';
 import { TuiButton } from '@taiga-ui/core';
 import { TuiNavigation } from '@taiga-ui/layout';
@@ -14,12 +14,20 @@ import { TuiNavigation } from '@taiga-ui/layout';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MenuComponent {
-  public isLoggedIn: boolean;
+  public isLoggedIn: WritableSignal<boolean>;
 
-  public isAdminIn: boolean;
+  public isAdminIn: WritableSignal<boolean>;
 
-  constructor(private authService: AuthService) {
-    this.isLoggedIn = this.authService.isLoggedIn();
-    this.isAdminIn = this.authService.isAdmin();
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {
+    this.isLoggedIn = this.authService.isLoggedIn;
+    this.isAdminIn = this.authService.isAdminIn;
+  }
+
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/']);
   }
 }
