@@ -9,8 +9,3 @@ export interface UserRequest {
 export interface UserResponse {
   token: string;
 }
-
-export interface ErrorResponse {
-  status: number;
-  reason: string;
-}

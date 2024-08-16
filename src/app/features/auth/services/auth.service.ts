@@ -6,6 +6,7 @@ import { UserRequest } from '@features/auth/interfaces/user-request.interface';
 import { LocalStorageKey } from '@shared/enums/local-storage-key.enum';
 import { catchError, EMPTY, tap } from 'rxjs';
 import { AuthApiService } from './auth-api.service';
+import { ErrorResponse, UserRequest, UserResponse } from '../interfaces/auth.interface';
 
 const KEY_USER_TOKEN = 'userToken';
 
@@ -47,9 +48,11 @@ export class AuthService {
     this.authApiService
       .signup(body)
       .pipe(
-        catchError((error: ErrorResponse) => {
-          return throwError(() => new Error(error.reason));
-        })
+        catchError(({ error: { message } }: HttpErrorResponse) => {
+          this.showNotification(message);
+          return throwError(() => new Error(message));
+        }),
+        takeUntil(inject(Router).events)
       )
       .subscribe((response: UserResponse) => {
         this.isLoggedIn.set(true);
@@ -65,5 +68,14 @@ export class AuthService {
 
   private getAuthStatus() {
     return !!this.localStorage.getItem(LocalStorageKey.UserToken);
+  }
+
+  protected showNotification(message: string): void {
+    this.alerts
+      .open('', {
+        label: `Error: ${message}`,
+        appearance: 'error',
+      })
+      .subscribe();
   }
 }
