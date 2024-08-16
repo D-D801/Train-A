@@ -1,1 +1,22 @@
-<p>login-page works!</p>
+<form class="form" [formGroup]="form">
+  <h3 class="tui-form__header tui-form__header_margin-top_none">Sign in</h3>
+  <div class="tui-form__row">
+    <tui-input formControlName="email">
+      Email
+      <input placeholder="sample@gmail.com" tuiTextfieldLegacy />
+      <span class="tui-required"></span>
+    </tui-input>
+    <tui-error formControlName="email" [error]="[] | tuiFieldError | async" />
+  </div>
+  <div class="tui-form__row">
+    <tui-input-password formControlName="password">
+      Password
+      <span class="tui-required"></span>
+    </tui-input-password>
+    <tui-error formControlName="password" [error]="[] | tuiFieldError | async" />
+  </div>
+  <div class="tui-form__buttons">
+    <button size="m" tuiButton type="submit" class="tui-form__button" [disabled]="form.invalid">Sign in</button>
+    <button appearance="flat" size="m" tuiButton type="button" class="tui-form__button">Cancel</button>
+  </div>
+</form>
