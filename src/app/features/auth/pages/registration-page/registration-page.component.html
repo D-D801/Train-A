@@ -9,7 +9,7 @@
             <input tuiTextfieldLegacy />
             <span class="tui-required"></span>
           </tui-input>
-          <tui-error formControlName="name" [error]="[] | tuiFieldError | async" />
+          <tui-error *ngIf="formSubmitted" formControlName="name" [error]="[] | tuiFieldError | async" />
         </div>
         <div class="tui-form__row">
           <tui-input formControlName="lastName" tuiTextfieldSize="m">
@@ -23,23 +23,31 @@
             <input tuiTextfieldLegacy type="email" />
             <span class="tui-required"></span>
           </tui-input>
-          <tui-error formControlName="email" [error]="[] | tuiFieldError | async" />
+          <tui-error *ngIf="formSubmitted" formControlName="email" [error]="[] | tuiFieldError | async" />
         </div>
         <div class="tui-form__row">
           <tui-input-password formControlName="password" tuiTextfieldSize="m"
             >Password
             <span class="tui-required"></span>
           </tui-input-password>
-          <tui-error formControlName="password" [error]="[] | tuiFieldError | async" />
+          <tui-error *ngIf="formSubmitted" formControlName="password" [error]="[] | tuiFieldError | async" />
         </div>
         <div class="tui-form__row">
           <tui-input-password formControlName="confirmPassword" tuiTextfieldSize="m"
             >Confirm password <span class="tui-required"></span
           ></tui-input-password>
-          <tui-error formControlName="confirmPassword" [error]="[] | tuiFieldError | async" />
+          <tui-error *ngIf="formSubmitted" formControlName="confirmPassword" [error]="[] | tuiFieldError | async" />
         </div>
         <div class="tui-form__buttons">
-          <button appearance="primary" size="m" tuiButton (click)="signup()">Register</button>
+          <button
+            appearance="primary"
+            size="m"
+            tuiButton
+            (click)="signup()"
+            [disabled]="registrationForm.invalid && hasClickedSubmit && !registrationForm.valid"
+          >
+            Register
+          </button>
         </div>
       </div>
     </div>

@@ -40,6 +40,10 @@ export class RegistrationPageComponent {
 
   private authService: AuthService = inject(AuthService);
 
+  public formSubmitted = false;
+
+  public hasClickedSubmit = false;
+
   registrationForm = this.fb.group(
     {
       email: this.fb.control('', [Validators.required, emailValidator]),
@@ -52,7 +56,13 @@ export class RegistrationPageComponent {
   );
 
   signup() {
-    if (!this.registrationForm.valid) return;
+    this.formSubmitted = true;
+    this.hasClickedSubmit = true;
+    this.registrationForm.markAllAsTouched();
+
+    if (!this.registrationForm.valid) {
+      return;
+    }
     const body = this.registrationForm.value;
     this.authService.signup(body);
     this.router.navigate(['/home']);
