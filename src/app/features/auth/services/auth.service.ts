@@ -7,6 +7,8 @@ import { LocalStorageKey } from '@shared/enums/local-storage-key.enum';
 import { catchError, EMPTY, tap } from 'rxjs';
 import { AuthApiService } from './auth-api.service';
 
+const KEY_USER_TOKEN = 'userToken';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -41,9 +43,18 @@ export class AuthService {
     );
   }
 
-  public signup(/* email: string = 'test', password: string= 'test' */) {
-    this._isLoggedIn.set(true);
-    this.localStorage.setItem(LocalStorageKey.UserToken, 'mockToken');
+  public signup(body: UserRequest) {
+    this.authApiService
+      .signup(body)
+      .pipe(
+        catchError((error: ErrorResponse) => {
+          return throwError(() => new Error(error.reason));
+        })
+      )
+      .subscribe((response: UserResponse) => {
+        this.isLoggedIn.set(true);
+        this.localStorage.setItem(KEY_USER_TOKEN, response.token);
+      });
   }
 
   public logout() {

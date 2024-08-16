@@ -1,1 +1,44 @@
-<p>registration-page works!</p>
+<div class="tui-container">
+  <form [formGroup]="registrationForm" class="form">
+    <div class="tui-row tui-row_sme">
+      <div class="tui-col_6">
+        <h3 class="tui-form__header">Registration</h3>
+        <div class="tui-form__row">
+          <tui-input formControlName="name" tuiTextfieldSize="m">
+            Name
+            <input tuiTextfieldLegacy />
+            <span class="tui-required"></span>
+          </tui-input>
+          <tui-error formControlName="name" [error]="[] | tuiFieldError | async" />
+        </div>
+        <div class="tui-form__row">
+          <tui-input formControlName="lastName" tuiTextfieldSize="m">
+            Lastname
+            <input tuiTextfieldLegacy />
+          </tui-input>
+        </div>
+        <div class="tui-form__row">
+          <tui-input formControlName="email" tuiTextfieldSize="m">
+            Email
+            <input tuiTextfieldLegacy type="email" />
+            <span class="tui-required"></span>
+          </tui-input>
+        </div>
+        <div class="tui-form__row">
+          <tui-input-password formControlName="password" tuiTextfieldSize="m"
+            >Password
+            <span class="tui-required"></span>
+          </tui-input-password>
+        </div>
+        <div class="tui-form__row">
+          <tui-input-password formControlName="confirmPassword" tuiTextfieldSize="m"
+            >Confirm password <span class="tui-required"></span
+          ></tui-input-password>
+        </div>
+        <div class="tui-form__buttons">
+          <button appearance="primary" size="m" tuiButton (click)="signup()">Register</button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
