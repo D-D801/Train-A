@@ -50,9 +50,9 @@ export class AuthService {
       .pipe(
         catchError(({ error: { message } }: HttpErrorResponse) => {
           this.showNotification(message);
-          return throwError(() => new Error(message));
-        }),
-        takeUntil(inject(Router).events)
+          // return throwError(() => new Error(message));
+          return EMPTY;
+        })
       )
       .subscribe((response: UserResponse) => {
         this.isLoggedIn.set(true);
@@ -72,8 +72,8 @@ export class AuthService {
 
   protected showNotification(message: string): void {
     this.alerts
-      .open('', {
-        label: `Error: ${message}`,
+      .open(message, {
+        label: 'Error:',
         appearance: 'error',
       })
       .subscribe();
