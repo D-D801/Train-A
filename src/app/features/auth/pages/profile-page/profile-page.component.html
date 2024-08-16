@@ -1,1 +1,10 @@
-<p>profile-page works!</p>
+<h2 class="tui-space_bottom-6">Profile</h2>
+<tui-avatar src="AA" class="text" [style.background]="'AA' | tuiAutoColor" />
+
+<dd-profile-field label="Name" text="aaa"></dd-profile-field>
+<dd-profile-field label="Email" text="aaa"></dd-profile-field>
+
+<div class="buttons">
+  <button size="m" tuiButton type="button" class="tui-space_top-4" (click)="logout()">Logout</button>
+  <button size="m" tuiButton type="button" class="tui-space_top-4">Change Password</button>
+</div>
