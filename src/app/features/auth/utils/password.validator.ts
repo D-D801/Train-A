@@ -1,13 +1,4 @@
-import { AbstractControl, FormGroup, Validators } from '@angular/forms';
-
-export function passwordValidator(field: AbstractControl): Validators | null {
-  const value = field.value || '';
-  const regex = /^(?!\s)(.{8,})(?!\s)$/;
-
-  return regex.test(value.trim())
-    ? null
-    : { passwordInvalid: 'Password must be at least 8 characters long and have no spaces at the beginning or end' };
-}
+import { FormGroup } from '@angular/forms';
 
 export function matchPasswordsValidator(passwordField: string, confirmPasswordField: string) {
   return (formGroup: FormGroup) => {

@@ -4,7 +4,6 @@
     <tui-input formControlName="name" tuiTextfieldSize="m">
       Name
       <input tuiTextfieldLegacy />
-      <span class="tui-required"></span>
     </tui-input>
     <tui-error *ngIf="formSubmitted" formControlName="name" [error]="[] | tuiFieldError | async" />
   </div>
