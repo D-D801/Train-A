@@ -1,9 +1,14 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
+import { LoginRequest } from '@features/auth/interfaces/auth.interface';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthApiService {
-  constructor(private httpClient: HttpClient) {}
+  private readonly httpClient: HttpClient = inject(HttpClient);
+
+  public signin(body: LoginRequest) {
+    return this.httpClient.post<LoginRequest>('/api/signin', body);
+  }
 }
