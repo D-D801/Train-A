@@ -25,18 +25,19 @@ describe('RegistrationPageComponent', () => {
     fixture.detectChanges();
   });
 
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should mark form as submitted and touched on signup', () => {
+    component.handleSignup();
+    expect(component.registrationForm.touched).toBeTruthy();
   });
 
   it('should call authService.signup if form is valid', () => {
     component.registrationForm.setValue(mockUser);
 
-    component.signup();
+    component.handleSignup();
     expect(authServiceMock.signup).toHaveBeenCalledWith(mockUser);
   });
 
@@ -49,7 +50,7 @@ describe('RegistrationPageComponent', () => {
       lastName: '',
     });
 
-    component.signup();
+    component.handleSignup();
     expect(authServiceMock.signup).not.toHaveBeenCalled();
   });
 });

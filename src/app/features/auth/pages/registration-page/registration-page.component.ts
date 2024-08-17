@@ -39,7 +39,7 @@ export class RegistrationPageComponent {
 
   private authService: AuthService = inject(AuthService);
 
-  public isDisabledRegister = true;
+  public showErrors = false;
 
   registrationForm = this.fb.group(
     {
@@ -52,10 +52,14 @@ export class RegistrationPageComponent {
     { validator: matchPasswordsValidator('password', 'confirmPassword') }
   );
 
-  signup() {
+  handleSignup() {
+    this.showErrors = true;
+    this.registrationForm.markAllAsTouched();
+
     if (!this.registrationForm.valid) {
       return;
     }
+
     const body = this.registrationForm.value;
     this.authService.signup(body);
   }
