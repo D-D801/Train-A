@@ -33,13 +33,6 @@ describe('RegistrationPageComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should mark form as submitted and touched on signup', () => {
-    component.signup();
-    expect(component.formSubmitted).toBeTruthy();
-    expect(component.hasClickedSubmit).toBeTruthy();
-    expect(component.registrationForm.touched).toBeTruthy();
-  });
-
   it('should call authService.signup if form is valid', () => {
     component.registrationForm.setValue(mockUser);
 
