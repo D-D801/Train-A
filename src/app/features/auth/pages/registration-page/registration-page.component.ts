@@ -8,7 +8,6 @@ import { AuthService } from '@features/auth/services/auth.service';
 import { errors } from '@shared/constants/built-in-errors.constant';
 import { matchPasswordsValidator, passwordValidator } from '@features/auth/utils/password.validator';
 import { emailValidator } from '@features/auth/utils/email.validator';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'dd-registration-page',
@@ -35,8 +34,6 @@ import { Router } from '@angular/router';
 })
 export class RegistrationPageComponent {
   private fb: FormBuilder = inject(FormBuilder);
-
-  private router: Router = inject(Router);
 
   private authService: AuthService = inject(AuthService);
 
@@ -65,6 +62,5 @@ export class RegistrationPageComponent {
     }
     const body = this.registrationForm.value;
     this.authService.signup(body);
-    this.router.navigate(['/home']);
   }
 }
