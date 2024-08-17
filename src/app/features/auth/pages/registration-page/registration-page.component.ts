@@ -1,4 +1,4 @@
-import { AsyncPipe, NgIf } from '@angular/common';
+import { AsyncPipe, NgClass, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TuiButton, TuiError } from '@taiga-ui/core';
@@ -21,6 +21,7 @@ import { emailValidator } from '@features/auth/utils/email.validator';
     TuiError,
     TuiFieldErrorPipe,
     NgIf,
+    NgClass,
   ],
   templateUrl: './registration-page.component.html',
   styleUrl: './registration-page.component.scss',
