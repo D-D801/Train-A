@@ -38,7 +38,7 @@
           ></tui-input-password>
           <tui-error *ngIf="formSubmitted" formControlName="confirmPassword" [error]="[] | tuiFieldError | async" />
         </div>
-        <div class="tui-form__buttons">
+        <div class="tui-form__buttons register__buttons">
           <button
             appearance="primary"
             size="m"
@@ -48,6 +48,10 @@
           >
             Register
           </button>
+          <div class="link_redirect">
+            <span>Already have an account?</span>
+            <a [routerLink]="['/login']" class="login">Login</a>
+          </div>
         </div>
       </div>
     </div>

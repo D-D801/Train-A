@@ -8,6 +8,7 @@ import { AuthService } from '@features/auth/services/auth.service';
 import { errors } from '@shared/constants/built-in-errors.constant';
 import { matchPasswordsValidator, passwordValidator } from '@features/auth/utils/password.validator';
 import { emailValidator } from '@features/auth/utils/email.validator';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'dd-registration-page',
@@ -22,6 +23,7 @@ import { emailValidator } from '@features/auth/utils/email.validator';
     TuiFieldErrorPipe,
     NgIf,
     NgClass,
+    RouterLink,
   ],
   templateUrl: './registration-page.component.html',
   styleUrl: './registration-page.component.scss',

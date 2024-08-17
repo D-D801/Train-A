@@ -1,0 +1,15 @@
+.register__buttons {
+  gap: 1rem;
+  align-items: center;
+}
+
+.link_redirect {
+  display: flex;
+  gap: 0.3rem;
+  font: var(--tui-font-text-m);
+
+  .login {
+    font-weight: bold;
+    color: var(--tui-text-primary);
+  }
+}
