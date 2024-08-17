@@ -1,9 +1,8 @@
 export interface UserRequest {
-  name?: string | null;
-  lastName?: string | null;
-  email?: string | null;
-  password?: string | null;
-  confirmPassword?: string | null;
+  name: string;
+  lastName: string;
+  email: string;
+  password: string;
 }
 
 export interface UserResponse {

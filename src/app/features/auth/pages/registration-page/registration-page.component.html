@@ -40,7 +40,9 @@
       size="m"
       tuiButton
       (click)="handleSignup()"
-      [disabled]="!registrationForm.controls['email'].value && !registrationForm.controls['password'].value"
+      [disabled]="
+        (!registrationForm.controls['email'].value && !registrationForm.controls['password'].value) || disabledButton
+      "
     >
       Register
     </button>
