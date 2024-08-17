@@ -4,15 +4,8 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 import { of } from 'rxjs';
 import { AuthService } from '@features/auth/services/auth.service';
+import { mockUser } from '@shared/constants/mock-user-data';
 import { RegistrationPageComponent } from './registration-page.component';
-
-const mockUser = {
-  email: 'test@example.com',
-  password: 'Password123',
-  confirmPassword: 'Password123',
-  name: 'John',
-  lastName: 'Doe',
-};
 
 describe('RegistrationPageComponent', () => {
   let component: RegistrationPageComponent;
@@ -30,6 +23,10 @@ describe('RegistrationPageComponent', () => {
     fixture = TestBed.createComponent(RegistrationPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
   it('should create', () => {
