@@ -39,9 +39,7 @@ export class RegistrationPageComponent {
 
   private authService: AuthService = inject(AuthService);
 
-  public formSubmitted = false;
-
-  public hasClickedSubmit = false;
+  public isDisabledRegister = true;
 
   registrationForm = this.fb.group(
     {
@@ -55,10 +53,6 @@ export class RegistrationPageComponent {
   );
 
   signup() {
-    this.formSubmitted = true;
-    this.hasClickedSubmit = true;
-    this.registrationForm.markAllAsTouched();
-
     if (!this.registrationForm.valid) {
       return;
     }
