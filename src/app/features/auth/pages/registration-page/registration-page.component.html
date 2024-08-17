@@ -1,59 +1,53 @@
-<div class="tui-container">
-  <form [formGroup]="registrationForm" class="form">
-    <div class="tui-row tui-row_sme">
-      <div class="tui-col_6">
-        <h3 class="tui-form__header">Registration</h3>
-        <div class="tui-form__row">
-          <tui-input formControlName="name" tuiTextfieldSize="m">
-            Name
-            <input tuiTextfieldLegacy />
-            <span class="tui-required"></span>
-          </tui-input>
-          <tui-error *ngIf="formSubmitted" formControlName="name" [error]="[] | tuiFieldError | async" />
-        </div>
-        <div class="tui-form__row">
-          <tui-input formControlName="lastName" tuiTextfieldSize="m">
-            Lastname
-            <input tuiTextfieldLegacy />
-          </tui-input>
-        </div>
-        <div class="tui-form__row">
-          <tui-input formControlName="email" tuiTextfieldSize="m">
-            Email
-            <input tuiTextfieldLegacy type="email" />
-            <span class="tui-required"></span>
-          </tui-input>
-          <tui-error *ngIf="formSubmitted" formControlName="email" [error]="[] | tuiFieldError | async" />
-        </div>
-        <div class="tui-form__row">
-          <tui-input-password formControlName="password" tuiTextfieldSize="m"
-            >Password
-            <span class="tui-required"></span>
-          </tui-input-password>
-          <tui-error *ngIf="formSubmitted" formControlName="password" [error]="[] | tuiFieldError | async" />
-        </div>
-        <div class="tui-form__row">
-          <tui-input-password formControlName="confirmPassword" tuiTextfieldSize="m"
-            >Confirm password <span class="tui-required"></span
-          ></tui-input-password>
-          <tui-error *ngIf="formSubmitted" formControlName="confirmPassword" [error]="[] | tuiFieldError | async" />
-        </div>
-        <div class="tui-form__buttons register__buttons">
-          <button
-            appearance="primary"
-            size="m"
-            tuiButton
-            (click)="signup()"
-            [disabled]="registrationForm.invalid && hasClickedSubmit"
-          >
-            Register
-          </button>
-          <div class="link_redirect">
-            <span>Already have an account?</span>
-            <a [routerLink]="['/login']" class="login">Login</a>
-          </div>
-        </div>
-      </div>
+<form [formGroup]="registrationForm" class="form">
+  <h3 class="tui-form__header">Registration</h3>
+  <div class="tui-form__row">
+    <tui-input formControlName="name" tuiTextfieldSize="m">
+      Name
+      <input tuiTextfieldLegacy />
+      <span class="tui-required"></span>
+    </tui-input>
+    <tui-error *ngIf="formSubmitted" formControlName="name" [error]="[] | tuiFieldError | async" />
+  </div>
+  <div class="tui-form__row">
+    <tui-input formControlName="lastName" tuiTextfieldSize="m">
+      Lastname
+      <input tuiTextfieldLegacy />
+    </tui-input>
+  </div>
+  <div class="tui-form__row">
+    <tui-input formControlName="email" tuiTextfieldSize="m">
+      Email
+      <input tuiTextfieldLegacy type="email" />
+      <span class="tui-required"></span>
+    </tui-input>
+    <tui-error *ngIf="formSubmitted" formControlName="email" [error]="[] | tuiFieldError | async" />
+  </div>
+  <div class="tui-form__row">
+    <tui-input-password formControlName="password" tuiTextfieldSize="m"
+      >Password
+      <span class="tui-required"></span>
+    </tui-input-password>
+    <tui-error *ngIf="formSubmitted" formControlName="password" [error]="[] | tuiFieldError | async" />
+  </div>
+  <div class="tui-form__row">
+    <tui-input-password formControlName="confirmPassword" tuiTextfieldSize="m"
+      >Confirm password <span class="tui-required"></span
+    ></tui-input-password>
+    <tui-error *ngIf="formSubmitted" formControlName="confirmPassword" [error]="[] | tuiFieldError | async" />
+  </div>
+  <div class="tui-form__buttons register__buttons">
+    <button
+      appearance="primary"
+      size="m"
+      tuiButton
+      (click)="signup()"
+      [disabled]="registrationForm.invalid && hasClickedSubmit"
+    >
+      Register
+    </button>
+    <div class="link_redirect">
+      <span>Already have an account?</span>
+      <a [routerLink]="['/login']" class="login">Login</a>
     </div>
-  </form>
-</div>
+  </div>
+</form>
