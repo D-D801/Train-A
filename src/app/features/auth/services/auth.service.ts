@@ -50,7 +50,6 @@ export class AuthService {
       .pipe(
         catchError(({ error: { message } }: HttpErrorResponse) => {
           this.showNotification(message);
-          // return throwError(() => new Error(message));
           return EMPTY;
         })
       )
