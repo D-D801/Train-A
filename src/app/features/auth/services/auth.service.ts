@@ -57,6 +57,7 @@ export class AuthService {
       .subscribe((response: UserResponse) => {
         this.isLoggedIn.set(true);
         this.localStorage.setItem(KEY_USER_TOKEN, response.token);
+        this.router.navigate(['/home']);
       });
   }
 
