@@ -5,7 +5,7 @@
       Name
       <input tuiTextfieldLegacy />
     </tui-input>
-    <tui-error *ngIf="formSubmitted" formControlName="name" [error]="[] | tuiFieldError | async" />
+    <tui-error formControlName="name" [error]="[] | tuiFieldError | async" />
   </div>
   <div class="tui-form__row">
     <tui-input formControlName="lastName" tuiTextfieldSize="m">
@@ -19,20 +19,20 @@
       <input tuiTextfieldLegacy type="email" />
       <span class="tui-required"></span>
     </tui-input>
-    <tui-error *ngIf="formSubmitted" formControlName="email" [error]="[] | tuiFieldError | async" />
+    <tui-error formControlName="email" [error]="[] | tuiFieldError | async" />
   </div>
   <div class="tui-form__row">
     <tui-input-password formControlName="password" tuiTextfieldSize="m"
       >Password
       <span class="tui-required"></span>
     </tui-input-password>
-    <tui-error *ngIf="formSubmitted" formControlName="password" [error]="[] | tuiFieldError | async" />
+    <tui-error formControlName="password" [error]="[] | tuiFieldError | async" />
   </div>
   <div class="tui-form__row">
     <tui-input-password formControlName="confirmPassword" tuiTextfieldSize="m"
       >Confirm password <span class="tui-required"></span
     ></tui-input-password>
-    <tui-error *ngIf="formSubmitted" formControlName="confirmPassword" [error]="[] | tuiFieldError | async" />
+    <tui-error formControlName="confirmPassword" [error]="[] | tuiFieldError | async" />
   </div>
   <div class="tui-form__buttons register__buttons">
     <button appearance="primary" size="m" tuiButton (click)="signup()" [disabled]="isDisabledRegister">Register</button>
