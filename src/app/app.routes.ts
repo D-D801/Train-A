@@ -7,7 +7,7 @@ export const routes: Routes = [
   {
     path: 'home',
     loadComponent: () =>
-      import('@features/TrainA/pages/home-page/home-page.component').then((m) => m.HomePageComponent),
+      import('@features/search/pages/search-page/search-page.component').then((m) => m.SearchPageComponent),
   },
   {
     path: 'registration',

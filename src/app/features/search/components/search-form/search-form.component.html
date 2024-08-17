@@ -1,0 +1,28 @@
+<form class="container" [formGroup]="searchForm" (submit)="search()">
+  <tui-input *tuiLet="cities$() as cities" formControlName="from" class="search-input">
+    From
+    <input placeholder="Type city name" tuiTextfieldLegacy />
+    <ng-container *ngIf="cities?.length">
+      <tui-data-list *tuiDataList>
+        <button *ngFor="let city of cities" tuiOption [value]="city.name" (click)="onSelected(city)">
+          {{ city.name }}
+        </button>
+      </tui-data-list>
+    </ng-container>
+  </tui-input>
+  <tui-input *tuiLet="cities$() as cities" formControlName="to" class="search-input">
+    To
+    <input placeholder="Type city name" tuiTextfieldLegacy />
+    <ng-container *ngIf="cities?.length">
+      <tui-data-list *tuiDataList>
+        <button *ngFor="let city of cities" tuiOption [value]="city.name" (click)="onSelected(city)">
+          {{ city.name }}
+        </button>
+      </tui-data-list>
+    </ng-container>
+  </tui-input>
+  <tui-input-date-time formControlName="date" timeMode="HH:MM"> Choose date and time </tui-input-date-time>
+  <button tuiButton appearance="primary" size="m" type="submit">
+    Search
+  </button>
+</form>
