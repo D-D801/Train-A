@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { LoginRequest } from '@features/auth/interfaces/auth.interface';
+import { UserResponse, UserRequest } from '@features/auth/interfaces/auth.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -8,7 +8,7 @@ import { LoginRequest } from '@features/auth/interfaces/auth.interface';
 export class AuthApiService {
   private readonly httpClient: HttpClient = inject(HttpClient);
 
-  public signin(body: LoginRequest) {
-    return this.httpClient.post<LoginRequest>('/api/signin', body);
+  public signin(body: UserRequest) {
+    return this.httpClient.post<UserResponse>('/api/signin', body);
   }
 }
