@@ -17,6 +17,9 @@
   </div>
   <div class="tui-form__buttons">
     <button size="m" tuiButton type="submit" class="tui-form__button" [disabled]="form.invalid">Sign in</button>
-    <button appearance="flat" size="m" tuiButton type="button" class="tui-form__button">Cancel</button>
+    <div class="link tui-form__button">
+      <span>Don't have an account yet?</span>
+      <a class="link_registration" routerLink="/registration">Register</a>
+    </div>
   </div>
 </form>

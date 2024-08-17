@@ -4,6 +4,7 @@ import { AsyncPipe } from '@angular/common';
 import { TuiButton, TuiError } from '@taiga-ui/core';
 import { TuiFieldErrorPipe } from '@taiga-ui/kit';
 import { TuiInputModule, TuiInputPasswordModule } from '@taiga-ui/legacy';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'dd-login-page',
@@ -16,6 +17,7 @@ import { TuiInputModule, TuiInputPasswordModule } from '@taiga-ui/legacy';
     TuiButton,
     TuiInputPasswordModule,
     TuiInputModule,
+    RouterLink,
   ],
   templateUrl: './login-page.component.html',
   styleUrl: './login-page.component.scss',
