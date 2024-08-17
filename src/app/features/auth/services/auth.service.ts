@@ -1,12 +1,11 @@
 import { inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { LocalStorageService } from '@core/services/local-storage.service';
-import { LoginRequest } from '@features/auth/interfaces/auth.interface';
+import { UserRequest } from '@features/auth/interfaces/auth.interface';
 import { Router } from '@angular/router';
 import { EMPTY } from 'rxjs';
 import { TuiAlertService } from '@taiga-ui/core';
+import { KEY_USER_TOKEN } from '@shared/constants';
 import { AuthApiService } from './auth-api.service';
-
-const KEY_USER_TOKEN = 'userToken';
 
 @Injectable({
   providedIn: 'root',
@@ -28,10 +27,11 @@ export class AuthService {
     this.isLoggedIn = signal(this.getAuthStatus());
   }
 
-  public signin(body: LoginRequest) {
+  public signin(body: UserRequest) {
     this.authApiService.signin(body).subscribe({
-      next: () => {
+      next: (response) => {
         this.isLoggedIn.set(true);
+        this.localStorage.setItem(KEY_USER_TOKEN, response.token);
         this.router.navigate(['/home']);
       },
       error: (err) => {

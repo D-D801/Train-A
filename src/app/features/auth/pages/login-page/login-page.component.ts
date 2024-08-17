@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AsyncPipe } from '@angular/common';
 import { TuiButton, TuiError } from '@taiga-ui/core';
 import { TuiFieldErrorPipe } from '@taiga-ui/kit';
@@ -34,8 +34,8 @@ export class LoginPageComponent {
   private authService = inject(AuthService);
 
   form: FormGroup = this.fb.group({
-    email: ['', [emailValidator()]],
-    password: ['', [passwordValidator()]],
+    email: ['', [Validators.required, emailValidator()]],
+    password: ['', [Validators.required, passwordValidator()]],
   });
 
   protected onSubmit() {

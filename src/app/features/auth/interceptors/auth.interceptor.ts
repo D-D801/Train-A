@@ -1,24 +1,16 @@
-import { HttpInterceptorFn, HttpResponse } from '@angular/common/http';
-import { tap } from 'rxjs';
-
-const KEY_USER_TOKEN = 'userToken';
-
-interface AuthResponse {
-  token: string;
-}
+import { HttpInterceptorFn } from '@angular/common/http';
+import { inject } from '@angular/core';
+import { LocalStorageService } from '@core/services/local-storage.service';
+import { KEY_USER_TOKEN } from '@shared/constants';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  if (req.url.includes('/api/signin')) {
-    return next(req).pipe(
-      tap((event) => {
-        if (event instanceof HttpResponse) {
-          const { token } = event.body as AuthResponse;
-          if (token) {
-            localStorage.setItem(KEY_USER_TOKEN, token);
-          }
-        }
-      })
-    );
+  const localStorageService = inject(LocalStorageService);
+  const token = localStorageService.getItem(KEY_USER_TOKEN);
+  if (token) {
+    const request = req.clone({
+      setHeaders: { Authorization: `Bearer ${token}` },
+    });
+    return next(request);
   }
   return next(req);
 };
