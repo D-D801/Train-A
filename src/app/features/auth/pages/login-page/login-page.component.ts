@@ -1,11 +1,14 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { AsyncPipe } from '@angular/common';
 import { TuiButton, TuiError } from '@taiga-ui/core';
 import { TuiFieldErrorPipe } from '@taiga-ui/kit';
 import { TuiInputModule, TuiInputPasswordModule } from '@taiga-ui/legacy';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '@features/auth/services/auth.service';
+import { TuiValidator } from '@taiga-ui/cdk';
+import { emailValidator } from '@features/auth/validators/password.validator';
+import { passwordValidator } from '@features/auth/validators/email.validator';
 
 @Component({
   selector: 'dd-login-page',
@@ -19,6 +22,7 @@ import { AuthService } from '@features/auth/services/auth.service';
     TuiInputPasswordModule,
     TuiInputModule,
     RouterLink,
+    TuiValidator,
   ],
   templateUrl: './login-page.component.html',
   styleUrl: './login-page.component.scss',
@@ -30,8 +34,8 @@ export class LoginPageComponent {
   private authService = inject(AuthService);
 
   form: FormGroup = this.fb.group({
-    email: ['', [Validators.required, Validators.email]],
-    password: ['', Validators.required],
+    email: ['', [emailValidator()]],
+    password: ['', [passwordValidator()]],
   });
 
   protected onSubmit() {
