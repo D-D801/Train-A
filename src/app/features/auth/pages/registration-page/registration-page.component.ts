@@ -7,7 +7,6 @@ import { TUI_VALIDATION_ERRORS, TuiFieldErrorPipe } from '@taiga-ui/kit';
 import { AuthService } from '@features/auth/services/auth.service';
 import { errors } from '@shared/constants/built-in-errors.constant';
 import { matchPasswordsValidator, passwordValidator } from '@features/auth/utils/password.validator';
-import { emailValidator } from '@features/auth/utils/email.validator';
 import { RouterLink } from '@angular/router';
 
 @Component({
@@ -46,7 +45,7 @@ export class RegistrationPageComponent {
 
   registrationForm = this.fb.group(
     {
-      email: this.fb.control('', [Validators.required, emailValidator]),
+      email: this.fb.control('', [Validators.required, Validators.email]),
       password: this.fb.control('', [Validators.required, Validators.minLength(8), passwordValidator]),
       confirmPassword: this.fb.control('', [Validators.required]),
       name: this.fb.control('', [Validators.required]),
