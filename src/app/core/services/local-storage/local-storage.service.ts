@@ -1,9 +1,6 @@
-import { Inject, Injectable, InjectionToken } from '@angular/core';
-
-export const LOCAL_STORAGE = new InjectionToken<Storage>('Local Storage', {
-  providedIn: 'root',
-  factory: () => window.localStorage,
-});
+import { Inject, Injectable } from '@angular/core';
+import { LOCAL_STORAGE } from '@core/services/tokens/local-storage.token';
+import { LocalStorageKey } from '@shared/enums/local-storage-key.enum';
 
 @Injectable({
   providedIn: 'root',
@@ -11,15 +8,15 @@ export const LOCAL_STORAGE = new InjectionToken<Storage>('Local Storage', {
 export class LocalStorageService {
   constructor(@Inject(LOCAL_STORAGE) private localStorage: Storage) {}
 
-  setItem(key: string, value: string) {
+  setItem(key: LocalStorageKey, value: string) {
     this.localStorage.setItem(key, value);
   }
 
-  getItem(key: string) {
+  getItem(key: LocalStorageKey) {
     return this.localStorage.getItem(key);
   }
 
-  removeItem(key: string) {
+  removeItem(key: LocalStorageKey) {
     this.localStorage.removeItem(key);
   }
 
