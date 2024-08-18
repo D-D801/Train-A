@@ -29,7 +29,9 @@
     <tui-error formControlName="confirmPassword" [error]="[] | tuiFieldError | async" />
   </div>
   <div class="tui-form__buttons register__buttons">
-    <button appearance="primary" size="m" tuiButton (click)="handleSignup()" [disabled]="onSubmit()">Register</button>
+    <button appearance="primary" size="m" tuiButton (click)="onSubmit()" [disabled]="checkSubmitStatus()">
+      Register
+    </button>
     <div class="link_redirect">
       <span>Already have an account?</span>
       <a [routerLink]="['/login']" class="login">Sign In</a>
