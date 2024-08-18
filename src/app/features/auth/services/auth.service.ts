@@ -2,7 +2,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertService } from '@core/services/alert/alert.service';
 import { LocalStorageService } from '@core/services/local-storage/local-storage.service';
-import { UserRequest } from '@features/auth/interfaces/auth.interface';
+import { UserRequest } from '@features/auth/interfaces/user-request.interface';
 import { LocalStorageKey } from '@shared/enums/local-storage-key.enum';
 import { catchError, EMPTY, tap } from 'rxjs';
 import { AuthApiService } from './auth-api.service';
