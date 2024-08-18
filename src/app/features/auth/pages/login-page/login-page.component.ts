@@ -43,20 +43,20 @@ export class LoginPageComponent {
   });
 
   public onSubmit() {
+    const emailControl = this.form.get('email');
+    const passwordControl = this.form.get('password');
+
     this.isSubmitted = true;
-    this.form.get('email')?.setValidators([Validators.required, emailValidator()]);
-    this.form.get('email')?.updateValueAndValidity();
-    this.form.get('password')?.setValidators([Validators.required, passwordValidator()]);
-    this.form.get('password')?.updateValueAndValidity();
+    emailControl?.setValidators([Validators.required, emailValidator()]);
+    emailControl?.updateValueAndValidity();
+    passwordControl?.setValidators([Validators.required, passwordValidator()]);
+    passwordControl?.updateValueAndValidity();
     this.form.markAllAsTouched();
     const body = this.form.value;
     this.authService.signin(body).pipe(takeUntilDestroyed(this.destroy)).subscribe();
   }
 
   public checkSubmitStatus() {
-    if (this.isSubmitted) {
-      return this.form.invalid;
-    }
-    return this.form.pristine;
+    return this.isSubmitted ? this.form.invalid : this.form.pristine;
   }
 }
