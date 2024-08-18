@@ -1,5 +1,5 @@
 import { inject, Injectable, signal, WritableSignal } from '@angular/core';
-import { LocalStorageService } from '@core/services/local-storage.service';
+import { LocalStorageService } from '@core/services/local-storage/local-storage.service';
 import { UserRequest } from '@features/auth/interfaces/auth.interface';
 import { Router } from '@angular/router';
 import { catchError, EMPTY, tap } from 'rxjs';
