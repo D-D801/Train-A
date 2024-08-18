@@ -8,6 +8,7 @@ import { TuiInputModule } from '@taiga-ui/legacy';
 import { builtInErrors } from '@shared/constants/build-in-errors.constants';
 import { ProfileService } from '@features/auth/services/profile/profile.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { emailValidator } from '@features/auth/validators';
 
 @Component({
   selector: 'dd-profile-field',
@@ -54,8 +55,8 @@ export class ProfileFieldComponent implements OnChanges {
     if (changes['text'] && changes['text'].currentValue !== changes['text'].previousValue) {
       this.profileForm.patchValue({ text: this.text });
     }
-    if (changes['label'] && changes['label'].currentValue === 'Email') {
-      this.profileForm.get('text')?.setValidators([Validators.required, Validators.email]);
+    if (changes['label'] && changes['label'].currentValue === 'email') {
+      this.profileForm.get('text')?.setValidators([Validators.required, emailValidator()]);
     }
   }
 
@@ -66,6 +67,7 @@ export class ProfileFieldComponent implements OnChanges {
   protected save() {
     tuiMarkControlAsTouchedAndValidate(this.profileForm);
     const { text } = this.profileForm.value;
+
     if (this.profileForm.valid && text) {
       this.profileService.updateUserInformation(this.label, text).pipe(takeUntilDestroyed(this.destroy)).subscribe();
       this.isEditMode = false;

@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ProfileService } from '@features/auth/services/profile/profile.service';
+import { passwordValidator } from '@features/auth/validators';
 import { TuiAutoFocus } from '@taiga-ui/cdk';
 import { TuiButton, TuiDialog, TuiDialogContext, TuiHint } from '@taiga-ui/core';
 import { TuiInputModule } from '@taiga-ui/legacy';
@@ -22,14 +23,16 @@ export class ChangePasswordDialogComponent {
 
   private readonly destroy = inject(DestroyRef);
 
-  protected changePasswordForm = new FormGroup({
-    newPassword: new FormControl(''),
+  private readonly fb = inject(FormBuilder);
+
+  protected changePasswordForm = this.fb.group({
+    newPassword: ['', [Validators.required, passwordValidator()]],
   });
 
   submit() {
     const { newPassword } = this.changePasswordForm.value;
 
-    if (newPassword) {
+    if (this.changePasswordForm.valid && newPassword) {
       this.profileService
         .updatePassword(newPassword)
         .pipe(takeUntilDestroyed(this.destroy))
