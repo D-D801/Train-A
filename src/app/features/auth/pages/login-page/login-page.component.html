@@ -16,7 +16,7 @@
     <tui-error formControlName="password" [error]="[] | tuiFieldError | async" />
   </div>
   <div class="tui-form__buttons">
-    <button size="m" tuiButton type="submit" class="tui-form__button" [disabled]="form.invalid">Sign in</button>
+    <button size="m" tuiButton type="submit" class="tui-form__button" [disabled]="checkSubmitStatus()">Sign in</button>
     <div class="link tui-form__button">
       <span>Don't have an account yet?</span>
       <a class="link_registration" routerLink="/registration">Register</a>
