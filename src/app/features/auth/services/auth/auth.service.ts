@@ -1,7 +1,6 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { LocalStorageService } from '@core/services/local-storage/local-storage.service';
-import { catchError, EMPTY } from 'rxjs';
-import { TuiAlertService } from '@taiga-ui/core';
+import { catchError, EMPTY, tap } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { AlertService } from '@core/services/alert/alert.service';
@@ -14,23 +13,34 @@ import { AuthApiService } from '../auth-api/auth-api.service';
   providedIn: 'root',
 })
 export class AuthService {
-  private readonly authApiService = inject(AuthApiService);
+  private readonly router = inject(Router);
 
-  private readonly alert = inject(AlertService);
+  private readonly alerts = inject(AlertService);
 
-  private readonly localStorage = inject(LocalStorageService);
+  private authApiService = inject(AuthApiService);
 
-  private router = inject(Router);
+  private localStorage = inject(LocalStorageService);
 
-  private readonly alerts = inject(TuiAlertService);
+  private _isLoggedIn = signal(this.getAuthStatus());
 
-  public isLoggedIn = signal(this.getAuthStatus());
+  public isLoggedIn = this._isLoggedIn.asReadonly();
 
-  public isAdminIn = signal(false);
+  private _isAdminIn = signal(false);
 
-  public signin(/* email: string = 'test', password: string= 'test' */) {
-    this.isLoggedIn.set(true);
-    this.localStorage.setItem(LocalStorageKey.UserToken, 'mockToken');
+  public isAdminIn = this._isAdminIn.asReadonly();
+
+  public signin(body: UserRequest) {
+    return this.authApiService.signin(body).pipe(
+      tap((response) => {
+        this._isLoggedIn.set(true);
+        this.localStorage.setItem(LocalStorageKey.UserToken, response.token);
+        this.router.navigate(['/home']);
+      }),
+      catchError(({ error: { message } }) => {
+        this.alerts.open({ message: message || 'smt went wrong', label: 'Error:', appearance: 'error' });
+        return EMPTY;
+      })
+    );
   }
 
   public signup(body: UserRequest) {
@@ -38,12 +48,12 @@ export class AuthService {
       .signup(body)
       .pipe(
         catchError(({ error: { message } }: HttpErrorResponse) => {
-          this.alert.open({ message, label: 'Error', appearance: 'error' });
+          this.alerts.open({ message, label: 'Error', appearance: 'error' });
           return EMPTY;
         })
       )
       .subscribe((response: UserResponse) => {
-        this.isLoggedIn.set(true);
+        this._isLoggedIn.set(true);
         this.localStorage.setItem(LocalStorageKey.UserToken, response.token);
         this.router.navigate(['/home']);
       });
@@ -51,8 +61,8 @@ export class AuthService {
 
   public logout() {
     this.localStorage.removeItem(LocalStorageKey.UserToken);
-    this.isLoggedIn.set(false);
-    this.isAdminIn.set(false);
+    this._isLoggedIn.set(false);
+    this._isAdminIn.set(false);
   }
 
   private getAuthStatus() {

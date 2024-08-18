@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { LocalStorageService } from '@core/services/local-storage/local-storage.service';
-import { LOCAL_STORAGE } from '@core/services/tokens/local-storage.token';
+import { LOCAL_STORAGE } from '@core/tokens/local-storage.token';
 import { LocalStorageKey } from '@shared/enums/local-storage-key.enum';
 
 describe('LocalStorageService', () => {

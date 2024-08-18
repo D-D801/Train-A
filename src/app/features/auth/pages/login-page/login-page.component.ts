@@ -3,13 +3,13 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AsyncPipe } from '@angular/common';
 import { emailValidator, passwordValidator } from '@features/auth/validators';
-import { builtInErrors } from '@shared/constants/build-in-errors.constant';
+import { buildInErrors } from '@shared/constants/build-in-errors.constant';
 import { TuiButton, TuiError } from '@taiga-ui/core';
 import { TUI_VALIDATION_ERRORS, TuiFieldErrorPipe } from '@taiga-ui/kit';
 import { TuiInputModule, TuiInputPasswordModule } from '@taiga-ui/legacy';
 import { RouterLink } from '@angular/router';
-import { AuthService } from '@features/auth/services/auth.service';
 import { TuiValidator } from '@taiga-ui/cdk';
+import { AuthService } from '@features/auth/services/auth/auth.service';
 
 @Component({
   selector: 'dd-login-page',
@@ -28,7 +28,7 @@ import { TuiValidator } from '@taiga-ui/cdk';
   providers: [
     {
       provide: TUI_VALIDATION_ERRORS,
-      useValue: builtInErrors,
+      useValue: buildInErrors,
     },
   ],
   templateUrl: './login-page.component.html',
