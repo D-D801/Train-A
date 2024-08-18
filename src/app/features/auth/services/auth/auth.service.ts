@@ -1,5 +1,4 @@
-
-import { inject, Injectable, signal, WritableSignal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { LocalStorageService } from '@core/services/local-storage/local-storage.service';
 import { catchError, EMPTY } from 'rxjs';
 import { TuiAlertService } from '@taiga-ui/core';
@@ -25,13 +24,9 @@ export class AuthService {
 
   private readonly alerts = inject(TuiAlertService);
 
-  public isLoggedIn: WritableSignal<boolean>;
+  public isLoggedIn = signal(this.getAuthStatus());
 
   public isAdminIn = signal(false);
-
-  constructor() {
-    this.isLoggedIn = signal(this.getAuthStatus());
-  }
 
   public signin(/* email: string = 'test', password: string= 'test' */) {
     this.isLoggedIn.set(true);

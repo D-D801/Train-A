@@ -53,11 +53,14 @@ export class RegistrationPageComponent {
   });
 
   handleSignup() {
+    const emailControl = this.registrationForm.get('email');
+    const passwordControl = this.registrationForm.get('password');
+
     this.isSubmitted = true;
-    this.registrationForm.get('email')?.setValidators([Validators.required, emailValidator()]);
-    this.registrationForm.get('email')?.updateValueAndValidity();
-    this.registrationForm.get('password')?.setValidators([Validators.required, Validators.minLength(8)]);
-    this.registrationForm.get('password')?.updateValueAndValidity();
+    emailControl?.setValidators([Validators.required, emailValidator()]);
+    emailControl?.updateValueAndValidity();
+    passwordControl?.setValidators([Validators.required, Validators.minLength(8)]);
+    passwordControl?.updateValueAndValidity();
     this.registrationForm.setValidators([matchPasswordsValidator('password', 'confirmPassword')]);
 
     this.registrationForm.markAllAsTouched();
