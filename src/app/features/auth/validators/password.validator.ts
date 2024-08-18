@@ -1,6 +1,6 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
-export function emailValidator(): ValidatorFn {
+export function passwordValidator(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null =>
-    !/^[\w\d_]+@[\w\d_]+.\w{2,7}$/.test(control.value) ? { emailRegex: 'Incorrect email' } : null;
+    !/.{8,}/.test(control.value.trim()) ? { minLength: 'At least 8 characters required' } : null;
 }
