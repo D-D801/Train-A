@@ -51,7 +51,7 @@ export class RegistrationPageComponent {
     name: this.fb.control(''),
   });
 
-  handleSignup() {
+  onSubmit() {
     const emailControl = this.registrationForm.get('email');
     const passwordControl = this.registrationForm.get('password');
 
@@ -73,9 +73,6 @@ export class RegistrationPageComponent {
   }
 
   protected checkSubmitStatus() {
-    if (this.isSubmitted) {
-      return this.registrationForm.invalid;
-    }
-    return this.registrationForm.pristine;
+    return this.isSubmitted ? this.registrationForm.invalid : this.registrationForm.pristine;
   }
 }

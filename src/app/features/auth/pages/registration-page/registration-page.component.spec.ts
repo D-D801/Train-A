@@ -30,7 +30,7 @@ describe('RegistrationPageComponent', () => {
   });
 
   it('should mark form as touched after handleSignup', () => {
-    component.handleSignup();
+    component.onSubmit();
     Object.keys(component.registrationForm.controls).forEach((key) => {
       expect(component.registrationForm.get(key)!.touched).toBeTruthy();
     });
@@ -38,7 +38,7 @@ describe('RegistrationPageComponent', () => {
 
   it('should call authService.signup if form is valid', () => {
     component.registrationForm.setValue(mockUser);
-    component.handleSignup();
+    component.onSubmit();
     expect(authServiceMock.signup).toHaveBeenCalledWith(mockUser);
   });
 
@@ -50,7 +50,7 @@ describe('RegistrationPageComponent', () => {
       name: '',
     });
 
-    component.handleSignup();
+    component.onSubmit();
     expect(authServiceMock.signup).not.toHaveBeenCalled();
   });
 });
