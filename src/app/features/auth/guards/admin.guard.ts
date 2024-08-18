@@ -1,23 +1,18 @@
 import { inject } from '@angular/core';
 import { CanMatchFn, Router } from '@angular/router';
-import { TuiAlertService } from '@taiga-ui/core';
+import { AlertService } from '@core/services/alert/alert.service';
 import { AuthService } from '../services/auth/auth.service';
 
 export const adminGuard: CanMatchFn = () => {
   const authService: AuthService = inject(AuthService);
 
-  const alerts = inject(TuiAlertService);
+  const alert = inject(AlertService);
 
   const message = 'You do not have admin rights';
 
   if (authService.isAdminIn()) {
     return true;
   }
-  alerts
-    .open(message, {
-      label: 'Error:',
-      appearance: 'error',
-    })
-    .subscribe();
+  alert.open({ message, label: 'Error', appearance: 'error' });
   return inject(Router).createUrlTree(['/home']);
 };
