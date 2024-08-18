@@ -18,9 +18,9 @@ export class AuthService {
 
   private readonly alert = inject(AlertService);
 
-  private readonly localStorage: LocalStorageService = inject(LocalStorageService);
+  private readonly localStorage = inject(LocalStorageService);
 
-  private router: Router = inject(Router);
+  private router = inject(Router);
 
   private readonly alerts = inject(TuiAlertService);
 
