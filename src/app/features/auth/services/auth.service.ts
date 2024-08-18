@@ -1,4 +1,4 @@
-import { inject, Injectable, signal, WritableSignal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertService } from '@core/services/alert/alert.service';
 import { LocalStorageService } from '@core/services/local-storage/local-storage.service';
@@ -11,26 +11,26 @@ import { AuthApiService } from './auth-api.service';
   providedIn: 'root',
 })
 export class AuthService {
-  private readonly router: Router = inject(Router);
+  private readonly router = inject(Router);
 
   private readonly alerts = inject(AlertService);
 
   private authApiService = inject(AuthApiService);
 
-  private localStorage: LocalStorageService = inject(LocalStorageService);
+  private localStorage = inject(LocalStorageService);
 
-  public isLoggedIn: WritableSignal<boolean>;
+  private _isLoggedIn = signal(this.getAuthStatus());
 
-  public isAdminIn = signal(false);
+  public isLoggedIn = this._isLoggedIn.asReadonly();
 
-  constructor() {
-    this.isLoggedIn = signal(this.getAuthStatus());
-  }
+  private _isAdminIn = signal(false);
+
+  public isAdminIn = this._isAdminIn.asReadonly();
 
   public signin(body: UserRequest) {
     return this.authApiService.signin(body).pipe(
       tap((response) => {
-        this.isLoggedIn.set(true);
+        this._isLoggedIn.set(true);
         this.localStorage.setItem(LocalStorageKey.UserToken, response.token);
         this.router.navigate(['/home']);
       }),
@@ -42,14 +42,14 @@ export class AuthService {
   }
 
   public signup(/* email: string = 'test', password: string= 'test' */) {
-    this.isLoggedIn.set(true);
+    this._isLoggedIn.set(true);
     this.localStorage.setItem(LocalStorageKey.UserToken, 'mockToken');
   }
 
   public logout() {
     this.localStorage.removeItem(LocalStorageKey.UserToken);
-    this.isLoggedIn.set(false);
-    this.isAdminIn.set(false);
+    this._isLoggedIn.set(false);
+    this._isAdminIn.set(false);
   }
 
   private getAuthStatus() {

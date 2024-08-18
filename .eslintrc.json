@@ -25,6 +25,7 @@
         "prettier"
       ],
       "rules": {
+        "no-underscore-dangle": "off",
         "no-console": [
           "error",
           {
