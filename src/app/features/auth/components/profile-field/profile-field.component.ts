@@ -1,11 +1,13 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { AsyncPipe, NgIf } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TuiAutoFocus, tuiMarkControlAsTouchedAndValidate, tuiTakeUntilDestroyed } from '@taiga-ui/cdk';
-import { TuiAlertService, TuiButton, TuiError } from '@taiga-ui/core';
+import { TuiAutoFocus, tuiMarkControlAsTouchedAndValidate } from '@taiga-ui/cdk';
+import { TuiButton, TuiError } from '@taiga-ui/core';
 import { TUI_VALIDATION_ERRORS, TuiFieldErrorPipe, TuiInputInline } from '@taiga-ui/kit';
 import { TuiInputModule } from '@taiga-ui/legacy';
 import { builtInErrors } from '@shared/constants/build-in-errors.constants';
+import { ProfileService } from '@features/auth/services/profile/profile.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'dd-profile-field',
@@ -32,13 +34,13 @@ import { builtInErrors } from '@shared/constants/build-in-errors.constants';
   ],
 })
 export class ProfileFieldComponent implements OnChanges {
-  @Input({ required: true }) label!: string;
+  @Input({ required: true }) label!: 'name' | 'email';
 
-  @Input({ required: true }) text!: string;
-
-  private readonly alert = inject(TuiAlertService);
+  @Input({ required: true }) text!: string | null;
 
   private readonly fb = inject(FormBuilder);
+
+  private readonly profileService = inject(ProfileService);
 
   private readonly destroy = inject(DestroyRef);
 
@@ -63,12 +65,10 @@ export class ProfileFieldComponent implements OnChanges {
 
   protected save() {
     tuiMarkControlAsTouchedAndValidate(this.profileForm);
-    if (this.profileForm.valid) {
+    const { text } = this.profileForm.value;
+    if (this.profileForm.valid && text) {
+      this.profileService.updateUserInformation(this.label, text).pipe(takeUntilDestroyed(this.destroy)).subscribe();
       this.isEditMode = false;
-      this.alert
-        .open(this.profileForm.value.text, { label: `New ${this.label.toLowerCase()}` })
-        .pipe(tuiTakeUntilDestroyed(this.destroy))
-        .subscribe();
     }
   }
 }
