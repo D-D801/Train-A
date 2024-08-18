@@ -49,7 +49,6 @@ export class RegistrationPageComponent {
     password: this.fb.control(''),
     confirmPassword: this.fb.control(''),
     name: this.fb.control(''),
-    lastName: this.fb.control(''),
   });
 
   handleSignup() {

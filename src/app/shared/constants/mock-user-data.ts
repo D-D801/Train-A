@@ -3,7 +3,6 @@ export const mockUser = {
   password: 'Password123!',
   confirmPassword: 'Password123!',
   name: 'John',
-  lastName: 'Doe',
 };
 
 export const mockTokenResponse = {

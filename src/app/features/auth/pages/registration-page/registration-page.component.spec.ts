@@ -48,7 +48,6 @@ describe('RegistrationPageComponent', () => {
       password: '',
       confirmPassword: '',
       name: '',
-      lastName: '',
     });
 
     component.handleSignup();
