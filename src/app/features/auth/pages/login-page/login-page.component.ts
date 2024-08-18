@@ -28,7 +28,7 @@ import { TuiValidator } from '@taiga-ui/cdk';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginPageComponent {
-  private isSubmitted = false;
+  public isSubmitted = false;
 
   private fb = inject(FormBuilder);
 
@@ -39,7 +39,7 @@ export class LoginPageComponent {
     password: [''],
   });
 
-  protected onSubmit() {
+  public onSubmit() {
     this.isSubmitted = true;
     this.form.get('email')?.setValidators([Validators.required, emailValidator()]);
     this.form.get('email')?.updateValueAndValidity();
@@ -50,7 +50,7 @@ export class LoginPageComponent {
     this.authService.signin(body);
   }
 
-  protected checkSubmitStatus() {
+  public checkSubmitStatus() {
     if (this.isSubmitted) {
       return this.form.invalid;
     }
