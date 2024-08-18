@@ -1,12 +1,10 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { LocalStorageService } from '@core/services/local-storage/local-storage.service';
-import { catchError, EMPTY, tap } from 'rxjs';
-import { HttpErrorResponse } from '@angular/common/http';
+import { catchError, EMPTY, switchMap, tap } from 'rxjs';
 import { Router } from '@angular/router';
 import { AlertService } from '@core/services/alert/alert.service';
 import { LocalStorageKey } from '@shared/enums/local-storage-key.enum';
 import { UserRequest } from '@features/auth/interfaces/user-request.interface';
-import { UserResponse } from '@features/auth/interfaces/user-response.interface';
 import { AuthApiService } from '../auth-api/auth-api.service';
 
 @Injectable({
@@ -44,19 +42,7 @@ export class AuthService {
   }
 
   public signup(body: UserRequest) {
-    this.authApiService
-      .signup(body)
-      .pipe(
-        catchError(({ error: { message } }: HttpErrorResponse) => {
-          this.alerts.open({ message, label: 'Error', appearance: 'error' });
-          return EMPTY;
-        })
-      )
-      .subscribe((response: UserResponse) => {
-        this._isLoggedIn.set(true);
-        this.localStorage.setItem(LocalStorageKey.UserToken, response.token);
-        this.router.navigate(['/home']);
-      });
+    return this.authApiService.signup(body).pipe(switchMap(() => this.signin(body)));
   }
 
   public logout() {

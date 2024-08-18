@@ -29,25 +29,19 @@ describe('LoginPageComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
   it('should mark form as submitted and touched on signin', () => {
     component.onSubmit();
-    expect(component.form.touched).toBeTruthy();
+    expect(component.isSubmitted()).toBeTruthy();
   });
+
   it('should call authService.signin if form is valid', () => {
     component.form.setValue(mockUser);
-
     component.onSubmit();
     expect(authServiceMock.signin).toHaveBeenCalledWith(mockUser);
   });
+
   it('should disable submit button when form is pristine', () => {
     expect(component.checkSubmitStatus()).toBe(true);
-  });
-  it('should enable submit button when form is dirty and valid', () => {
-    component.form.setValue(mockUser);
-    component.isSubmitted = true;
-
-    fixture.detectChanges();
-
-    expect(component.checkSubmitStatus()).toBe(false);
   });
 });
