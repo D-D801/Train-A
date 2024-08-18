@@ -1,6 +1,6 @@
 import { of } from 'rxjs';
 
-export const errors = {
+export const builInErrors = {
   required: 'This field is required',
   maxlength: ({ requiredLength }: { requiredLength: string }) => `Maximum length — ${requiredLength} characters`,
   minlength: ({ requiredLength }: { requiredLength: string }) => of(`Minimum length — ${requiredLength} characters`),
