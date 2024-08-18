@@ -3,12 +3,12 @@ import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { of, throwError } from 'rxjs';
 import { Router } from '@angular/router';
-import { LocalStorageService } from '@core/services/local-storage.service';
+import { LocalStorageService } from '@core/services/local-storage/local-storage.service';
 import { TuiAlertService } from '@taiga-ui/core';
 import { mockTokenResponse, mockUser } from '@shared/constants/mock-user-data';
+import { UserResponse, UserRequest } from '@features/auth/interfaces/auth.interface';
+import { AuthApiService } from '../auth-api/auth-api.service';
 import { AuthService } from './auth.service';
-import { AuthApiService } from './auth-api.service';
-import { UserRequest, UserResponse } from '../interfaces/auth.interface';
 
 const KEY_USER_TOKEN = 'userToken';
 
@@ -70,7 +70,7 @@ describe('AuthServiceService', () => {
     const userRequest: UserRequest = mockUser;
     service.signup(userRequest);
 
-    expect(alertServiceMock.open).toHaveBeenCalledWith('Error message', { label: 'Error:', appearance: 'error' });
+    expect(alertServiceMock.open).toHaveBeenCalledWith('Error message', { label: 'Error', appearance: 'error' });
     expect(routerMock.navigate).not.toHaveBeenCalled();
   });
 

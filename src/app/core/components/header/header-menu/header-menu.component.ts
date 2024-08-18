@@ -1,7 +1,7 @@
 import { NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { AuthService } from '@features/auth/services/auth.service';
+import { AuthService } from '@features/auth/services/auth/auth.service';
 import { TuiButton } from '@taiga-ui/core';
 import { TuiNavigation } from '@taiga-ui/layout';
 

@@ -4,10 +4,11 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { TuiButton, TuiError } from '@taiga-ui/core';
 import { TuiInputModule, TuiInputPasswordModule } from '@taiga-ui/legacy';
 import { TUI_VALIDATION_ERRORS, TuiFieldErrorPipe } from '@taiga-ui/kit';
-import { AuthService } from '@features/auth/services/auth.service';
 import { builInErrors } from '@shared/constants/built-in-errors.constant';
 import { matchPasswordsValidator } from '@features/auth/validators/password.validator';
 import { RouterLink } from '@angular/router';
+import { emailValidator } from '@features/auth/validators/email.validator';
+import { AuthService } from '@features/auth/services/auth/auth.service';
 
 @Component({
   selector: 'dd-registration-page',
@@ -53,7 +54,7 @@ export class RegistrationPageComponent {
 
   handleSignup() {
     this.isSubmitted = true;
-    this.registrationForm.get('email')?.setValidators([Validators.required, Validators.email]);
+    this.registrationForm.get('email')?.setValidators([Validators.required, emailValidator()]);
     this.registrationForm.get('email')?.updateValueAndValidity();
     this.registrationForm.get('password')?.setValidators([Validators.required, Validators.minLength(8)]);
     this.registrationForm.get('password')?.updateValueAndValidity();
