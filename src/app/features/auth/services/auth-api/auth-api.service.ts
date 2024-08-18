@@ -9,7 +9,7 @@ import { Observable, switchMap } from 'rxjs';
   providedIn: 'root',
 })
 export class AuthApiService {
-  private readonly httpClient: HttpClient = inject(HttpClient);
+  private readonly httpClient = inject(HttpClient);
 
   signup(body: UserRequest): Observable<UserResponse> {
     return this.httpClient.post<UserResponse>('/api/signup', body).pipe(switchMap(() => this.signin(body)));
