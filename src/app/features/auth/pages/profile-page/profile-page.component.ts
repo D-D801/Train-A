@@ -1,13 +1,26 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { TuiButton, TuiAutoColorPipe } from '@taiga-ui/core';
-import { AuthService } from '@features/auth/services/auth.service';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, INJECTOR } from '@angular/core';
+import { TuiButton, TuiAutoColorPipe, TuiDialogService } from '@taiga-ui/core';
 import { TuiAvatar } from '@taiga-ui/kit';
-import { ProfileFieldComponent } from './profile-field/profile-field/profile-field.component';
+import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
+import { AuthService } from '@features/auth/services/auth/auth.service';
+import { ProfileService } from '@features/auth/services/profile/profile.service';
+import { AsyncPipe, NgIf } from '@angular/common';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ProfileFieldComponent } from '../../components/profile-field/profile-field.component';
+import { ChangePasswordDialogComponent } from '../../components/change-password-dialog/change-password-dialog/change-password-dialog.component';
 
 @Component({
   selector: 'dd-profile-page',
   standalone: true,
-  imports: [TuiAvatar, TuiAutoColorPipe, ProfileFieldComponent, TuiButton],
+  imports: [
+    TuiAvatar,
+    TuiAutoColorPipe,
+    ProfileFieldComponent,
+    TuiButton,
+    ChangePasswordDialogComponent,
+    NgIf,
+    AsyncPipe,
+  ],
   templateUrl: './profile-page.component.html',
   styleUrl: './profile-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -15,7 +28,29 @@ import { ProfileFieldComponent } from './profile-field/profile-field/profile-fie
 export class ProfilePageComponent {
   private authService = inject(AuthService);
 
+  private profileService = inject(ProfileService);
+
+  private readonly dialogs = inject(TuiDialogService);
+
+  private readonly injector = inject(INJECTOR);
+
+  private readonly destroy = inject(DestroyRef);
+
+  private readonly dialog = this.dialogs.open<number>(
+    new PolymorpheusComponent(ChangePasswordDialogComponent, this.injector),
+    {
+      dismissible: true,
+      label: 'Change Password',
+    }
+  );
+
+  protected userInformation = this.profileService.getUserInformation();
+
   logout() {
-    this.authService.logout();
+    this.authService.logout().pipe(takeUntilDestroyed(this.destroy)).subscribe();
+  }
+
+  protected showDialog() {
+    this.dialog.pipe(takeUntilDestroyed(this.destroy)).subscribe();
   }
 }

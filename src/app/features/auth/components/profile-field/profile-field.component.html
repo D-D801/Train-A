@@ -1,0 +1,20 @@
+<h3>{{ label }}</h3>
+
+<form *ngIf="isEditMode; else textBlock" [formGroup]="profileForm" class="wrapper" (ngSubmit)="save()">
+  <div class="input">
+    <tui-input formControlName="text" tuiHintContent="A tooltip">
+      <input placeholder="Field placeholder" tuiTextfieldLegacy />
+    </tui-input>
+    <tui-error formControlName="text" [error]="[] | tuiFieldError | async" />
+  </div>
+  <button tuiIconButton appearance="icon" iconStart="@tui.save" size="s" type="submit">Save</button>
+</form>
+
+<ng-template #textBlock>
+  <div class="wrapper">
+    <div class="text-block">{{ profileForm.value.text }}</div>
+    <button tuiIconButton appearance="icon" iconStart="@tui.pencil" size="s" type="button" (click)="switchEditMode()">
+      Edit heading
+    </button>
+  </div>
+</ng-template>
