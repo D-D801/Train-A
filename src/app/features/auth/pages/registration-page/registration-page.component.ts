@@ -1,14 +1,13 @@
 import { AsyncPipe, NgClass, NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TuiButton, TuiError } from '@taiga-ui/core';
 import { TuiInputModule, TuiInputPasswordModule } from '@taiga-ui/legacy';
 import { TUI_VALIDATION_ERRORS, TuiFieldErrorPipe } from '@taiga-ui/kit';
 import { AuthService } from '@features/auth/services/auth.service';
-import { errors } from '@shared/constants/built-in-errors.constant';
-import { matchPasswordsValidator } from '@features/auth/utils/password.validator';
+import { builInErrors } from '@shared/constants/built-in-errors.constant';
+import { matchPasswordsValidator } from '@features/auth/validators/password.validator';
 import { RouterLink } from '@angular/router';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'dd-registration-page',
@@ -31,61 +30,49 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   providers: [
     {
       provide: TUI_VALIDATION_ERRORS,
-      useValue: errors,
+      useValue: builInErrors,
     },
   ],
 })
-export class RegistrationPageComponent implements OnInit {
+export class RegistrationPageComponent {
   private fb: FormBuilder = inject(FormBuilder);
 
   private authService: AuthService = inject(AuthService);
 
   private readonly destroy = inject(DestroyRef);
 
-  public showErrors = false;
+  private isSubmitted = false;
 
-  public firstClickButton = false;
-
-  public disabledButton = false;
-
-  registrationForm = this.fb.group(
-    {
-      email: this.fb.control('', [Validators.required, Validators.email]),
-      password: this.fb.control('', [Validators.required, Validators.minLength(8)]),
-      confirmPassword: this.fb.control('', [Validators.required]),
-      name: this.fb.control(''),
-      lastName: this.fb.control(''),
-    },
-    { validator: matchPasswordsValidator('password', 'confirmPassword') }
-  );
-
-  ngOnInit() {
-    this.resetTouchedOnEmptyFields();
-  }
-
-  resetTouchedOnEmptyFields() {
-    this.registrationForm.statusChanges.pipe(takeUntilDestroyed(this.destroy)).subscribe(() => {
-      if (this.registrationForm.controls['email'].valid && this.registrationForm.controls['password'].valid) {
-        this.disabledButton = false;
-      } else if (this.firstClickButton) {
-        this.disabledButton = true;
-      }
-    });
-  }
+  registrationForm: FormGroup = this.fb.group({
+    email: this.fb.control(''),
+    password: this.fb.control(''),
+    confirmPassword: this.fb.control(''),
+    name: this.fb.control(''),
+    lastName: this.fb.control(''),
+  });
 
   handleSignup() {
-    this.showErrors = true;
-
-    this.firstClickButton = true;
+    this.isSubmitted = true;
+    this.registrationForm.get('email')?.setValidators([Validators.required, Validators.email]);
+    this.registrationForm.get('email')?.updateValueAndValidity();
+    this.registrationForm.get('password')?.setValidators([Validators.required, Validators.minLength(8)]);
+    this.registrationForm.get('password')?.updateValueAndValidity();
+    this.registrationForm.setValidators([matchPasswordsValidator('password', 'confirmPassword')]);
 
     this.registrationForm.markAllAsTouched();
 
     if (!this.registrationForm.valid) {
-      this.disabledButton = true;
       return;
     }
 
     const body = this.registrationForm.value;
     this.authService.signup(body);
+  }
+
+  protected checkSubmitStatus() {
+    if (this.isSubmitted) {
+      return this.registrationForm.invalid;
+    }
+    return this.registrationForm.pristine;
   }
 }
