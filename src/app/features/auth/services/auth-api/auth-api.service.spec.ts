@@ -25,18 +25,26 @@ describe('AuthApiService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should call signup endpoint and then signin endpoint', () => {
+  it('should call signup endpoint', () => {
     const userRequest: UserRequest = mockUser;
     const signupResponse: UserResponse = mockTokenResponse;
-    const signinResponse: UserResponse = mockTokenResponse;
 
     service.signup(userRequest).subscribe((response) => {
-      expect(response).toEqual(signinResponse);
+      expect(response).toEqual(signupResponse);
     });
 
     const signupRequest = httpMock.expectOne('/api/signup');
     expect(signupRequest.request.method).toBe('POST');
     signupRequest.flush(signupResponse);
+  });
+
+  it('should call signin endpoint', () => {
+    const userRequest: UserRequest = mockUser;
+    const signinResponse: UserResponse = mockTokenResponse;
+
+    service.signin(userRequest).subscribe((response) => {
+      expect(response).toEqual(signinResponse);
+    });
 
     const signinRequest = httpMock.expectOne('/api/signin');
     expect(signinRequest.request.method).toBe('POST');

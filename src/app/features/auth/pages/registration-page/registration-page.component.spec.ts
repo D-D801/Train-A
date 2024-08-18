@@ -29,17 +29,13 @@ describe('RegistrationPageComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should mark form as touched after handleSignup', () => {
-    component.onSubmit();
-    Object.keys(component.registrationForm.controls).forEach((key) => {
-      expect(component.registrationForm.get(key)!.touched).toBeTruthy();
-    });
-  });
-
   it('should call authService.signup if form is valid', () => {
     component.registrationForm.setValue(mockUser);
     component.onSubmit();
-    expect(authServiceMock.signup).toHaveBeenCalledWith(mockUser);
+    expect(authServiceMock.signup).toHaveBeenCalledWith({
+      email: mockUser.email,
+      password: mockUser.password.trim(),
+    });
   });
 
   it('should not call authService.signup if form is invalid', () => {

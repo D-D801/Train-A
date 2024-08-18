@@ -22,7 +22,7 @@ export class HeaderMenuComponent {
 
   public isAdminIn = this.authService.isAdminIn;
 
-  logout() {
+  public logout() {
     this.authService.logout();
     this.router.navigate(['/']);
   }

@@ -1,6 +1,6 @@
 import { AsyncPipe, NgClass, NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, signal } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TuiButton, TuiError } from '@taiga-ui/core';
 import { TuiInputModule, TuiInputPasswordModule } from '@taiga-ui/legacy';
 import { TUI_VALIDATION_ERRORS, TuiFieldErrorPipe } from '@taiga-ui/kit';
@@ -9,6 +9,7 @@ import { RouterLink } from '@angular/router';
 import { emailValidator } from '@features/auth/validators/email.validator';
 import { AuthService } from '@features/auth/services/auth/auth.service';
 import { buildInErrors } from '@shared/constants/build-in-errors.constant';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'dd-registration-page',
@@ -38,41 +39,44 @@ import { buildInErrors } from '@shared/constants/build-in-errors.constant';
 export class RegistrationPageComponent {
   private fb: FormBuilder = inject(FormBuilder);
 
-  private authService: AuthService = inject(AuthService);
-
   private readonly destroy = inject(DestroyRef);
 
-  private isSubmitted = false;
+  private authService: AuthService = inject(AuthService);
 
-  registrationForm: FormGroup = this.fb.group({
+  public isSubmitted = signal(false);
+
+  public registrationForm = this.fb.group({
     email: this.fb.control(''),
     password: this.fb.control(''),
     confirmPassword: this.fb.control(''),
     name: this.fb.control(''),
   });
 
-  onSubmit() {
-    const emailControl = this.registrationForm.get('email');
-    const passwordControl = this.registrationForm.get('password');
+  public constructor() {
+    effect(() => {
+      if (this.isSubmitted()) {
+        const emailControl = this.registrationForm.controls.email;
+        const passwordControl = this.registrationForm.controls.password;
+        emailControl.setValidators([Validators.required, emailValidator()]);
+        emailControl.updateValueAndValidity();
+        passwordControl.setValidators([Validators.required, passwordValidator(8)]);
+        passwordControl.updateValueAndValidity();
+        this.registrationForm.setValidators([matchPasswordsValidator('password', 'confirmPassword')]);
 
-    this.isSubmitted = true;
-    emailControl?.setValidators([Validators.required, emailValidator()]);
-    emailControl?.updateValueAndValidity();
-    passwordControl?.setValidators([Validators.required, passwordValidator(8)]);
-    passwordControl?.updateValueAndValidity();
-    this.registrationForm.setValidators([matchPasswordsValidator('password', 'confirmPassword')]);
+        this.registrationForm.markAllAsTouched();
+      }
+    });
+  }
 
-    this.registrationForm.markAllAsTouched();
+  public onSubmit() {
+    this.isSubmitted.set(true);
+    const { email, password } = this.registrationForm.value;
+    if (!(email && password)) return;
 
-    if (!this.registrationForm.valid) {
-      return;
-    }
-
-    const body = this.registrationForm.value;
-    this.authService.signup(body);
+    this.authService.signup({ email, password: password.trim() }).pipe(takeUntilDestroyed(this.destroy)).subscribe();
   }
 
   protected checkSubmitStatus() {
-    return this.isSubmitted ? this.registrationForm.invalid : this.registrationForm.pristine;
+    return this.isSubmitted() ? this.registrationForm.invalid : this.registrationForm.pristine;
   }
 }

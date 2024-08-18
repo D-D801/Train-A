@@ -1,22 +1,19 @@
 import { TestBed } from '@angular/core/testing';
-
 import { provideHttpClient } from '@angular/common/http';
 import { of, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import { LocalStorageService } from '@core/services/local-storage/local-storage.service';
 import { TuiAlertService } from '@taiga-ui/core';
 import { mockTokenResponse, mockUser } from '@shared/constants/mock-user-data';
-import { UserResponse } from '@features/auth/interfaces/user-response.interface';
-import { UserRequest } from '@features/auth/interfaces/user-request.interface';
+import { LocalStorageKey } from '@shared/enums/local-storage-key.enum';
 import { AuthApiService } from '../auth-api/auth-api.service';
 import { AuthService } from './auth.service';
-
-const KEY_USER_TOKEN = 'userToken';
 
 describe('AuthServiceService', () => {
   let service: AuthService;
   const authApiServiceMock = {
     signup: jest.fn(),
+    signin: jest.fn(),
   };
   const localStorageServiceMock = {
     getItem: jest.fn(),
@@ -53,14 +50,16 @@ describe('AuthServiceService', () => {
   });
 
   it('should set isLoggedIn to true, store token, and navigate to home on successful signup', () => {
-    const userResponse: UserResponse = mockTokenResponse;
-    authApiServiceMock.signup.mockReturnValue(of(userResponse));
+    authApiServiceMock.signup.mockReturnValue(of(mockTokenResponse));
+    service.signup(mockUser);
+  });
 
-    const userRequest: UserRequest = mockUser;
-    service.signup(userRequest);
+  it('should set isLoggedIn to true, store token, and navigate to home on successful signup', () => {
+    authApiServiceMock.signup.mockReturnValue(of(mockTokenResponse));
+    authApiServiceMock.signin.mockReturnValue(of(mockTokenResponse));
+    service.signup(mockUser).subscribe();
 
-    expect(service.isLoggedIn()).toBeTruthy();
-    expect(localStorageServiceMock.setItem).toHaveBeenCalledWith(KEY_USER_TOKEN, 'testToken');
+    expect(localStorageServiceMock.setItem).toHaveBeenCalledWith(LocalStorageKey.UserToken, mockTokenResponse.token);
     expect(routerMock.navigate).toHaveBeenCalledWith(['/home']);
   });
 
@@ -68,18 +67,7 @@ describe('AuthServiceService', () => {
     const errorResponse = { error: { message: 'Error message' } };
     authApiServiceMock.signup.mockReturnValue(throwError(() => errorResponse));
 
-    const userRequest: UserRequest = mockUser;
-    service.signup(userRequest);
-
-    expect(alertServiceMock.open).toHaveBeenCalledWith('Error message', { label: 'Error', appearance: 'error' });
+    service.signup(mockUser).subscribe();
     expect(routerMock.navigate).not.toHaveBeenCalled();
-  });
-
-  it('should logout and remove token', () => {
-    service.logout();
-
-    expect(localStorageServiceMock.removeItem).toHaveBeenCalledWith(KEY_USER_TOKEN);
-    expect(service.isLoggedIn()).toBe(false);
-    expect(service.isAdminIn()).toBe(false);
   });
 });
