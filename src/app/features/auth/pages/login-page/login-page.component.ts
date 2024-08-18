@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AsyncPipe } from '@angular/common';
 import { emailValidator, passwordValidator } from '@features/auth/validators';
@@ -32,6 +33,8 @@ export class LoginPageComponent {
 
   private fb = inject(FormBuilder);
 
+  private readonly destroy = inject(DestroyRef);
+
   private authService = inject(AuthService);
 
   form: FormGroup = this.fb.group({
@@ -47,7 +50,7 @@ export class LoginPageComponent {
     this.form.get('password')?.updateValueAndValidity();
     this.form.markAllAsTouched();
     const body = this.form.value;
-    this.authService.signin(body);
+    this.authService.signin(body).pipe(takeUntilDestroyed(this.destroy)).subscribe();
   }
 
   public checkSubmitStatus() {

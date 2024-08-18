@@ -2,7 +2,7 @@ import { inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { LocalStorageService } from '@core/services/local-storage.service';
 import { UserRequest } from '@features/auth/interfaces/auth.interface';
 import { Router } from '@angular/router';
-import { EMPTY } from 'rxjs';
+import { catchError, EMPTY, tap } from 'rxjs';
 import { TuiAlertService } from '@taiga-ui/core';
 import { KEY_USER_TOKEN } from '@shared/constants';
 import { AuthApiService } from './auth-api.service';
@@ -28,17 +28,17 @@ export class AuthService {
   }
 
   public signin(body: UserRequest) {
-    this.authApiService.signin(body).subscribe({
-      next: (response) => {
+    return this.authApiService.signin(body).pipe(
+      tap((response) => {
         this.isLoggedIn.set(true);
         this.localStorage.setItem(KEY_USER_TOKEN, response.token);
         this.router.navigate(['/home']);
-      },
-      error: (err) => {
-        this.alerts.open(err.error?.message || 'smt went wrong', { label: 'Error:', appearance: 'error' }).subscribe();
+      }),
+      catchError(({ error: { message } }) => {
+        this.alerts.open(message || 'smt went wrong', { label: 'Error:', appearance: 'error' }).subscribe();
         return EMPTY;
-      },
-    });
+      })
+    );
   }
 
   public signup(/* email: string = 'test', password: string= 'test' */) {
