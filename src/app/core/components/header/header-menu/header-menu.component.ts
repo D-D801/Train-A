@@ -1,5 +1,5 @@
 import { NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, WritableSignal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '@features/auth/services/auth.service';
 import { TuiButton } from '@taiga-ui/core';
@@ -18,9 +18,9 @@ export class HeaderMenuComponent {
 
   private router: Router = inject(Router);
 
-  public isLoggedIn: WritableSignal<boolean> = this.authService.isLoggedIn;
+  public isLoggedIn = this.authService.isLoggedIn;
 
-  public isAdminIn: WritableSignal<boolean> = this.authService.isAdminIn;
+  public isAdminIn = this.authService.isAdminIn;
 
   logout() {
     this.authService.logout();
