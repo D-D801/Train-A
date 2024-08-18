@@ -3,7 +3,8 @@ import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { mockTokenResponse, mockUser } from '@shared/constants/mock-user-data';
-import { UserRequest, UserResponse } from '@features/auth/interfaces/auth.interface';
+import { UserRequest } from '@features/auth/interfaces/user-request.interface';
+import { UserResponse } from '@features/auth/interfaces/user-response.interface';
 import { AuthApiService } from './auth-api.service';
 
 describe('AuthApiService', () => {

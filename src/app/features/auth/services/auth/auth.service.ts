@@ -7,7 +7,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { AlertService } from '@core/services/alert/alert.service';
 import { LocalStorageKey } from '@shared/enums/local-storage-key.enum';
-import { UserRequest, UserResponse } from '../../interfaces/auth.interface';
+import { UserRequest } from '@features/auth/interfaces/user-request.interface';
+import { UserResponse } from '@features/auth/interfaces/user-response.interface';
 import { AuthApiService } from '../auth-api/auth-api.service';
 
 @Injectable({

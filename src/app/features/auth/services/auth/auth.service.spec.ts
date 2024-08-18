@@ -6,7 +6,8 @@ import { Router } from '@angular/router';
 import { LocalStorageService } from '@core/services/local-storage/local-storage.service';
 import { TuiAlertService } from '@taiga-ui/core';
 import { mockTokenResponse, mockUser } from '@shared/constants/mock-user-data';
-import { UserResponse, UserRequest } from '@features/auth/interfaces/auth.interface';
+import { UserResponse } from '@features/auth/interfaces/user-response.interface';
+import { UserRequest } from '@features/auth/interfaces/user-request.interface';
 import { AuthApiService } from '../auth-api/auth-api.service';
 import { AuthService } from './auth.service';
 

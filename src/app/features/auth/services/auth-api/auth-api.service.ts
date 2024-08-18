@@ -1,7 +1,8 @@
 
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { UserRequest, UserResponse } from '@features/auth/interfaces/auth.interface';
+import { UserRequest } from '@features/auth/interfaces/user-request.interface';
+import { UserResponse } from '@features/auth/interfaces/user-response.interface';
 import { Observable, switchMap } from 'rxjs';
 
 @Injectable({
