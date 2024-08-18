@@ -1,10 +1,10 @@
 import { inject, Injectable, signal, WritableSignal } from '@angular/core';
+import { Router } from '@angular/router';
+import { AlertService } from '@core/services/alert/alert.service';
 import { LocalStorageService } from '@core/services/local-storage/local-storage.service';
 import { UserRequest } from '@features/auth/interfaces/auth.interface';
-import { Router } from '@angular/router';
+import { LocalStorageKey } from '@shared/enums/local-storage-key.enum';
 import { catchError, EMPTY, tap } from 'rxjs';
-import { TuiAlertService } from '@taiga-ui/core';
-import { KEY_USER_TOKEN } from '@shared/constants';
 import { AuthApiService } from './auth-api.service';
 
 @Injectable({
@@ -13,7 +13,7 @@ import { AuthApiService } from './auth-api.service';
 export class AuthService {
   private readonly router: Router = inject(Router);
 
-  private readonly alerts = inject(TuiAlertService);
+  private readonly alerts = inject(AlertService);
 
   private authApiService = inject(AuthApiService);
 
@@ -31,11 +31,11 @@ export class AuthService {
     return this.authApiService.signin(body).pipe(
       tap((response) => {
         this.isLoggedIn.set(true);
-        this.localStorage.setItem(KEY_USER_TOKEN, response.token);
+        this.localStorage.setItem(LocalStorageKey.UserToken, response.token);
         this.router.navigate(['/home']);
       }),
       catchError(({ error: { message } }) => {
-        this.alerts.open(message || 'smt went wrong', { label: 'Error:', appearance: 'error' }).subscribe();
+        this.alerts.open({ message: message || 'smt went wrong', label: 'Error:', appearance: 'error' });
         return EMPTY;
       })
     );
@@ -43,16 +43,16 @@ export class AuthService {
 
   public signup(/* email: string = 'test', password: string= 'test' */) {
     this.isLoggedIn.set(true);
-    this.localStorage.setItem(KEY_USER_TOKEN, 'mockToken');
+    this.localStorage.setItem(LocalStorageKey.UserToken, 'mockToken');
   }
 
   public logout() {
-    this.localStorage.removeItem(KEY_USER_TOKEN);
+    this.localStorage.removeItem(LocalStorageKey.UserToken);
     this.isLoggedIn.set(false);
     this.isAdminIn.set(false);
   }
 
   private getAuthStatus() {
-    return !!this.localStorage.getItem(KEY_USER_TOKEN);
+    return !!this.localStorage.getItem(LocalStorageKey.UserToken);
   }
 }
