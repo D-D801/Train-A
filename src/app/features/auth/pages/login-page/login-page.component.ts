@@ -3,8 +3,9 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AsyncPipe } from '@angular/common';
 import { emailValidator, passwordValidator } from '@features/auth/validators';
+import { builtInErrors } from '@shared/constants/build-in-errors.constant';
 import { TuiButton, TuiError } from '@taiga-ui/core';
-import { TuiFieldErrorPipe } from '@taiga-ui/kit';
+import { TUI_VALIDATION_ERRORS, TuiFieldErrorPipe } from '@taiga-ui/kit';
 import { TuiInputModule, TuiInputPasswordModule } from '@taiga-ui/legacy';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '@features/auth/services/auth.service';
@@ -23,6 +24,12 @@ import { TuiValidator } from '@taiga-ui/cdk';
     TuiInputModule,
     RouterLink,
     TuiValidator,
+  ],
+  providers: [
+    {
+      provide: TUI_VALIDATION_ERRORS,
+      useValue: builtInErrors,
+    },
   ],
   templateUrl: './login-page.component.html',
   styleUrl: './login-page.component.scss',
@@ -49,10 +56,10 @@ export class LoginPageComponent {
     this.isSubmitted = true;
     emailControl?.setValidators([Validators.required, emailValidator()]);
     emailControl?.updateValueAndValidity();
-    passwordControl?.setValidators([Validators.required, passwordValidator()]);
+    passwordControl?.setValidators([Validators.required, passwordValidator(8)]);
     passwordControl?.updateValueAndValidity();
     this.form.markAllAsTouched();
-    const body = this.form.value;
+    const body = { email: emailControl?.value, password: passwordControl?.value.trim() };
     this.authService.signin(body).pipe(takeUntilDestroyed(this.destroy)).subscribe();
   }
 
