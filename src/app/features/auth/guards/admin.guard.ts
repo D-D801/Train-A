@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { CanMatchFn, Router } from '@angular/router';
 import { TuiAlertService } from '@taiga-ui/core';
-import { AuthService } from '../services/auth.service';
+import { AuthService } from '../services/auth/auth.service';
 
 export const adminGuard: CanMatchFn = () => {
   const authService: AuthService = inject(AuthService);

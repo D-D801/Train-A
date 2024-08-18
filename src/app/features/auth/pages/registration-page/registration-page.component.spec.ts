@@ -3,8 +3,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 import { of } from 'rxjs';
-import { AuthService } from '@features/auth/services/auth.service';
 import { mockUser } from '@shared/constants/mock-user-data';
+import { AuthService } from '@features/auth/services/auth/auth.service';
 import { RegistrationPageComponent } from './registration-page.component';
 
 describe('RegistrationPageComponent', () => {
@@ -29,14 +29,15 @@ describe('RegistrationPageComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should mark form as submitted and touched on signup', () => {
+  it('should mark form as touched after handleSignup', () => {
     component.handleSignup();
-    expect(component.registrationForm.touched).toBeTruthy();
+    Object.keys(component.registrationForm.controls).forEach((key) => {
+      expect(component.registrationForm.get(key)!.touched).toBeTruthy();
+    });
   });
 
   it('should call authService.signup if form is valid', () => {
     component.registrationForm.setValue(mockUser);
-
     component.handleSignup();
     expect(authServiceMock.signup).toHaveBeenCalledWith(mockUser);
   });
