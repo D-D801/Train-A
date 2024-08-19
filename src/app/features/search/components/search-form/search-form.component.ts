@@ -6,9 +6,10 @@ import { TuiButton, TuiDataList, TuiInitialsPipe, TuiTextfield } from '@taiga-ui
 import { TuiDay, TuiLet, TuiTime } from '@taiga-ui/cdk';
 import { TuiDataListWrapper } from '@taiga-ui/kit';
 import { TuiInputDateTimeModule, TuiInputModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
-import { SearchService } from '@features/search/services/search.service';
-import { merge, Subscription } from 'rxjs';
-import { LocationApiService } from '@features/search/services/location-api.service';
+import { SearchService } from '@features/search/services/search/search.service';
+import { debounceTime, merge, Subscription } from 'rxjs';
+import { LocationApiService } from '@features/search/services/location-api/location-api.service';
+import { CityInfo } from '@features/search/interfaces/city-info';
 
 @Component({
   selector: 'dd-search-form',
@@ -54,42 +55,59 @@ export class SearchFormComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.subscription.add(
       merge(
-        this.searchForm.controls.from.valueChanges.pipe(),
-        this.searchForm.controls.to.valueChanges.pipe()
+        this.searchForm.controls.from.valueChanges.pipe(debounceTime(1000)),
+        this.searchForm.controls.to.valueChanges.pipe(debounceTime(1000))
       ).subscribe(() => {
-        if (!(this.from.value && this.to.value)) return;
-        this.locationService.getLocationCoordinates(this.from.value).subscribe((value) => {
-          this.fromInputValue = { lat: value[0].lat, lon: value[0].lon };
-        });
-        this.locationService.getLocationCoordinates(this.to.value).subscribe((value) => {
-          this.toInputValue = { lat: value[0].lat, lon: value[0].lon };
-        });
+        if (!this.from.value) return;
+        this.updateCities(this.from.value, 'from');
+        if (!this.to.value) return;
+        this.updateCities(this.to.value, 'to');
       })
     );
+  }
+
+  updateCities(city: string, inputName: string) {
+    this.locationService.getLocationCoordinates(city).subscribe((value) => {
+      if (inputName === 'from') {
+        this.fromInputValue = { lat: value[0].lat, lon: value[0].lon };
+      } else {
+        this.toInputValue = { lat: value[0].lat, lon: value[0].lon };
+      }
+      this.searchService.setCities(value);
+    });
   }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
 
+  onSelected(city: CityInfo, inputName: string) {
+    if (inputName === 'from') {
+      this.from.setValue(city.name);
+    }
+    if (inputName === 'to') {
+      this.to.setValue(city.name);
+    }
+  }
+
   search() {
-    console.error(
-      this.date.value?.[0]?.day,
-      this.date.value?.[0]?.month,
-      this.date.value?.[0]?.year,
-      this.date.value?.[1]?.hours,
-      this.date.value?.[1]?.minutes
-    );
-    const res = this.searchService
+    if (this.searchForm.invalid) return;
+    let date = 0;
+    if (this.date.value) {
+      const { day, month, year } = this.date.value[0];
+      const { hours, minutes } = this.date.value[1];
+      date = new Date(day, month, year, hours, minutes).valueOf();
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const searchServiceResponse = this.searchService
       .search({
         fromLatitude: this.fromInputValue.lat,
         fromLongitude: this.fromInputValue.lon,
         toLatitude: this.toInputValue.lat,
         toLongitude: this.toInputValue.lon,
-        time: 0,
+        time: date,
       })
       .subscribe();
-    console.error(res);
   }
 
   get from() {
