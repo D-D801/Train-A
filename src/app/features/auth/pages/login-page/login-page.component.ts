@@ -63,14 +63,14 @@ export class LoginPageComponent {
     password: [''],
   });
 
-  public onSubmit() {
+  protected onSubmit() {
     this.isSubmitted.set(true);
     const { email, password } = this.form.value;
     if (!(email && password)) return;
     this.authService.signin({ email, password: password.trim() }).pipe(takeUntilDestroyed(this.destroy)).subscribe();
   }
 
-  public checkSubmitStatus() {
+  protected checkSubmitStatus() {
     return this.isSubmitted() ? this.form.invalid : this.form.pristine;
   }
 }

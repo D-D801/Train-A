@@ -68,7 +68,7 @@ export class RegistrationPageComponent {
     });
   }
 
-  public onSubmit() {
+  protected onSubmit() {
     this.isSubmitted.set(true);
     const { email, password } = this.registrationForm.value;
     if (!(email && password)) return;
