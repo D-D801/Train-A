@@ -38,10 +38,10 @@ export class ChangePasswordDialogComponent {
   private readonly fb = inject(FormBuilder);
 
   protected changePasswordForm = this.fb.group({
-    newPassword: ['', [Validators.required, passwordValidator()]],
+    newPassword: ['', [Validators.required, passwordValidator(8)]],
   });
 
-  submit() {
+  protected submit() {
     const { newPassword } = this.changePasswordForm.value;
 
     if (this.changePasswordForm.valid && newPassword) {

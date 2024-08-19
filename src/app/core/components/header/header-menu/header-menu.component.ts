@@ -1,5 +1,6 @@
 import { NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, WritableSignal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '@features/auth/services/auth/auth.service';
 import { TuiButton } from '@taiga-ui/core';
