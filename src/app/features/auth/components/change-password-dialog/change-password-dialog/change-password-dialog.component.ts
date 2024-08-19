@@ -1,17 +1,29 @@
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ProfileService } from '@features/auth/services/profile/profile.service';
 import { passwordValidator } from '@features/auth/validators';
 import { TuiAutoFocus } from '@taiga-ui/cdk';
-import { TuiButton, TuiDialog, TuiDialogContext, TuiHint } from '@taiga-ui/core';
+import { TuiButton, TuiDialog, TuiDialogContext, TuiError, TuiHint } from '@taiga-ui/core';
+import { TuiFieldErrorPipe } from '@taiga-ui/kit';
 import { TuiInputModule } from '@taiga-ui/legacy';
 import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
 
 @Component({
   selector: 'dd-change-password-dialog',
   standalone: true,
-  imports: [TuiButton, TuiHint, TuiDialog, ReactiveFormsModule, TuiInputModule, TuiAutoFocus],
+  imports: [
+    TuiButton,
+    TuiHint,
+    TuiDialog,
+    ReactiveFormsModule,
+    TuiInputModule,
+    TuiAutoFocus,
+    TuiFieldErrorPipe,
+    AsyncPipe,
+    TuiError,
+  ],
   templateUrl: './change-password-dialog.component.html',
   styleUrl: './change-password-dialog.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
