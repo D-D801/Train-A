@@ -5,6 +5,11 @@ export const mockUser = {
   name: 'John',
 };
 
+export const mockLoginUser = {
+  email: 'test@example.com',
+  password: 'Password123!',
+};
+
 export const mockTokenResponse = {
   token: 'testToken',
 };

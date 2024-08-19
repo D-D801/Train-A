@@ -5,22 +5,37 @@ import { provideRouter } from '@angular/router';
 import { of } from 'rxjs';
 import { mockUser } from '@shared/constants/mock-user-data';
 import { AuthService } from '@features/auth/services/auth/auth.service';
+import { Component } from '@angular/core';
 import { RegistrationPageComponent } from './registration-page.component';
 
+@Component({
+  selector: 'dd-mock-registration-page',
+  standalone: true,
+})
+class MockRegistrationPageComponent extends RegistrationPageComponent {
+  public override onSubmit(): void {
+    super.onSubmit();
+  }
+
+  public override checkSubmitStatus(): boolean {
+    return super.checkSubmitStatus();
+  }
+}
+
 describe('RegistrationPageComponent', () => {
-  let component: RegistrationPageComponent;
-  let fixture: ComponentFixture<RegistrationPageComponent>;
+  let component: MockRegistrationPageComponent;
+  let fixture: ComponentFixture<MockRegistrationPageComponent>;
   const authServiceMock = {
     signup: jest.fn(() => of({})),
   };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RegistrationPageComponent],
+      imports: [MockRegistrationPageComponent],
       providers: [provideRouter([]), provideHttpClient(), { provide: AuthService, useValue: authServiceMock }],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(RegistrationPageComponent);
+    fixture = TestBed.createComponent(MockRegistrationPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -48,5 +63,9 @@ describe('RegistrationPageComponent', () => {
 
     component.onSubmit();
     expect(authServiceMock.signup).not.toHaveBeenCalled();
+  });
+
+  it('should disable submit button when form is pristine', () => {
+    expect(component.checkSubmitStatus()).toBe(true);
   });
 });
