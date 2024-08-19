@@ -14,10 +14,10 @@ import { TuiAutoFocus, tuiMarkControlAsTouchedAndValidate } from '@taiga-ui/cdk'
 import { TuiButton, TuiError } from '@taiga-ui/core';
 import { TUI_VALIDATION_ERRORS, TuiFieldErrorPipe, TuiInputInline } from '@taiga-ui/kit';
 import { TuiInputModule } from '@taiga-ui/legacy';
-import { builtInErrors } from '@shared/constants/build-in-errors.constant';
 import { ProfileService } from '@features/auth/services/profile/profile.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { emailValidator } from '@features/auth/validators';
+import { buildInErrors } from '@shared/constants/build-in-errors.constant';
 
 @Component({
   selector: 'dd-profile-field',
@@ -39,14 +39,14 @@ import { emailValidator } from '@features/auth/validators';
   providers: [
     {
       provide: TUI_VALIDATION_ERRORS,
-      useValue: builtInErrors,
+      useValue: buildInErrors,
     },
   ],
 })
 export class ProfileFieldComponent implements OnChanges {
-  @Input({ required: true }) label!: 'name' | 'email';
+  @Input({ required: true }) public label!: 'name' | 'email';
 
-  @Input({ required: true }) text!: string | null;
+  @Input({ required: true }) public text!: string | null;
 
   private readonly fb = inject(FormBuilder);
 
@@ -60,7 +60,7 @@ export class ProfileFieldComponent implements OnChanges {
     text: ['', [Validators.required]],
   });
 
-  ngOnChanges(changes: SimpleChanges): void {
+  public ngOnChanges(changes: SimpleChanges): void {
     if (changes['text'] && changes['text'].currentValue !== changes['text'].previousValue) {
       this.profileForm.patchValue({ text: this.text });
     }
