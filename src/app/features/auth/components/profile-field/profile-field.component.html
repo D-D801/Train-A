@@ -1,9 +1,9 @@
 <h3>{{ label }}</h3>
 
-<form *ngIf="isEditMode; else textBlock" [formGroup]="profileForm" class="wrapper" (ngSubmit)="save()">
+<form *ngIf="isEditMode(); else textBlock" [formGroup]="profileForm" class="wrapper" (ngSubmit)="save()">
   <div class="input">
     <tui-input formControlName="text" tuiHintContent="A tooltip">
-      <input placeholder="Field placeholder" tuiTextfieldLegacy />
+      <input placeholder="Your new password" tuiTextfieldLegacy />
     </tui-input>
     <tui-error formControlName="text" [error]="[] | tuiFieldError | async" />
   </div>

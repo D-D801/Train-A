@@ -1,11 +1,20 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, Input, OnChanges, SimpleChanges } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  inject,
+  Input,
+  OnChanges,
+  signal,
+  SimpleChanges,
+} from '@angular/core';
 import { AsyncPipe, NgIf } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TuiAutoFocus, tuiMarkControlAsTouchedAndValidate } from '@taiga-ui/cdk';
 import { TuiButton, TuiError } from '@taiga-ui/core';
 import { TUI_VALIDATION_ERRORS, TuiFieldErrorPipe, TuiInputInline } from '@taiga-ui/kit';
 import { TuiInputModule } from '@taiga-ui/legacy';
-import { builtInErrors } from '@shared/constants/build-in-errors.constants';
+import { builtInErrors } from '@shared/constants/build-in-errors.constant';
 import { ProfileService } from '@features/auth/services/profile/profile.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { emailValidator } from '@features/auth/validators';
@@ -45,7 +54,7 @@ export class ProfileFieldComponent implements OnChanges {
 
   private readonly destroy = inject(DestroyRef);
 
-  protected isEditMode = false;
+  protected isEditMode = signal(false);
 
   public profileForm = this.fb.group({
     text: ['', [Validators.required]],
@@ -61,7 +70,7 @@ export class ProfileFieldComponent implements OnChanges {
   }
 
   protected switchEditMode() {
-    this.isEditMode = true;
+    this.isEditMode.set(true);
   }
 
   protected save() {
@@ -69,8 +78,12 @@ export class ProfileFieldComponent implements OnChanges {
     const { text } = this.profileForm.value;
 
     if (this.profileForm.valid && text) {
-      this.profileService.updateUserInformation(this.label, text).pipe(takeUntilDestroyed(this.destroy)).subscribe();
-      this.isEditMode = false;
+      this.profileService
+        .updateUserInformation(this.label, text)
+        .pipe(takeUntilDestroyed(this.destroy))
+        .subscribe(() => {
+          this.isEditMode.set(false);
+        });
     }
   }
 }
