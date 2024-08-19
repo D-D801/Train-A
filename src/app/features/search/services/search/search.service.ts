@@ -1,12 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
-import { SearchRouteParams } from '../interfaces/search-route-params';
+import { CityInfo } from '@features/search/interfaces/city-info';
+import { SearchRouteParams } from '../../interfaces/search-route-params';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SearchService {
-  private _cities = signal([{ name: 'Nuew-Yotk' }, { name: 'Taganrog' }]);
+  private _cities = signal<CityInfo[]>([]);
 
   public cities = this._cities.asReadonly();
 
@@ -25,5 +26,9 @@ export class SearchService {
 
   getStations() {
     return this.httpClient.get('/api/station');
+  }
+
+  setCities(receivedCities: CityInfo[]) {
+    this._cities.set(receivedCities);
   }
 }
