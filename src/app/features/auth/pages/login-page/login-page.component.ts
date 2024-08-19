@@ -36,7 +36,9 @@ import { AuthService } from '@features/auth/services/auth/auth.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginPageComponent {
-  public isSubmitted = signal(false);
+  private _isSubmitted = signal(false);
+
+  public isSubmitted = this._isSubmitted.asReadonly();
 
   private fb = inject(FormBuilder);
 
@@ -64,7 +66,7 @@ export class LoginPageComponent {
   });
 
   protected onSubmit() {
-    this.isSubmitted.set(true);
+    this._isSubmitted.set(true);
     const { email, password } = this.form.value;
     if (!(email && password)) return;
     this.authService.signin({ email, password: password.trim() }).pipe(takeUntilDestroyed(this.destroy)).subscribe();
