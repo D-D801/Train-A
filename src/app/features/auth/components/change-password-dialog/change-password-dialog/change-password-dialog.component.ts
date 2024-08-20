@@ -2,7 +2,8 @@ import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ProfileService } from '@features/auth/services/profile/profile.service';
+import { AlertService } from '@core/services/alert/alert.service';
+import { ProfileApiService } from '@features/auth/services/profile-api/profile-api.service';
 import { passwordValidator } from '@features/auth/validators';
 import { buildInErrors } from '@shared/constants/build-in-errors';
 import { PASSWORD_MAX_LENGTH } from '@shared/constants/password-max-length';
@@ -39,9 +40,11 @@ import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
 export class ChangePasswordDialogComponent {
   private readonly context = inject<TuiDialogContext>(POLYMORPHEUS_CONTEXT);
 
-  private readonly profileService = inject(ProfileService);
+  private readonly profileApiService = inject(ProfileApiService);
 
   private readonly destroy = inject(DestroyRef);
+
+  private readonly alert = inject(AlertService);
 
   private readonly fb = inject(FormBuilder);
 
@@ -53,10 +56,18 @@ export class ChangePasswordDialogComponent {
     const { newPassword } = this.changePasswordForm.value;
 
     if (this.changePasswordForm.valid && newPassword) {
-      this.profileService
+      this.profileApiService
         .updatePassword(newPassword)
         .pipe(takeUntilDestroyed(this.destroy))
-        .subscribe(() => this.context.completeWith());
+        .subscribe({
+          next: () => {
+            this.context.completeWith();
+            this.alert.open({ message: 'Change password' });
+          },
+          error: ({ error: { message } }) => {
+            this.alert.open({ message, label: 'Error', appearance: 'error' });
+          },
+        });
     }
   }
 }
