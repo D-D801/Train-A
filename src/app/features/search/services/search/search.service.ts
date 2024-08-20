@@ -1,6 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { CityInfo } from '@features/search/interfaces/city-info';
+import { catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 import { SearchRouteParams } from '../../interfaces/search-route-params';
 
 @Injectable({
@@ -21,11 +23,7 @@ export class SearchService {
       toLongitude,
       time,
     };
-    return this.httpClient.get('/api/search', { params });
-  }
-
-  getStations() {
-    return this.httpClient.get('/api/station');
+    return this.httpClient.get('/api/search', { params }).pipe(catchError((error) => of(error)));
   }
 
   setCities(receivedCities: CityInfo[]) {
