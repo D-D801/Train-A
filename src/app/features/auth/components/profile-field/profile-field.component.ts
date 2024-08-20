@@ -51,16 +51,16 @@ export class ProfileFieldComponent {
   protected isEditMode = signal(false);
 
   public profileForm = this.fb.group({
-    text: this.fb.control('', [Validators.required]),
+    profileFieldValue: this.fb.control('', [Validators.required]),
   });
 
   public constructor() {
     effect(() => {
       if (this.profileFieldValue()) {
-        this.profileForm.patchValue({ text: this.profileFieldValue() ?? '' });
+        this.profileForm.patchValue({ profileFieldValue: this.profileFieldValue() ?? '' });
       }
       if (this.label() === 'email') {
-        this.profileForm.get('text')?.setValidators([Validators.required, emailValidator()]);
+        this.profileForm.controls.profileFieldValue.setValidators([Validators.required, emailValidator()]);
       }
     });
   }
@@ -71,15 +71,15 @@ export class ProfileFieldComponent {
 
   protected saveProfileField() {
     tuiMarkControlAsTouchedAndValidate(this.profileForm);
-    const { text } = this.profileForm.value;
+    const { profileFieldValue } = this.profileForm.value;
 
-    if (this.profileForm.valid && text) {
+    if (this.profileForm.valid && profileFieldValue) {
       this.profileApiService
-        .updateUserInformation({ [this.label()]: text })
+        .updateUserInformation({ [this.label()]: profileFieldValue })
         .pipe(takeUntilDestroyed(this.destroy))
         .subscribe({
           next: () => {
-            this.alert.open({ message: text, label: `Change ${this.label()}` });
+            this.alert.open({ message: profileFieldValue, label: `Change ${this.label()}` });
             this.isEditMode.set(false);
           },
           error: ({ error: { message } }) => {
