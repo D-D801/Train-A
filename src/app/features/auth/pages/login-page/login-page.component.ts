@@ -37,15 +37,15 @@ import { PASSWORD_MAX_LENGTH } from '@shared/constants/password-max-length';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginPageComponent {
-  private _isSubmitted = signal(false);
+  private readonly _isSubmitted = signal(false);
 
   public isSubmitted = this._isSubmitted.asReadonly();
 
-  private fb = inject(FormBuilder);
+  private readonly fb = inject(FormBuilder);
 
   private readonly destroy = inject(DestroyRef);
 
-  private authService = inject(AuthService);
+  private readonly authService = inject(AuthService);
 
   public constructor() {
     effect(() => {
