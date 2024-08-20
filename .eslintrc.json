@@ -25,6 +25,7 @@
         "prettier"
       ],
       "rules": {
+        "@typescript-eslint/prefer-readonly": "error",
         "no-underscore-dangle": "off",
         "no-console": [
           "error",

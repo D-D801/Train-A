@@ -10,7 +10,7 @@ describe('ProfileFieldComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ProfileFieldComponent],
-      providers: [provideHttpClient()],
+      providers: [provideHttpClient],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ProfileFieldComponent);

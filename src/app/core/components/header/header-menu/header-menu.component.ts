@@ -15,9 +15,9 @@ import { TuiNavigation } from '@taiga-ui/layout';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderMenuComponent {
-  private authService = inject(AuthService);
+  private readonly authService = inject(AuthService);
 
-  private destroy = inject(DestroyRef);
+  private readonly destroy = inject(DestroyRef);
 
   public isLoggedIn = this.authService.isLoggedIn;
 
