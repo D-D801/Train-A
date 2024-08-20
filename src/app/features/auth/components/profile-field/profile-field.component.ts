@@ -38,7 +38,7 @@ import { ProfileApiService } from '@features/auth/services/profile-api/profile-a
 export class ProfileFieldComponent {
   public label = input.required<'name' | 'email'>();
 
-  public text = input<string | null>();
+  public profileFieldValue = input<string | null>();
 
   private readonly profileApiService = inject(ProfileApiService);
 
@@ -56,8 +56,8 @@ export class ProfileFieldComponent {
 
   public constructor() {
     effect(() => {
-      if (this.text()) {
-        this.profileForm.patchValue({ text: this.text() ?? '' });
+      if (this.profileFieldValue()) {
+        this.profileForm.patchValue({ text: this.profileFieldValue() ?? '' });
       }
       if (this.label() === 'email') {
         this.profileForm.get('text')?.setValidators([Validators.required, emailValidator()]);
@@ -65,11 +65,11 @@ export class ProfileFieldComponent {
     });
   }
 
-  protected switchEditMode() {
+  protected enableEditMode() {
     this.isEditMode.set(true);
   }
 
-  protected save() {
+  protected saveProfileField() {
     tuiMarkControlAsTouchedAndValidate(this.profileForm);
     const { text } = this.profileForm.value;
 
