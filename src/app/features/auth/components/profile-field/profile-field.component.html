@@ -1,6 +1,6 @@
 <h3>{{ label() }}</h3>
 
-<form *ngIf="isEditMode(); else textBlock" [formGroup]="profileForm" class="wrapper" (ngSubmit)="save()">
+<form *ngIf="isEditMode(); else textBlock" [formGroup]="profileForm" class="wrapper" (ngSubmit)="saveProfileField()">
   <div class="input">
     <tui-input formControlName="text" tuiHintContent="A tooltip">
       <input placeholder="Your new password" tuiTextfieldLegacy />
@@ -15,7 +15,7 @@
 <ng-template #textBlock>
   <div class="wrapper">
     <div class="text-block">{{ value }}</div>
-    <button tuiIconButton appearance="icon" iconStart="@tui.pencil" size="s" type="button" (click)="switchEditMode()">
+    <button tuiIconButton appearance="icon" iconStart="@tui.pencil" size="s" type="button" (click)="enableEditMode()">
       Edit heading
     </button>
   </div>
