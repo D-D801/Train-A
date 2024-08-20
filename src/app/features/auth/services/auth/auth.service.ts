@@ -47,15 +47,9 @@ export class AuthService {
 
   public logout() {
     return this.authApiService.logout().pipe(
-      catchError(({ error: { message } }) => {
-        this.alerts.open({ message, label: 'Error', appearance: 'error' });
-        return EMPTY;
-      }),
       tap(() => {
-        this.localStorage.removeItem(LocalStorageKey.UserToken);
         this._isLoggedIn.set(false);
         this._isAdminIn.set(false);
-        this.router.navigate(['/home']);
       })
     );
   }

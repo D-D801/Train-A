@@ -5,10 +5,11 @@ import { TuiAutoFocus, tuiMarkControlAsTouchedAndValidate } from '@taiga-ui/cdk'
 import { TuiButton, TuiError } from '@taiga-ui/core';
 import { TUI_VALIDATION_ERRORS, TuiFieldErrorPipe, TuiInputInline } from '@taiga-ui/kit';
 import { TuiInputModule } from '@taiga-ui/legacy';
-import { ProfileService } from '@features/auth/services/profile/profile.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { buildInErrors } from '@shared/constants/build-in-errors';
 import { emailValidator } from '@features/auth/validators';
+import { AlertService } from '@core/services/alert/alert.service';
+import { ProfileApiService } from '@features/auth/services/profile-api/profile-api.service';
 
 @Component({
   selector: 'dd-profile-field',
@@ -39,11 +40,13 @@ export class ProfileFieldComponent {
 
   public text = input<string | null>();
 
-  private readonly fb = inject(FormBuilder);
-
-  private readonly profileService = inject(ProfileService);
+  private readonly profileApiService = inject(ProfileApiService);
 
   private readonly destroy = inject(DestroyRef);
+
+  private readonly alert = inject(AlertService);
+
+  private readonly fb = inject(FormBuilder);
 
   protected isEditMode = signal(false);
 
@@ -71,11 +74,17 @@ export class ProfileFieldComponent {
     const { text } = this.profileForm.value;
 
     if (this.profileForm.valid && text) {
-      this.profileService
-        .updateUserInformation(this.label(), text)
+      this.profileApiService
+        .updateUserInformation({ [this.label()]: text })
         .pipe(takeUntilDestroyed(this.destroy))
-        .subscribe(() => {
-          this.isEditMode.set(false);
+        .subscribe({
+          next: () => {
+            this.alert.open({ message: text, label: `Change ${this.label()}` });
+            this.isEditMode.set(false);
+          },
+          error: ({ error: { message } }) => {
+            this.alert.open({ message, label: 'Error', appearance: 'error' });
+          },
         });
     }
   }

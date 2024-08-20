@@ -17,7 +17,7 @@ export class ProfileApiService {
     return this.httpClient.put<UserInformation>('/api/profile', body);
   }
 
-  public updatePassword(body: { password: string }) {
-    return this.httpClient.put('/api/profile/password', body);
+  public updatePassword(newPassword: string) {
+    return this.httpClient.put('/api/profile/password', { password: newPassword });
   }
 }
