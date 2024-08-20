@@ -9,15 +9,15 @@ import { UserRequest } from '@features/auth/interfaces/user-request.interface';
 export class ProfileApiService {
   private readonly httpClient: HttpClient = inject(HttpClient);
 
-  getUserInformation() {
+  public getUserInformation() {
     return this.httpClient.get<UserInformation>('/api/profile');
   }
 
-  updateUserInformation(body: Partial<UserRequest>) {
+  public updateUserInformation(body: Partial<UserRequest>) {
     return this.httpClient.put<UserInformation>('/api/profile', body);
   }
 
-  updatePassword(body: { password: string }) {
-    return this.httpClient.put('/api/profile', body);
+  public updatePassword(body: { password: string }) {
+    return this.httpClient.put('/api/profile/password', body);
   }
 }

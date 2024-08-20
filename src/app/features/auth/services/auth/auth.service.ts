@@ -15,15 +15,15 @@ export class AuthService {
 
   private readonly alerts = inject(AlertService);
 
-  private authApiService = inject(AuthApiService);
+  private readonly authApiService = inject(AuthApiService);
 
-  private localStorage = inject(LocalStorageService);
+  private readonly localStorage = inject(LocalStorageService);
 
-  private _isLoggedIn = signal(this.getAuthStatus());
+  private readonly _isLoggedIn = signal(this.getAuthStatus());
 
   public isLoggedIn = this._isLoggedIn.asReadonly();
 
-  private _isAdminIn = signal(false);
+  private readonly _isAdminIn = signal(false);
 
   public isAdminIn = this._isAdminIn.asReadonly();
 

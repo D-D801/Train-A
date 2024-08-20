@@ -9,7 +9,7 @@ import { PASSWORD_MAX_LENGTH } from '@shared/constants/password-max-length';
 import { TuiAutoFocus } from '@taiga-ui/cdk';
 import { TuiButton, TuiDialog, TuiDialogContext, TuiError, TuiHint } from '@taiga-ui/core';
 import { TUI_VALIDATION_ERRORS, TuiFieldErrorPipe } from '@taiga-ui/kit';
-import { TuiInputModule } from '@taiga-ui/legacy';
+import { TuiInputPasswordModule } from '@taiga-ui/legacy';
 import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
 
 @Component({
@@ -20,11 +20,11 @@ import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
     TuiHint,
     TuiDialog,
     ReactiveFormsModule,
-    TuiInputModule,
     TuiAutoFocus,
     TuiFieldErrorPipe,
     AsyncPipe,
     TuiError,
+    TuiInputPasswordModule,
   ],
   templateUrl: './change-password-dialog.component.html',
   styleUrl: './change-password-dialog.component.scss',

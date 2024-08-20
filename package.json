@@ -12,8 +12,8 @@
     "test:watch": "jest --watch",
     "stylelint": "stylelint './src/**/*.{css,scss}'",
     "stylelint:fix": "stylelint './src/**/*.{css,scss}' --fix",
-    "lint": "eslint ./src/**/*.{ts,html}",
-    "lint:fix": "eslint ./src/**/*.{ts,html} --fix",
+    "lint": "eslint \"./src/**/*.{ts,html}\" ",
+    "lint:fix": "eslint \"./src/**/*.{ts,html}\" --fix",
     "format": "prettier --write ./src",
     "format:check": "prettier --check ./src",
     "prepare": "husky install"

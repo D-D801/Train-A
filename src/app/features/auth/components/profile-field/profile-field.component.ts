@@ -62,15 +62,6 @@ export class ProfileFieldComponent {
     });
   }
 
-  // public ngOnChanges(changes: SimpleChanges): void {
-  //   if (changes['text'] && changes['text'].currentValue !== changes['text'].previousValue) {
-  //     this.profileForm.patchValue({ text: this.text });
-  //   }
-  //   if (changes['label'] && changes['label'].currentValue === 'email') {
-  //     this.profileForm.get('text')?.setValidators([Validators.required, emailValidator()]);
-  //   }
-  // }
-
   protected switchEditMode() {
     this.isEditMode.set(true);
   }
