@@ -8,8 +8,9 @@ import { matchPasswordsValidator, passwordValidator } from '@features/auth/valid
 import { RouterLink } from '@angular/router';
 import { emailValidator } from '@features/auth/validators/email.validator';
 import { AuthService } from '@features/auth/services/auth/auth.service';
-import { buildInErrors } from '@shared/constants/build-in-errors.constant';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { buildInErrors } from '@shared/constants/build-in-errors';
+import { PASSWORD_MAX_LENGTH } from '@shared/constants/password-max-length';
 
 @Component({
   selector: 'dd-registration-page',
@@ -37,13 +38,13 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   ],
 })
 export class RegistrationPageComponent {
-  private fb: FormBuilder = inject(FormBuilder);
+  private readonly fb = inject(FormBuilder);
 
   private readonly destroy = inject(DestroyRef);
 
-  private authService: AuthService = inject(AuthService);
+  private readonly authService = inject(AuthService);
 
-  public isSubmitted = signal(false);
+  protected isSubmitted = signal(false);
 
   public registrationForm = this.fb.group({
     email: this.fb.control(''),
@@ -59,7 +60,7 @@ export class RegistrationPageComponent {
         const passwordControl = this.registrationForm.controls.password;
         emailControl.setValidators([Validators.required, emailValidator()]);
         emailControl.updateValueAndValidity();
-        passwordControl.setValidators([Validators.required, passwordValidator(8)]);
+        passwordControl.setValidators([Validators.required, passwordValidator(PASSWORD_MAX_LENGTH)]);
         passwordControl.updateValueAndValidity();
         this.registrationForm.setValidators([matchPasswordsValidator('password', 'confirmPassword')]);
 

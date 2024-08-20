@@ -3,13 +3,14 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AsyncPipe } from '@angular/common';
 import { emailValidator, passwordValidator } from '@features/auth/validators';
-import { buildInErrors } from '@shared/constants/build-in-errors.constant';
 import { TuiButton, TuiError } from '@taiga-ui/core';
 import { TUI_VALIDATION_ERRORS, TuiFieldErrorPipe } from '@taiga-ui/kit';
 import { TuiInputModule, TuiInputPasswordModule } from '@taiga-ui/legacy';
 import { RouterLink } from '@angular/router';
 import { TuiValidator } from '@taiga-ui/cdk';
 import { AuthService } from '@features/auth/services/auth/auth.service';
+import { buildInErrors } from '@shared/constants/build-in-errors';
+import { PASSWORD_MAX_LENGTH } from '@shared/constants/password-max-length';
 
 @Component({
   selector: 'dd-login-page',
@@ -53,7 +54,7 @@ export class LoginPageComponent {
         const passwordControl = this.form.controls.password;
         emailControl?.setValidators([Validators.required, emailValidator()]);
         emailControl?.updateValueAndValidity();
-        passwordControl?.setValidators([Validators.required, passwordValidator(8)]);
+        passwordControl?.setValidators([Validators.required, passwordValidator(PASSWORD_MAX_LENGTH)]);
         passwordControl?.updateValueAndValidity();
         this.form.markAllAsTouched();
       }

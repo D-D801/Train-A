@@ -6,7 +6,7 @@ import { LocalStorageKey } from '@shared/enums/local-storage-key.enum';
   providedIn: 'root',
 })
 export class LocalStorageService {
-  private constructor(@Inject(LOCAL_STORAGE) private localStorage: Storage) {}
+  private constructor(@Inject(LOCAL_STORAGE) private readonly localStorage: Storage) {}
 
   public setItem(key: LocalStorageKey, value: string) {
     this.localStorage.setItem(key, value);

@@ -1,13 +1,6 @@
 <form [formGroup]="registrationForm" class="form">
   <h3 class="tui-form__header">Registration</h3>
   <div class="tui-form__row">
-    <tui-input formControlName="name" tuiTextfieldSize="m">
-      Name
-      <input tuiTextfieldLegacy />
-    </tui-input>
-    <tui-error formControlName="name" [error]="[] | tuiFieldError | async" />
-  </div>
-  <div class="tui-form__row">
     <tui-input formControlName="email" tuiTextfieldSize="m">
       Email
       <input tuiTextfieldLegacy type="email" />

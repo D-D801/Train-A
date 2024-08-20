@@ -6,8 +6,11 @@ import { AuthService } from '@features/auth/services/auth/auth.service';
 import { ProfileService } from '@features/auth/services/profile/profile.service';
 import { AsyncPipe, NgIf } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { TuiInputModule } from '@taiga-ui/legacy';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ProfileFieldComponent } from '../../components/profile-field/profile-field.component';
 import { ChangePasswordDialogComponent } from '../../components/change-password-dialog/change-password-dialog/change-password-dialog.component';
+import { ProfileField2Component } from '../../components/profile-field2/profile-field2/profile-field2.component';
 
 @Component({
   selector: 'dd-profile-page',
@@ -20,21 +23,26 @@ import { ChangePasswordDialogComponent } from '../../components/change-password-
     ChangePasswordDialogComponent,
     NgIf,
     AsyncPipe,
+    ProfileField2Component,
+    TuiInputModule,
+    ReactiveFormsModule,
   ],
   templateUrl: './profile-page.component.html',
   styleUrl: './profile-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProfilePageComponent {
-  private authService = inject(AuthService);
+  private readonly authService = inject(AuthService);
 
-  private profileService = inject(ProfileService);
+  private readonly profileService = inject(ProfileService);
 
   private readonly dialogs = inject(TuiDialogService);
 
   private readonly injector = inject(INJECTOR);
 
   private readonly destroy = inject(DestroyRef);
+
+  public control = new FormControl('');
 
   private readonly dialog = this.dialogs.open<number>(
     new PolymorpheusComponent(ChangePasswordDialogComponent, this.injector),
@@ -46,7 +54,7 @@ export class ProfilePageComponent {
 
   protected userInformation = this.profileService.getUserInformation();
 
-  logout() {
+  protected logout() {
     this.authService.logout().pipe(takeUntilDestroyed(this.destroy)).subscribe();
   }
 

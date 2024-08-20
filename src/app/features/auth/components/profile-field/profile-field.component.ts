@@ -1,13 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  DestroyRef,
-  inject,
-  Input,
-  OnChanges,
-  signal,
-  SimpleChanges,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, input, signal } from '@angular/core';
 import { AsyncPipe, NgIf } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TuiAutoFocus, tuiMarkControlAsTouchedAndValidate } from '@taiga-ui/cdk';
@@ -16,8 +7,8 @@ import { TUI_VALIDATION_ERRORS, TuiFieldErrorPipe, TuiInputInline } from '@taiga
 import { TuiInputModule } from '@taiga-ui/legacy';
 import { ProfileService } from '@features/auth/services/profile/profile.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { buildInErrors } from '@shared/constants/build-in-errors';
 import { emailValidator } from '@features/auth/validators';
-import { buildInErrors } from '@shared/constants/build-in-errors.constant';
 
 @Component({
   selector: 'dd-profile-field',
@@ -43,10 +34,10 @@ import { buildInErrors } from '@shared/constants/build-in-errors.constant';
     },
   ],
 })
-export class ProfileFieldComponent implements OnChanges {
-  @Input({ required: true }) public label!: 'name' | 'email';
+export class ProfileFieldComponent {
+  public label = input.required<'name' | 'email'>();
 
-  @Input({ required: true }) public text!: string | null;
+  public text = input<string | null>();
 
   private readonly fb = inject(FormBuilder);
 
@@ -57,17 +48,28 @@ export class ProfileFieldComponent implements OnChanges {
   protected isEditMode = signal(false);
 
   public profileForm = this.fb.group({
-    text: ['', [Validators.required]],
+    text: this.fb.control('', [Validators.required]),
   });
 
-  public ngOnChanges(changes: SimpleChanges): void {
-    if (changes['text'] && changes['text'].currentValue !== changes['text'].previousValue) {
-      this.profileForm.patchValue({ text: this.text });
-    }
-    if (changes['label'] && changes['label'].currentValue === 'email') {
-      this.profileForm.get('text')?.setValidators([Validators.required, emailValidator()]);
-    }
+  public constructor() {
+    effect(() => {
+      if (this.text()) {
+        this.profileForm.patchValue({ text: this.text() ?? '' });
+      }
+      if (this.label() === 'email') {
+        this.profileForm.get('text')?.setValidators([Validators.required, emailValidator()]);
+      }
+    });
   }
+
+  // public ngOnChanges(changes: SimpleChanges): void {
+  //   if (changes['text'] && changes['text'].currentValue !== changes['text'].previousValue) {
+  //     this.profileForm.patchValue({ text: this.text });
+  //   }
+  //   if (changes['label'] && changes['label'].currentValue === 'email') {
+  //     this.profileForm.get('text')?.setValidators([Validators.required, emailValidator()]);
+  //   }
+  // }
 
   protected switchEditMode() {
     this.isEditMode.set(true);
@@ -79,7 +81,7 @@ export class ProfileFieldComponent implements OnChanges {
 
     if (this.profileForm.valid && text) {
       this.profileService
-        .updateUserInformation(this.label, text)
+        .updateUserInformation(this.label(), text)
         .pipe(takeUntilDestroyed(this.destroy))
         .subscribe(() => {
           this.isEditMode.set(false);

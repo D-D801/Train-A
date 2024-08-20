@@ -4,9 +4,11 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ProfileService } from '@features/auth/services/profile/profile.service';
 import { passwordValidator } from '@features/auth/validators';
+import { buildInErrors } from '@shared/constants/build-in-errors';
+import { PASSWORD_MAX_LENGTH } from '@shared/constants/password-max-length';
 import { TuiAutoFocus } from '@taiga-ui/cdk';
 import { TuiButton, TuiDialog, TuiDialogContext, TuiError, TuiHint } from '@taiga-ui/core';
-import { TuiFieldErrorPipe } from '@taiga-ui/kit';
+import { TUI_VALIDATION_ERRORS, TuiFieldErrorPipe } from '@taiga-ui/kit';
 import { TuiInputModule } from '@taiga-ui/legacy';
 import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
 
@@ -27,6 +29,12 @@ import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
   templateUrl: './change-password-dialog.component.html',
   styleUrl: './change-password-dialog.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    {
+      provide: TUI_VALIDATION_ERRORS,
+      useValue: buildInErrors,
+    },
+  ],
 })
 export class ChangePasswordDialogComponent {
   private readonly context = inject<TuiDialogContext>(POLYMORPHEUS_CONTEXT);
@@ -37,11 +45,11 @@ export class ChangePasswordDialogComponent {
 
   private readonly fb = inject(FormBuilder);
 
-  protected changePasswordForm = this.fb.group({
-    newPassword: ['', [Validators.required, passwordValidator(8)]],
+  public changePasswordForm = this.fb.group({
+    newPassword: this.fb.control('', [Validators.required, passwordValidator(PASSWORD_MAX_LENGTH)]),
   });
 
-  protected submit() {
+  public submit() {
     const { newPassword } = this.changePasswordForm.value;
 
     if (this.changePasswordForm.valid && newPassword) {
