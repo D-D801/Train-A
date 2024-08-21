@@ -61,6 +61,7 @@ export class ChangePasswordDialogComponent {
         .pipe(takeUntilDestroyed(this.destroy))
         .subscribe({
           next: () => {
+            this.context.completeWith();
             this.alert.open({ message: 'Change password' });
           },
           error: ({ error: { message } }) => {
