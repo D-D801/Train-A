@@ -1,6 +1,6 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { LocalStorageService } from '@core/services/local-storage/local-storage.service';
-import { catchError, EMPTY, switchMap, tap } from 'rxjs';
+import { switchMap, tap } from 'rxjs';
 import { Router } from '@angular/router';
 import { AlertService } from '@core/services/alert/alert.service';
 import { LocalStorageKey } from '@shared/enums/local-storage-key.enum';
@@ -32,11 +32,6 @@ export class AuthService {
       tap((response) => {
         this._isLoggedIn.set(true);
         this.localStorage.setItem(LocalStorageKey.UserToken, response.token);
-        this.router.navigate(['/home']);
-      }),
-      catchError(({ error: { message } }) => {
-        this.alerts.open({ message: message || 'smt went wrong', label: 'Error:', appearance: 'error' });
-        return EMPTY;
       })
     );
   }
