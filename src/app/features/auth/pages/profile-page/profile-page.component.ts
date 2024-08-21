@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, INJECTOR } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
 import { TuiButton, TuiAutoColorPipe, TuiDialogService } from '@taiga-ui/core';
 import { TuiAvatar } from '@taiga-ui/kit';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
@@ -39,8 +39,6 @@ export class ProfilePageComponent {
 
   private readonly dialogs = inject(TuiDialogService);
 
-  private readonly injector = inject(INJECTOR);
-
   private readonly destroy = inject(DestroyRef);
 
   private readonly alert = inject(AlertService);
@@ -48,20 +46,20 @@ export class ProfilePageComponent {
   private readonly router = inject(Router);
 
   private readonly dialog = this.dialogs
-    .open<number>(new PolymorpheusComponent(ChangePasswordDialogComponent, this.injector), {
+    .open<number>(new PolymorpheusComponent(ChangePasswordDialogComponent), {
       dismissible: true,
       label: 'Change Password',
     })
     .pipe(takeUntilDestroyed());
 
   protected userInformation = this.profileApiService.getUserInformation().pipe(
-    takeUntilDestroyed(this.destroy),
     tap({
       error: ({ error: { message } }) => {
         this.alert.open({ message, label: 'Error', appearance: 'error' });
         this.router.navigate(['/home']);
       },
-    })
+    }),
+    takeUntilDestroyed(this.destroy)
   );
 
   protected logout() {
