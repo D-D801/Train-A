@@ -1,21 +1,31 @@
 <form class="container" [formGroup]="searchForm" (ngSubmit)="search()">
-  <tui-input *tuiLet="cities$() as cities" formControlName="from" class="search-input">
+  <tui-input *tuiLet="cities() as cities" formControlName="from" class="search-input">
     From
     <input placeholder="Type city name" tuiTextfieldLegacy />
     <ng-container *ngIf="cities?.length">
       <tui-data-list *tuiDataList>
-        <button *ngFor="let city of cities" tuiOption [value]="city.name" (click)="onSelected(city, 'from')">
+        <button
+          *ngFor="let city of cities; index as i"
+          tuiOption
+          [value]="city.name"
+          (click)="onSelected(city, 'from', i)"
+        >
           {{ city.name }}, {{ city.country }}
         </button>
       </tui-data-list>
     </ng-container>
   </tui-input>
-  <tui-input *tuiLet="cities$() as cities" formControlName="to" class="search-input">
+  <tui-input *tuiLet="cities() as cities" formControlName="to" class="search-input">
     To
     <input placeholder="Type city name" tuiTextfieldLegacy />
     <ng-container *ngIf="cities?.length">
       <tui-data-list *tuiDataList>
-        <button *ngFor="let city of cities" tuiOption [value]="city.name" (click)="onSelected(city, 'to')">
+        <button
+          *ngFor="let city of cities; index as i"
+          tuiOption
+          [value]="city.name"
+          (click)="onSelected(city, 'to', i)"
+        >
           {{ city.name }}, {{ city.country }}
         </button>
       </tui-data-list>

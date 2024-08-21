@@ -15,25 +15,25 @@ export interface SearchRouteResponse {
       longitude: number;
     };
   };
-  routes: Array<Route>;
+  routes: Route[];
 }
 
 interface Route {
   id: number;
-  path: Array<number>;
-  carriages: Array<string>;
-  schedule: Array<Ride>;
+  path: number[];
+  carriages: string[];
+  schedule: Ride[];
 }
 
 interface Ride {
   rideId: number;
-  segments: Array<RoadSection>;
+  segments: RoadSection[];
 }
 
 interface RoadSection {
-  time: Array<string>;
+  time: string[];
   price: {
     [carriageType: string]: number;
   };
-  occupiedSeats: Array<number>;
+  occupiedSeats: number[];
 }

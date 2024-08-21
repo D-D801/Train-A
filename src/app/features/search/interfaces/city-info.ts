@@ -1,6 +1,6 @@
 export interface CityInfo {
   name: string;
-  local_names?: {
+  local_names: {
     af: string;
     ar: string;
     ascii: string;
