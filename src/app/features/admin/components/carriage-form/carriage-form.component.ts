@@ -1,6 +1,6 @@
 import { NgFor, NgIf, AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, Output, OnChanges } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Carriage } from '@features/admin/interfaces/carriage.interface';
 import { TuiError, TuiButton } from '@taiga-ui/core';
 import { TuiFieldErrorPipe } from '@taiga-ui/kit';
@@ -27,7 +27,7 @@ import { CarriagePreviewComponent } from '../carriage-preview/carriage-preview.c
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CarriageFormComponent implements OnChanges {
-  private readonly fb = inject(FormBuilder);
+  private readonly fb = inject(NonNullableFormBuilder);
 
   protected min = 1;
 
@@ -52,23 +52,12 @@ export class CarriageFormComponent implements OnChanges {
   }
 
   public onSubmit() {
-    const carriageData = this.carriageForm.value as Carriage;
-    if (this.carriageForm.valid) {
-      this.submitForm.emit(carriageData);
-    }
+    const { code, name, rows, leftSeats, rightSeats } = this.carriageForm.value;
+    if (!(name && rows && leftSeats && rightSeats)) return;
+    this.submitForm.emit({ code, name, rows, leftSeats, rightSeats });
   }
 
   public onCancel() {
     this.cancelForm.emit(null);
-  }
-
-  public get carriagePreviewData(): Carriage {
-    return {
-      code: this.carriageForm.value.code || '',
-      name: this.carriageForm.value.name || '',
-      rows: this.carriageForm.value.rows ?? 0,
-      leftSeats: this.carriageForm.value.leftSeats ?? 0,
-      rightSeats: this.carriageForm.value.rightSeats ?? 0,
-    };
   }
 }

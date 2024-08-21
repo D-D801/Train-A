@@ -23,7 +23,7 @@ export class AuthService {
 
   public isLoggedIn = this._isLoggedIn.asReadonly();
 
-  private readonly _isAdminIn = signal(false);
+  private readonly _isAdminIn = signal(true);
 
   public isAdminIn = this._isAdminIn.asReadonly();
 

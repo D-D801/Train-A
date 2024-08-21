@@ -59,16 +59,16 @@ section {
 
     position: absolute;
     top: -2px;
-    left: -2px; /* Сдвиг влево на 10px ширины + 2px отступ */
+    left: -2px;
 
-    width: 10px; /* Половина ширины основного элемента */
-    height: 23px; /* Полная высота основного элемента */
+    width: 10px;
+    height: 23px;
 
-    border-top: 1px solid var(--tui-status-neutralt); /* Линия сверху */
-    border-bottom: 1px solid var(--tui-status-neutral); /* Линия снизу */
-    border-left: 1px solid var(--tui-status-neutral); /* Линия слева */
-    border-top-left-radius: 5px; /* Закругленный верхний левый угол */
-    border-bottom-left-radius: 5px; /* Закругленный нижний левый угол */
+    border-top: 1px solid var(--tui-status-neutralt);
+    border-bottom: 1px solid var(--tui-status-neutral);
+    border-left: 1px solid var(--tui-status-neutral);
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
   }
 }
 

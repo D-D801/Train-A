@@ -1,6 +1,6 @@
 <button class="create-btn" appearance="primary" size="m" tuiButton (click)="onCreate()">Create</button>
 
-<div *ngIf="showForm">
+<div *ngIf="showForm()">
   <dd-carriage-form
     [carriage]="selectedCarriage"
     (submitForm)="onSubmit($event)"
@@ -8,7 +8,7 @@
   ></dd-carriage-form>
 </div>
 
-<div *ngFor="let carriage of carriages().slice().reverse()">
+<div *ngFor="let carriage of combinedCarriages$ | async">
   <div class="carriage-item">
     <dd-carriage-preview [carriage]="carriage"></dd-carriage-preview>
     <div>
