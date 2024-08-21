@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Carriage } from '@features/admin/interfaces/carriage.interface';
-import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -9,15 +8,15 @@ import { Observable } from 'rxjs';
 export class CarriageApiService {
   private readonly http = inject(HttpClient);
 
-  public getCarriages(): Observable<Carriage[]> {
+  public getCarriages() {
     return this.http.get<Carriage[]>('/api/carriage');
   }
 
-  public createCarriage(carriage: Carriage): Observable<Carriage> {
+  public createCarriage(carriage: Carriage) {
     return this.http.post<Carriage>('/api/carriage', carriage);
   }
 
-  public updateCarriage(carriage: Carriage): Observable<Carriage> {
+  public updateCarriage(carriage: Carriage) {
     return this.http.put<Carriage>(`/api/carriage/${carriage.code}`, carriage);
   }
 }

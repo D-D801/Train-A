@@ -1,0 +1,74 @@
+section {
+  align-items: center;
+  justify-content: center;
+
+  color: var(--tui-text-secondary);
+
+  border: 1px dashed;
+  border-radius: 0.75rem;
+}
+
+.carriage {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+
+  padding: 1rem;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+}
+
+.seats-right,
+.seats-left {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.seat {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 20px;
+  height: 20px;
+
+  font-size: 12px;
+  color: var(--tui-background-base-alt);
+  text-align: center;
+
+  background-color: var(--tui-background-accent-1-pressed);
+  border-radius: 5px;
+
+  &::before {
+    content: '';
+
+    position: absolute;
+    top: -2px;
+    left: -2px; /* Сдвиг влево на 10px ширины + 2px отступ */
+
+    width: 10px; /* Половина ширины основного элемента */
+    height: 23px; /* Полная высота основного элемента */
+
+    border-top: 1px solid var(--tui-status-neutralt); /* Линия сверху */
+    border-bottom: 1px solid var(--tui-status-neutral); /* Линия снизу */
+    border-left: 1px solid var(--tui-status-neutral); /* Линия слева */
+    border-top-left-radius: 5px; /* Закругленный верхний левый угол */
+    border-bottom-left-radius: 5px; /* Закругленный нижний левый угол */
+  }
+}
+
+.aisle {
+  height: 30px;
+  background-color: #f3f4f6;
+}

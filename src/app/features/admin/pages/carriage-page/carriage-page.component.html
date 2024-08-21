@@ -1,32 +1,50 @@
-<button (click)="onCreate()">Создать</button>
+<button appearance="primary" size="s" tuiButton (click)="onCreate()">Create</button>
 
 <div *ngIf="showForm">
   <form [formGroup]="carriageForm" (ngSubmit)="onSubmit()">
-    <label for="name">Наименование</label>
-    <input id="name" formControlName="name" type="text" />
+    <div class="tui-form__row">
+      <tui-input formControlName="name">
+        Name
+        <input tuiTextfieldLegacy />
+      </tui-input>
+      <tui-error formControlName="name" [error]="[] | tuiFieldError | async" />
+    </div>
+    <div class="tui-form__row">
+      <tui-input formControlName="rows">
+        Rows
+        <input tuiTextfieldLegacy />
+      </tui-input>
+      <tui-error formControlName="rows" [error]="[] | tuiFieldError | async" />
+    </div>
 
-    <label for="rows">Ряды</label>
-    <input id="rows" formControlName="rows" type="text" />
+    <div class="tui-form__row">
+      <tui-input formControlName="leftSeats">
+        LeftSeats
+        <input tuiTextfieldLegacy />
+      </tui-input>
+      <tui-error formControlName="leftSeats" [error]="[] | tuiFieldError | async" />
+    </div>
 
-    <label for="leftSeats">Левые места</label>
-    <input id="leftSeats" formControlName="leftSeats" type="text" />
+    <div class="tui-form__row">
+      <tui-input formControlName="rightSeats">
+        RightSeats
+        <input tuiTextfieldLegacy />
+      </tui-input>
+      <tui-error formControlName="rightSeats" [error]="[] | tuiFieldError | async" />
+    </div>
 
-    <label for="rightSeats">Правые места</label>
-    <input id="rightSeats" formControlName="rightSeats" type="text" />
-
-    <button type="submit">Сохранить</button>
-    <button type="button" (click)="onCancel()">Отмена</button>
+    <button appearance="primary" size="s" tuiButton type="submit">Save</button>
+    <button appearance="error" size="s" tuiButton (click)="onCancel()">Cancel</button>
   </form>
 
-  <div class="carriage-preview">
-    <!-- <app-carriage-preview [carriage]="carriageForm.value"></app-carriage-preview> -->
-  </div>
+  <!-- <div class="carriage-preview">
+    <dd-carriage-preview [carriage]="carriageForm.value"></dd-carriage-preview>
+  </div> -->
 </div>
 
-<div *ngFor="let carriage of carriages()">
+<div *ngFor="let carriage of carriages().slice().reverse()">
   <div class="carriage-item">
-    <div>{{ carriage.name }}</div>
-    <!-- <app-carriage-preview [carriage]="carriage"></app-carriage-preview> -->
-    <button (click)="onEdit(carriage)">Обновить</button>
+    <dd-carriage-preview [carriage]="carriage"></dd-carriage-preview>
+    <button appearance="primary" size="s" tuiButton (click)="onEdit(carriage)">Edit</button>
   </div>
 </div>

@@ -1,0 +1,23 @@
+<div tuiCardLarge="normal" tuiSurface="elevated">
+  <header tuiHeader>
+    <h2 tuiTitle>{{ carriage.name }}</h2>
+  </header>
+
+  <section>
+    <div class="carriage">
+      <div class="column" *ngFor="let row of seatNumbers">
+        <div class="seats-right">
+          <div class="seat" *ngFor="let seatNumber of row.rightRow">
+            {{ seatNumber }}
+          </div>
+        </div>
+        <div class="aisle"></div>
+        <div class="seats-left">
+          <div class="seat" *ngFor="let seatNumber of row.leftRow">
+            {{ seatNumber }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
