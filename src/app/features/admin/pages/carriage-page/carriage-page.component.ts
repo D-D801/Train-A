@@ -1,16 +1,30 @@
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AlertService } from '@core/services/alert/alert.service';
+import { CarriagePreviewComponent } from '@features/admin/components/carriage-preview/carriage-preview.component';
 import { Carriage } from '@features/admin/interfaces/carriage.interface';
 import { CarriageApiService } from '@features/admin/services/carriage-api/carriage-api.service';
+import { TuiButton, TuiError } from '@taiga-ui/core';
+import { TuiFieldErrorPipe } from '@taiga-ui/kit';
+import { TuiInputModule } from '@taiga-ui/legacy';
 import { BehaviorSubject, switchMap } from 'rxjs';
 
 @Component({
   selector: 'dd-carriage-page',
   standalone: true,
-  imports: [ReactiveFormsModule, NgFor, NgIf, AsyncPipe],
+  imports: [
+    CarriagePreviewComponent,
+    TuiError,
+    ReactiveFormsModule,
+    TuiFieldErrorPipe,
+    NgFor,
+    NgIf,
+    TuiButton,
+    AsyncPipe,
+    TuiInputModule,
+  ],
   templateUrl: './carriage-page.component.html',
   styleUrl: './carriage-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,10 +48,10 @@ export class CarriagePageComponent {
 
   public carriageForm = this.fb.group({
     code: [''],
-    name: [''],
-    rows: [0],
-    leftSeats: [0],
-    rightSeats: [0],
+    name: ['', Validators.required],
+    rows: [0, Validators.required],
+    leftSeats: [0, Validators.required],
+    rightSeats: [0, Validators.required],
   });
 
   public onCreate() {
@@ -52,7 +66,7 @@ export class CarriagePageComponent {
 
   public onSubmit() {
     if (this.carriageForm.valid) {
-      const carriageData = this.carriageForm.value;
+      const carriageData = this.carriageForm.value as Carriage;
       if (carriageData.code) {
         this.carriageApiService
           .updateCarriage(carriageData)
