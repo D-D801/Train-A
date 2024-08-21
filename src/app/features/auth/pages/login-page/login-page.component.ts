@@ -54,35 +54,38 @@ export class LoginPageComponent implements OnInit {
 
   private readonly isHttpRequesting = signal(false);
 
-  private readonly _isSubmitted = signal(false);
+  private readonly isSubmitted = signal(false);
 
-  public readonly isSubmitted = this._isSubmitted.asReadonly();
+  public form = this.fb.group({
+    email: this.fb.control(''),
+    password: this.fb.control(''),
+  });
 
   public ngOnInit() {
     this.form.valueChanges.pipe(takeUntilDestroyed(this.destroy)).subscribe(() => {
-      if (!this._isSubmitted()) {
+      if (!this.isSubmitted()) {
         const { email, password } = this.form.value;
-        if (email && password) this.isFormValid.set(mailRegex.test(email) && password?.trim().length > 0);
+        if (!(email && password)) return;
+        this.isFormValid.set(mailRegex.test(email) && password.trim().length > 0);
       }
-      if (this.form.dirty && this._isSubmitted()) {
-        this._isSubmitted.set(false);
-        const { email, password } = this.form.controls;
-        email.setValidators([Validators.required, emailValidator()]);
-        email.updateValueAndValidity();
-        password.setValidators(requiredValidator());
-        password.updateValueAndValidity();
-        this.form.markAllAsTouched();
+      if (this.form.dirty && this.isSubmitted()) {
+        this.isSubmitted.set(false);
+        this.setValidators();
       }
     });
   }
 
-  public form = this.fb.group({
-    email: [''],
-    password: [''],
-  });
+  private setValidators() {
+    const { email, password } = this.form.controls;
+    email.setValidators([Validators.required, emailValidator()]);
+    email.updateValueAndValidity();
+    password.setValidators(requiredValidator());
+    password.updateValueAndValidity();
+    this.form.markAllAsTouched();
+  }
 
-  public onSubmit(): void {
-    this._isSubmitted.set(true);
+  protected onSubmit() {
+    this.isSubmitted.set(true);
     this.isHttpRequesting.set(true);
     const { email, password } = this.form.value;
     if (!(email && password)) return;
@@ -109,7 +112,7 @@ export class LoginPageComponent implements OnInit {
       });
   }
 
-  public checkSubmitStatus(): boolean {
+  protected checkSubmitStatus() {
     return this.isHttpRequesting() || !(this.isFormValid() && this.form.valid);
   }
 }

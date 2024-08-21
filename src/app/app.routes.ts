@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 import { adminGuard } from '@features/auth/guards/admin.guard';
 import { authGuard } from '@features/auth/guards/auth.guard';
-import { authenticatedGuard } from '@features/auth/guards/authenticated.guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -16,13 +15,13 @@ export const routes: Routes = [
       import('@features/auth/pages/registration-page/registration-page.component').then(
         (m) => m.RegistrationPageComponent
       ),
-    canMatch: [authenticatedGuard],
+    canMatch: [authGuard],
   },
   {
     path: 'login',
     loadComponent: () =>
       import('@features/auth/pages/login-page/login-page.component').then((m) => m.LoginPageComponent),
-    canMatch: [authenticatedGuard],
+    canMatch: [authGuard],
   },
   {
     path: 'profile',
