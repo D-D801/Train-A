@@ -1,5 +1,6 @@
 export const buildInErrors = {
-  required: 'This field is required',
+  required: 'Required',
   emailRegex: 'Incorrect email',
   password: 'At least 8 characters required',
+  authError: 'Incorrect email or password',
 } as const;

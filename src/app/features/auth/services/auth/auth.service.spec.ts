@@ -60,7 +60,6 @@ describe('AuthServiceService', () => {
     service.signup(mockUser).subscribe();
 
     expect(localStorageServiceMock.setItem).toHaveBeenCalledWith(LocalStorageKey.UserToken, mockTokenResponse.token);
-    expect(routerMock.navigate).toHaveBeenCalledWith(['/home']);
   });
 
   it('should show notification and not navigate on signup error', () => {

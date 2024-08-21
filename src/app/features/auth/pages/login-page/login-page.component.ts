@@ -1,16 +1,17 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, signal } from '@angular/core';
+import { AsyncPipe, NgIf } from '@angular/common';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AsyncPipe } from '@angular/common';
-import { emailValidator, passwordValidator } from '@features/auth/validators';
+import { Router, RouterLink } from '@angular/router';
+import { AlertService } from '@core/services/alert/alert.service';
+import { AuthService } from '@features/auth/services/auth/auth.service';
+import { emailValidator, requiredValidator } from '@features/auth/validators';
+import { buildInErrors } from '@shared/constants/build-in-errors';
+import { TuiValidator } from '@taiga-ui/cdk';
 import { TuiButton, TuiError } from '@taiga-ui/core';
 import { TUI_VALIDATION_ERRORS, TuiFieldErrorPipe } from '@taiga-ui/kit';
 import { TuiInputModule, TuiInputPasswordModule } from '@taiga-ui/legacy';
-import { RouterLink } from '@angular/router';
-import { TuiValidator } from '@taiga-ui/cdk';
-import { AuthService } from '@features/auth/services/auth/auth.service';
-import { buildInErrors } from '@shared/constants/build-in-errors';
-import { PASSWORD_MAX_LENGTH } from '@shared/constants/password-max-length';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'dd-login-page',
@@ -25,6 +26,7 @@ import { PASSWORD_MAX_LENGTH } from '@shared/constants/password-max-length';
     TuiInputModule,
     RouterLink,
     TuiValidator,
+    NgIf,
   ],
   providers: [
     {
@@ -36,10 +38,10 @@ import { PASSWORD_MAX_LENGTH } from '@shared/constants/password-max-length';
   styleUrl: './login-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LoginPageComponent {
-  private readonly _isSubmitted = signal(false);
+export class LoginPageComponent implements OnInit {
+  private readonly router = inject(Router);
 
-  public isSubmitted = this._isSubmitted.asReadonly();
+  private readonly alerts = inject(AlertService);
 
   private readonly fb = inject(FormBuilder);
 
@@ -47,15 +49,28 @@ export class LoginPageComponent {
 
   private readonly authService = inject(AuthService);
 
-  public constructor() {
-    effect(() => {
-      if (this.isSubmitted()) {
-        const emailControl = this.form.controls.email;
-        const passwordControl = this.form.controls.password;
-        emailControl?.setValidators([Validators.required, emailValidator()]);
-        emailControl?.updateValueAndValidity();
-        passwordControl?.setValidators([Validators.required, passwordValidator(PASSWORD_MAX_LENGTH)]);
-        passwordControl?.updateValueAndValidity();
+  private readonly isFormValid = signal(false);
+
+  private readonly isHttpRequesting = signal(false);
+
+  private readonly _isSubmitted = signal(false);
+
+  public readonly isSubmitted = this._isSubmitted.asReadonly();
+
+  public ngOnInit() {
+    this.form.valueChanges.pipe(takeUntilDestroyed(this.destroy)).subscribe(() => {
+      if (!this._isSubmitted()) {
+        const { email, password } = this.form.value;
+        if (email && password)
+          this.isFormValid.set(/^[\w\d_]+@[\w\d_]+.\w{2,7}$/.test(email) && password?.trim().length > 0);
+      }
+      if (this.form.dirty && this._isSubmitted()) {
+        this._isSubmitted.set(false);
+        const { email, password } = this.form.controls;
+        email.setValidators([Validators.required, emailValidator()]);
+        email.updateValueAndValidity();
+        password.setValidators(requiredValidator());
+        password.updateValueAndValidity();
         this.form.markAllAsTouched();
       }
     });
@@ -66,14 +81,34 @@ export class LoginPageComponent {
     password: [''],
   });
 
-  protected onSubmit() {
+  public onSubmit(): void {
     this._isSubmitted.set(true);
+    this.isHttpRequesting.set(true);
     const { email, password } = this.form.value;
     if (!(email && password)) return;
-    this.authService.signin({ email, password: password.trim() }).pipe(takeUntilDestroyed(this.destroy)).subscribe();
+    this.form.markAsPristine();
+    this.authService
+      .signin({ email, password: password.trim() })
+      .pipe(
+        takeUntilDestroyed(this.destroy),
+        finalize(() => {
+          this.isHttpRequesting.set(false);
+        })
+      )
+      .subscribe({
+        next: () => {
+          this.router.navigate(['/home']);
+        },
+        error: ({ error: { message } }) => {
+          this.form.controls.email.setErrors({ authError: true });
+          this.form.controls.password.setErrors({ authError: true });
+
+          this.alerts.open({ message: message || 'smt went wrong', label: 'Error:', appearance: 'error' });
+        },
+      });
   }
 
-  protected checkSubmitStatus() {
-    return this.isSubmitted() ? this.form.invalid : this.form.pristine;
+  public checkSubmitStatus(): boolean {
+    return this.isHttpRequesting() || !(this.isFormValid() && this.form.valid);
   }
 }
