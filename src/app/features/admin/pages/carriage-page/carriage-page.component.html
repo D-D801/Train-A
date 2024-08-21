@@ -1,50 +1,18 @@
-<button appearance="primary" size="s" tuiButton (click)="onCreate()">Create</button>
+<button class="create-btn" appearance="primary" size="m" tuiButton (click)="onCreate()">Create</button>
 
 <div *ngIf="showForm">
-  <form [formGroup]="carriageForm" (ngSubmit)="onSubmit()">
-    <div class="tui-form__row">
-      <tui-input formControlName="name">
-        Name
-        <input tuiTextfieldLegacy />
-      </tui-input>
-      <tui-error formControlName="name" [error]="[] | tuiFieldError | async" />
-    </div>
-    <div class="tui-form__row">
-      <tui-input formControlName="rows">
-        Rows
-        <input tuiTextfieldLegacy />
-      </tui-input>
-      <tui-error formControlName="rows" [error]="[] | tuiFieldError | async" />
-    </div>
-
-    <div class="tui-form__row">
-      <tui-input formControlName="leftSeats">
-        LeftSeats
-        <input tuiTextfieldLegacy />
-      </tui-input>
-      <tui-error formControlName="leftSeats" [error]="[] | tuiFieldError | async" />
-    </div>
-
-    <div class="tui-form__row">
-      <tui-input formControlName="rightSeats">
-        RightSeats
-        <input tuiTextfieldLegacy />
-      </tui-input>
-      <tui-error formControlName="rightSeats" [error]="[] | tuiFieldError | async" />
-    </div>
-
-    <button appearance="primary" size="s" tuiButton type="submit">Save</button>
-    <button appearance="error" size="s" tuiButton (click)="onCancel()">Cancel</button>
-  </form>
-
-  <!-- <div class="carriage-preview">
-    <dd-carriage-preview [carriage]="carriageForm.value"></dd-carriage-preview>
-  </div> -->
+  <dd-carriage-form
+    [carriage]="selectedCarriage"
+    (submitForm)="onSubmit($event)"
+    (cancelForm)="onCancel()"
+  ></dd-carriage-form>
 </div>
 
 <div *ngFor="let carriage of carriages().slice().reverse()">
   <div class="carriage-item">
     <dd-carriage-preview [carriage]="carriage"></dd-carriage-preview>
-    <button appearance="primary" size="s" tuiButton (click)="onEdit(carriage)">Edit</button>
+    <div>
+      <button class="edit-btn" appearance="primary" size="s" tuiButton (click)="onEdit(carriage)">Edit</button>
+    </div>
   </div>
 </div>

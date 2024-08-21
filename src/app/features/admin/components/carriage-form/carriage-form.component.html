@@ -1,0 +1,25 @@
+<form [formGroup]="carriageForm">
+  <div class="tui-form__row">
+    <tui-input formControlName="name">
+      Name
+      <input tuiTextfieldLegacy />
+    </tui-input>
+    <tui-error formControlName="name" [error]="[] | tuiFieldError | async" />
+  </div>
+  <div class="tui-form__row">
+    <tui-input-number [min]="min" class="input" formControlName="rows"> Rows </tui-input-number>
+    <tui-error formControlName="rows" [error]="[] | tuiFieldError | async" />
+  </div>
+  <div class="tui-form__row">
+    <tui-input-number [min]="min" class="input" formControlName="leftSeats"> LeftSeats </tui-input-number>
+    <tui-error formControlName="leftSeats" [error]="[] | tuiFieldError | async" />
+  </div>
+  <div class="tui-form__row">
+    <tui-input-number [min]="min" class="input" formControlName="rightSeats"> RightSeats </tui-input-number>
+    <tui-error formControlName="rightSeats" [error]="[] | tuiFieldError | async" />
+  </div>
+  <dd-carriage-preview *ngIf="carriageForm.valid" [carriage]="carriagePreviewData"></dd-carriage-preview>
+
+  <button appearance="primary" size="m" tuiButton (click)="onSubmit()">Save</button>
+  <button appearance="accent" size="m" tuiButton (click)="onCancel()">Cancel</button>
+</form>

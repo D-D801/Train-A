@@ -1,5 +1,5 @@
 import { NgFor } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { Carriage } from '@features/admin/interfaces/carriage.interface';
 
 @Component({
@@ -10,12 +10,18 @@ import { Carriage } from '@features/admin/interfaces/carriage.interface';
   styleUrl: './carriage-preview.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CarriagePreviewComponent implements OnInit {
+export class CarriagePreviewComponent implements OnChanges {
   @Input({ required: true }) public carriage!: Carriage;
 
   public seatNumbers: Array<{ leftRow: number[]; rightRow: number[] }> = [];
 
-  public ngOnInit(): void {
+  public ngOnChanges(changes: SimpleChanges): void {
+    if (changes['carriage']) {
+      this.updateSeatNumbers();
+    }
+  }
+
+  private updateSeatNumbers(): void {
     let currentSeatNumber = 1;
 
     this.seatNumbers = Array.from({ length: this.carriage.rows }, () => {
