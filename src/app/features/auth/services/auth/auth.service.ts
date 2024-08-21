@@ -23,6 +23,7 @@ export class AuthService {
 
   public isLoggedIn = this._isLoggedIn.asReadonly();
 
+  // TODO: change role
   private readonly _isAdminIn = signal(true);
 
   public isAdminIn = this._isAdminIn.asReadonly();

@@ -43,10 +43,17 @@ export const routes: Routes = [
       import('@features/admin/pages/admin-page/admin-page.component').then((m) => m.AdminPageComponent),
     canMatch: [adminGuard],
   },
+
   {
     path: 'admin/carriage',
     loadComponent: () =>
       import('@features/admin/pages/carriage-page/carriage-page.component').then((m) => m.CarriagePageComponent),
+  },
+  // TODO: latter it will be another path
+  {
+    path: 'schedule',
+    loadComponent: () =>
+      import('@features/admin/pages/schedule-page/schedule-page.component').then((m) => m.SchedulePageComponent),
     canMatch: [adminGuard],
   },
   {
