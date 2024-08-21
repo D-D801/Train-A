@@ -2,7 +2,6 @@ export const mockUser = {
   email: 'test@example.com',
   password: 'Password123!',
   confirmPassword: 'Password123!',
-  name: 'John',
 } as const;
 
 export const mockLoginUser = {

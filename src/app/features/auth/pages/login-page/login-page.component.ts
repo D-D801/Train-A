@@ -7,6 +7,7 @@ import { AlertService } from '@core/services/alert/alert.service';
 import { AuthService } from '@features/auth/services/auth/auth.service';
 import { emailValidator, requiredValidator } from '@features/auth/validators';
 import { buildInErrors } from '@shared/constants/build-in-errors';
+import { mailRegex } from '@shared/constants/mail-regex';
 import { TuiValidator } from '@taiga-ui/cdk';
 import { TuiButton, TuiError } from '@taiga-ui/core';
 import { TUI_VALIDATION_ERRORS, TuiFieldErrorPipe } from '@taiga-ui/kit';
@@ -61,8 +62,7 @@ export class LoginPageComponent implements OnInit {
     this.form.valueChanges.pipe(takeUntilDestroyed(this.destroy)).subscribe(() => {
       if (!this._isSubmitted()) {
         const { email, password } = this.form.value;
-        if (email && password)
-          this.isFormValid.set(/^[\w\d_]+@[\w\d_]+.\w{2,7}$/.test(email) && password?.trim().length > 0);
+        if (email && password) this.isFormValid.set(mailRegex.test(email) && password?.trim().length > 0);
       }
       if (this.form.dirty && this._isSubmitted()) {
         this._isSubmitted.set(false);
@@ -87,6 +87,7 @@ export class LoginPageComponent implements OnInit {
     const { email, password } = this.form.value;
     if (!(email && password)) return;
     this.form.markAsPristine();
+
     this.authService
       .signin({ email, password: password.trim() })
       .pipe(
