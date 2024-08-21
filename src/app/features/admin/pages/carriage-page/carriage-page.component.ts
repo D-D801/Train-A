@@ -33,6 +33,8 @@ export class CarriagePageComponent {
 
   private readonly carriages$ = this.refreshTrigger.pipe(switchMap(() => this.carriageApiService.getCarriages()));
 
+  // private readonly carriages$ = this.carriageApiService.getCarriages();
+
   public carriages = toSignal(this.carriages$, { initialValue: [] });
 
   public selectedCarriage: Carriage | null = null;
