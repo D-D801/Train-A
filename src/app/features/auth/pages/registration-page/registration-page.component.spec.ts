@@ -58,7 +58,6 @@ describe('RegistrationPageComponent', () => {
       email: '',
       password: '',
       confirmPassword: '',
-      name: '',
     });
 
     component.onSubmit();
