@@ -1,0 +1,32 @@
+<button (click)="onCreate()">Создать</button>
+
+<div *ngIf="showForm">
+  <form [formGroup]="carriageForm" (ngSubmit)="onSubmit()">
+    <label for="name">Наименование</label>
+    <input id="name" formControlName="name" type="text" />
+
+    <label for="rows">Ряды</label>
+    <input id="rows" formControlName="rows" type="text" />
+
+    <label for="leftSeats">Левые места</label>
+    <input id="leftSeats" formControlName="leftSeats" type="text" />
+
+    <label for="rightSeats">Правые места</label>
+    <input id="rightSeats" formControlName="rightSeats" type="text" />
+
+    <button type="submit">Сохранить</button>
+    <button type="button" (click)="onCancel()">Отмена</button>
+  </form>
+
+  <div class="carriage-preview">
+    <!-- <app-carriage-preview [carriage]="carriageForm.value"></app-carriage-preview> -->
+  </div>
+</div>
+
+<div *ngFor="let carriage of carriages()">
+  <div class="carriage-item">
+    <div>{{ carriage.name }}</div>
+    <!-- <app-carriage-preview [carriage]="carriage"></app-carriage-preview> -->
+    <button (click)="onEdit(carriage)">Обновить</button>
+  </div>
+</div>
