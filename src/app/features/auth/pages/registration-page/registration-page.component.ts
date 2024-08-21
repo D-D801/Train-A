@@ -56,7 +56,7 @@ export class RegistrationPageComponent implements OnInit {
 
   private readonly isHttpRequesting = signal(false);
 
-  private readonly _isSubmitted = signal(false);
+  private readonly isSubmitted = signal(false);
 
   public registrationForm = this.fb.group(
     {
@@ -67,27 +67,31 @@ export class RegistrationPageComponent implements OnInit {
     { validators: [matchPasswordsValidator('password', 'confirmPassword')] }
   );
 
-  public ngOnInit(): void {
+  public ngOnInit() {
     this.registrationForm.valueChanges.pipe(takeUntilDestroyed(this.destroy)).subscribe(() => {
-      if (!this._isSubmitted()) {
+      if (!this.isSubmitted()) {
         const { email, password } = this.registrationForm.value;
-        if (email && password)
-          this.isFormValid.set(mailRegex.test(email) && password?.trim().length >= PASSWORD_MAX_LENGTH);
+        if (!(email && password)) return;
+        this.isFormValid.set(mailRegex.test(email) && password?.trim().length >= PASSWORD_MAX_LENGTH);
       }
-      if (this.registrationForm.dirty && this._isSubmitted()) {
-        this._isSubmitted.set(false);
-        const { email, password } = this.registrationForm.controls;
-        email.setValidators([Validators.required, emailValidator()]);
-        email.updateValueAndValidity();
-        password.setValidators([requiredValidator(), passwordValidator(PASSWORD_MAX_LENGTH)]);
-        password.updateValueAndValidity();
-        this.registrationForm.markAllAsTouched();
+      if (this.registrationForm.dirty && this.isSubmitted()) {
+        this.isSubmitted.set(false);
+        this.setValidators();
       }
     });
   }
 
+  private setValidators() {
+    const { email, password } = this.registrationForm.controls;
+    email.setValidators([Validators.required, emailValidator()]);
+    email.updateValueAndValidity();
+    password.setValidators([requiredValidator(), passwordValidator(PASSWORD_MAX_LENGTH)]);
+    password.updateValueAndValidity();
+    this.registrationForm.markAllAsTouched();
+  }
+
   protected onSubmit() {
-    this._isSubmitted.set(true);
+    this.isSubmitted.set(true);
     this.isHttpRequesting.set(true);
     const { email, password } = this.registrationForm.value;
     if (!(email && password)) return;

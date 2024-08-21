@@ -2,11 +2,13 @@ import { inject } from '@angular/core';
 import { CanMatchFn, Router } from '@angular/router';
 import { AuthService } from '../services/auth/auth.service';
 
-export const authGuard: CanMatchFn = () => {
-  const authService: AuthService = inject(AuthService);
+export const authGuard: CanMatchFn = (route) => {
+  const authService = inject(AuthService);
+  const router = inject(Router);
 
-  if (authService.isLoggedIn()) {
-    return true;
-  }
-  return inject(Router).createUrlTree(['/login']);
+  const isAuthPath = ['registration', 'login'].includes(route.path ?? '');
+
+  return isAuthPath
+    ? !authService.isLoggedIn() || router.createUrlTree(['/home'])
+    : authService.isLoggedIn() || router.createUrlTree(['/login']);
 };

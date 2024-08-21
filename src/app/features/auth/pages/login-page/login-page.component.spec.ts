@@ -2,7 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { provideRouter, Router } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
-import { of } from 'rxjs';
+import { AlertService } from '@core/services/alert/alert.service';
+import { of, throwError } from 'rxjs';
 import { AuthService } from '@features/auth/services/auth/auth.service';
 import { mockLoginUser } from '@shared/constants/mock-user-data';
 import { Component } from '@angular/core';
@@ -31,6 +32,9 @@ describe('LoginPageComponent', () => {
   const routerMock = {
     navigate: jest.fn(),
   };
+  const alertServiceMock = {
+    open: jest.fn(),
+  };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -40,6 +44,7 @@ describe('LoginPageComponent', () => {
         provideHttpClient(),
         { provide: AuthService, useValue: authServiceMock },
         { provide: Router, useValue: routerMock },
+        { provide: AlertService, useValue: alertServiceMock },
       ],
     }).compileComponents();
 
@@ -52,9 +57,25 @@ describe('LoginPageComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should mark form as submitted on signin', () => {
+  it('should handle error correctly on signin failure', () => {
+    authServiceMock.signin.mockReturnValueOnce(
+      throwError(() => ({
+        error: {
+          message: 'User already exists',
+        },
+      }))
+    );
+    component.form.setValue({ email: 'test@example.com', password: 'password123' });
+
     component.onSubmit();
-    expect(component.isSubmitted()).toBeTruthy();
+
+    expect(component.form.controls.email.errors).toEqual({ authError: true });
+    expect(component.form.controls.password.errors).toEqual({ authError: true });
+    expect(alertServiceMock.open).toHaveBeenCalledWith({
+      message: 'User already exists',
+      label: 'Error:',
+      appearance: 'error',
+    });
   });
 
   it('should call authService.signin if form is valid', () => {
