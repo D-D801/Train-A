@@ -2,7 +2,7 @@
 
 <form *ngIf="isEditMode(); else textBlock" [formGroup]="profileForm" class="wrapper" (ngSubmit)="saveProfileField()">
   <div class="input">
-    <tui-input formControlName="profileFieldValue" tuiHintContent="A tooltip">
+    <tui-input formControlName="profileFieldValue">
       <input placeholder="Your new password" tuiTextfieldLegacy />
     </tui-input>
     <tui-error formControlName="profileFieldValue" [error]="[] | tuiFieldError | async" />
@@ -10,11 +10,9 @@
   <button tuiIconButton appearance="icon" iconStart="@tui.save" size="s" type="submit">Save</button>
 </form>
 
-@let value = profileForm.controls.profileFieldValue.valueChanges | async;
-
 <ng-template #textBlock>
   <div class="wrapper">
-    <div class="text-block">{{ value }}</div>
+    <div class="text-block">{{ formProfileFieldValue() }}</div>
     <button tuiIconButton appearance="icon" iconStart="@tui.pencil" size="s" type="button" (click)="enableEditMode()">
       Edit heading
     </button>

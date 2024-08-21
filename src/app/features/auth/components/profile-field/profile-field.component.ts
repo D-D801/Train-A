@@ -5,7 +5,7 @@ import { TuiAutoFocus, tuiMarkControlAsTouchedAndValidate } from '@taiga-ui/cdk'
 import { TuiButton, TuiError } from '@taiga-ui/core';
 import { TUI_VALIDATION_ERRORS, TuiFieldErrorPipe, TuiInputInline } from '@taiga-ui/kit';
 import { TuiInputModule } from '@taiga-ui/legacy';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { buildInErrors } from '@shared/constants/build-in-errors';
 import { emailValidator } from '@features/auth/validators';
 import { AlertService } from '@core/services/alert/alert.service';
@@ -53,6 +53,8 @@ export class ProfileFieldComponent {
   public profileForm = this.fb.group({
     profileFieldValue: this.fb.control('', [Validators.required]),
   });
+
+  protected formProfileFieldValue = toSignal(this.profileForm.controls.profileFieldValue.valueChanges);
 
   public constructor() {
     effect(() => {
