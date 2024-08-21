@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
+import { environment } from 'src/environment';
 import { CityInfo } from '../../interfaces/city-info';
 
-const BASE_URL = 'http://api.openweathermap.org/geo/1.0';
 const responseLimit = 5;
 
 @Injectable({
@@ -11,11 +11,9 @@ const responseLimit = 5;
 export class LocationApiService {
   private httpClient = inject(HttpClient);
 
-  apiLocationKey = import.meta.env.NG_APP_API_LOCATION_KEY;
-
   getLocationCoordinates(city: string) {
     return this.httpClient.get<CityInfo[]>(
-      `${BASE_URL}/direct?q=${city}&limit=${responseLimit}&appid=${this.apiLocationKey}`
+      `${environment.baseLocationApiUrl}/direct?q=${city}&limit=${responseLimit}&appid=${environment.locationApiKey}`
     );
   }
 }

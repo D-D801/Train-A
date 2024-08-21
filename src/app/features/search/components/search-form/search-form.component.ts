@@ -7,9 +7,17 @@ import { TuiDay, TuiLet, TuiTime } from '@taiga-ui/cdk';
 import { TuiDataListWrapper } from '@taiga-ui/kit';
 import { TuiInputDateTimeModule, TuiInputModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { SearchService } from '@features/search/services/search/search.service';
-import { debounceTime, merge, Subscription } from 'rxjs';
+import { debounceTime, Subscription } from 'rxjs';
 import { LocationApiService } from '@features/search/services/location-api/location-api.service';
 import { CityInfo } from '@features/search/interfaces/city-info';
+import { dateValidator } from '@features/search/validators/date';
+
+interface CityCoordinates {
+  latitude: number;
+  longitude: number;
+}
+
+type InputName = 'from' | 'to';
 
 @Component({
   selector: 'dd-search-form',
@@ -40,40 +48,51 @@ export class SearchFormComponent implements OnInit, OnDestroy {
 
   private subscription = new Subscription();
 
-  cities$ = this.searchService.cities;
+  cities = this.searchService.cities;
 
-  private fromInputValue: { lat: number; lon: number } = { lat: 0, lon: 0 };
+  private fromCityCoordinates: CityCoordinates = { latitude: 0, longitude: 0 };
 
-  private toInputValue: { lat: number; lon: number } = { lat: 0, lon: 0 };
+  private toCityCoordinates: CityCoordinates = { latitude: 0, longitude: 0 };
+
+  selectedCityIndex: number = 0;
 
   searchForm = new FormGroup({
     from: new FormControl('', [Validators.required]),
     to: new FormControl('', [Validators.required]),
-    date: new FormControl<[TuiDay, TuiTime]>([new TuiDay(2017, 2, 15), new TuiTime(12, 30)]),
+    date: new FormControl<[TuiDay, TuiTime]>([TuiDay.currentUtc(), new TuiTime(0, 0)], dateValidator()),
   });
 
   ngOnInit(): void {
+    const { from, to } = this.searchForm.controls;
     this.subscription.add(
-      merge(
-        this.searchForm.controls.from.valueChanges.pipe(debounceTime(1000)),
-        this.searchForm.controls.to.valueChanges.pipe(debounceTime(1000))
-      ).subscribe(() => {
+      from.valueChanges.pipe(debounceTime(1000)).subscribe(() => {
         if (!this.from.value) return;
         this.updateCities(this.from.value, 'from');
+      })
+    );
+    this.subscription.add(
+      to.valueChanges.pipe(debounceTime(1000)).subscribe(() => {
         if (!this.to.value) return;
         this.updateCities(this.to.value, 'to');
       })
     );
   }
 
-  updateCities(city: string, inputName: string) {
-    this.locationService.getLocationCoordinates(city).subscribe((value) => {
+  updateCities(city: string, inputName: InputName) {
+    this.locationService.getLocationCoordinates(city).subscribe((receivedCities) => {
+      const { lat, lon } = receivedCities[this.selectedCityIndex];
       if (inputName === 'from') {
-        this.fromInputValue = { lat: value[0].lat, lon: value[0].lon };
+        this.fromCityCoordinates = {
+          latitude: lat,
+          longitude: lon,
+        };
       } else {
-        this.toInputValue = { lat: value[0].lat, lon: value[0].lon };
+        this.toCityCoordinates = {
+          latitude: lat,
+          longitude: lon,
+        };
       }
-      this.searchService.setCities(value);
+      this.searchService.setCities(receivedCities);
     });
   }
 
@@ -81,7 +100,8 @@ export class SearchFormComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
-  onSelected(city: CityInfo, inputName: string) {
+  onSelected(city: CityInfo, inputName: string, index: number) {
+    this.selectedCityIndex = index;
     if (inputName === 'from') {
       this.from.setValue(city.name);
     }
@@ -94,20 +114,20 @@ export class SearchFormComponent implements OnInit, OnDestroy {
     if (this.searchForm.invalid) return;
     let date = 0;
     if (this.date.value) {
-      const { day, month, year } = this.date.value[0];
-      const { hours, minutes } = this.date.value[1];
+      const [{ day, month, year }, { hours, minutes }] = this.date.value;
       date = new Date(day, month, year, hours, minutes).valueOf();
     }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const searchServiceResponse = this.searchService
-      .search({
-        fromLatitude: this.fromInputValue.lat,
-        fromLongitude: this.fromInputValue.lon,
-        toLatitude: this.toInputValue.lat,
-        toLongitude: this.toInputValue.lon,
-        time: date,
-      })
-      .subscribe();
+    this.subscription.add(
+      this.searchService
+        .search({
+          fromLatitude: this.fromCityCoordinates.latitude,
+          fromLongitude: this.fromCityCoordinates.longitude,
+          toLatitude: this.toCityCoordinates.latitude,
+          toLongitude: this.toCityCoordinates.longitude,
+          time: date,
+        })
+        .subscribe()
+    );
   }
 
   get from() {
