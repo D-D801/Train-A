@@ -1,3 +1,5 @@
+import { CityCoordinates } from './city-coordinates.interface';
+
 export interface SearchRouteResponse {
   from: {
     stationId: number;
@@ -13,11 +15,6 @@ export interface SearchRouteResponse {
     };
   };
   routes: Route[];
-}
-
-export interface CityCoordinates {
-  latitude: number;
-  longitude: number;
 }
 
 interface Route {
