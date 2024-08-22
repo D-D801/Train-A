@@ -1,4 +1,4 @@
-import { AsyncPipe, NgIf, NgForOf } from '@angular/common';
+import { AsyncPipe, NgIf, NgForOf, NgTemplateOutlet, TitleCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TuiButton, TuiDataList, TuiInitialsPipe, TuiTextfield } from '@taiga-ui/core';
@@ -33,6 +33,8 @@ type InputName = 'from' | 'to';
     TuiTextfield,
     TuiInputDateTimeModule,
     TuiButton,
+    NgTemplateOutlet,
+    TitleCasePipe,
   ],
   templateUrl: './search-form.component.html',
   styleUrl: './search-form.component.scss',
