@@ -2,10 +2,7 @@ export interface SearchRouteResponse {
   from: {
     stationId: number;
     city: string;
-    geolocation: {
-      latitude: number;
-      longitude: number;
-    };
+    geolocation: CityCoordinates;
   };
   to: {
     stationId: number;
@@ -16,6 +13,11 @@ export interface SearchRouteResponse {
     };
   };
   routes: Route[];
+}
+
+export interface CityCoordinates {
+  latitude: number;
+  longitude: number;
 }
 
 interface Route {

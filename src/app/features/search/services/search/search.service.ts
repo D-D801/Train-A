@@ -11,9 +11,9 @@ export class SearchService {
 
   public cities = this._cities.asReadonly();
 
-  private httpClient = inject(HttpClient);
+  private readonly httpClient = inject(HttpClient);
 
-  search({ fromLatitude, fromLongitude, toLatitude, toLongitude, time }: SearchRouteParams) {
+  public search({ fromLatitude, fromLongitude, toLatitude, toLongitude, time }: SearchRouteParams) {
     return this.httpClient
       .get('/api/search', {
         params: {
@@ -27,7 +27,7 @@ export class SearchService {
       .pipe();
   }
 
-  setCities(receivedCities: CityInfo[]) {
+  public setCities(receivedCities: CityInfo[]) {
     this._cities.set(receivedCities);
   }
 }

@@ -9,9 +9,9 @@ const responseLimit = 5;
   providedIn: 'root',
 })
 export class LocationApiService {
-  private httpClient = inject(HttpClient);
+  private readonly httpClient = inject(HttpClient);
 
-  getLocationCoordinates(city: string) {
+  public getLocationCoordinates(city: string) {
     return this.httpClient.get<CityInfo[]>(
       `${environment.baseLocationApiUrl}/direct?q=${city}&limit=${responseLimit}&appid=${environment.locationApiKey}`
     );

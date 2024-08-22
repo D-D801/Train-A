@@ -1,5 +1,5 @@
 import { AsyncPipe, NgIf, NgForOf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TuiButton, TuiDataList, TuiInitialsPipe, TuiTextfield } from '@taiga-ui/core';
 
@@ -7,15 +7,12 @@ import { TuiDay, TuiLet, TuiTime } from '@taiga-ui/cdk';
 import { TuiDataListWrapper } from '@taiga-ui/kit';
 import { TuiInputDateTimeModule, TuiInputModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { SearchService } from '@features/search/services/search/search.service';
-import { debounceTime, Subscription } from 'rxjs';
+import { debounceTime } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { LocationApiService } from '@features/search/services/location-api/location-api.service';
 import { CityInfo } from '@features/search/interfaces/city-info';
 import { dateValidator } from '@features/search/validators/date';
-
-interface CityCoordinates {
-  latitude: number;
-  longitude: number;
-}
+import { CityCoordinates } from '@features/search/interfaces/search-route-response';
 
 type InputName = 'from' | 'to';
 
@@ -41,66 +38,61 @@ type InputName = 'from' | 'to';
   styleUrl: './search-form.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SearchFormComponent implements OnInit, OnDestroy {
-  private searchService = inject(SearchService);
+export class SearchFormComponent implements OnInit {
+  private readonly searchService = inject(SearchService);
 
-  private locationService = inject(LocationApiService);
+  private readonly locationService = inject(LocationApiService);
 
-  private subscription = new Subscription();
+  private readonly destroy = inject(DestroyRef);
 
-  cities = this.searchService.cities;
+  public cities = this.searchService.cities;
 
   private fromCityCoordinates: CityCoordinates = { latitude: 0, longitude: 0 };
 
   private toCityCoordinates: CityCoordinates = { latitude: 0, longitude: 0 };
 
-  selectedCityIndex: number = 0;
+  private selectedCityIndex: number = 0;
 
-  searchForm = new FormGroup({
+  public searchForm = new FormGroup({
     from: new FormControl('', [Validators.required]),
     to: new FormControl('', [Validators.required]),
     date: new FormControl<[TuiDay, TuiTime]>([TuiDay.currentUtc(), new TuiTime(0, 0)], dateValidator()),
   });
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     const { from, to } = this.searchForm.controls;
-    this.subscription.add(
-      from.valueChanges.pipe(debounceTime(1000)).subscribe(() => {
-        if (!this.from.value) return;
-        this.updateCities(this.from.value, 'from');
-      })
-    );
-    this.subscription.add(
-      to.valueChanges.pipe(debounceTime(1000)).subscribe(() => {
-        if (!this.to.value) return;
-        this.updateCities(this.to.value, 'to');
-      })
-    );
-  }
-
-  updateCities(city: string, inputName: InputName) {
-    this.locationService.getLocationCoordinates(city).subscribe((receivedCities) => {
-      const { lat, lon } = receivedCities[this.selectedCityIndex];
-      if (inputName === 'from') {
-        this.fromCityCoordinates = {
-          latitude: lat,
-          longitude: lon,
-        };
-      } else {
-        this.toCityCoordinates = {
-          latitude: lat,
-          longitude: lon,
-        };
-      }
-      this.searchService.setCities(receivedCities);
+    from.valueChanges.pipe(debounceTime(1000), takeUntilDestroyed(this.destroy)).subscribe(() => {
+      if (!this.from.value) return;
+      this.updateCities(this.from.value, 'from');
+    });
+    to.valueChanges.pipe(debounceTime(1000), takeUntilDestroyed(this.destroy)).subscribe(() => {
+      if (!this.to.value) return;
+      this.updateCities(this.to.value, 'to');
     });
   }
 
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+  public updateCities(city: string, inputName: InputName) {
+    this.locationService
+      .getLocationCoordinates(city)
+      .pipe(takeUntilDestroyed(this.destroy))
+      .subscribe((receivedCities) => {
+        const { lat, lon } = receivedCities[this.selectedCityIndex];
+        if (inputName === 'from') {
+          this.fromCityCoordinates = {
+            latitude: lat,
+            longitude: lon,
+          };
+        } else {
+          this.toCityCoordinates = {
+            latitude: lat,
+            longitude: lon,
+          };
+        }
+        this.searchService.setCities(receivedCities);
+      });
   }
 
-  onSelected(city: CityInfo, inputName: string, index: number) {
+  public onSelected(city: CityInfo, inputName: string, index: number) {
     this.selectedCityIndex = index;
     if (inputName === 'from') {
       this.from.setValue(city.name);
@@ -110,35 +102,34 @@ export class SearchFormComponent implements OnInit, OnDestroy {
     }
   }
 
-  search() {
+  public search() {
     if (this.searchForm.invalid) return;
     let date = 0;
     if (this.date.value) {
       const [{ day, month, year }, { hours, minutes }] = this.date.value;
       date = new Date(day, month, year, hours, minutes).valueOf();
     }
-    this.subscription.add(
-      this.searchService
-        .search({
-          fromLatitude: this.fromCityCoordinates.latitude,
-          fromLongitude: this.fromCityCoordinates.longitude,
-          toLatitude: this.toCityCoordinates.latitude,
-          toLongitude: this.toCityCoordinates.longitude,
-          time: date,
-        })
-        .subscribe()
-    );
+    this.searchService
+      .search({
+        fromLatitude: this.fromCityCoordinates.latitude,
+        fromLongitude: this.fromCityCoordinates.longitude,
+        toLatitude: this.toCityCoordinates.latitude,
+        toLongitude: this.toCityCoordinates.longitude,
+        time: date,
+      })
+      .pipe(takeUntilDestroyed(this.destroy))
+      .subscribe();
   }
 
-  get from() {
+  public get from() {
     return this.searchForm.controls.from;
   }
 
-  get to() {
+  public get to() {
     return this.searchForm.controls.to;
   }
 
-  get date() {
+  public get date() {
     return this.searchForm.controls.date;
   }
 }
