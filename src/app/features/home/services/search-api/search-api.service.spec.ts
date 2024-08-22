@@ -12,6 +12,7 @@ describe('SearchService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({ providers: [provideHttpClient(), provideHttpClientTesting()] });
     service = TestBed.inject(SearchApiService);
+    httpMock = TestBed.inject(HttpTestingController);
   });
 
   it('should be created', () => {
@@ -78,8 +79,10 @@ describe('SearchService', () => {
       expect(response).toEqual(searchRouteResponse);
     });
 
-    const signupRequest = httpMock.expectOne('/api/search');
-    expect(signupRequest.request.method).toBe('GET');
-    signupRequest.flush(searchRouteResponse);
+    const searchRequest = httpMock.expectOne(
+      '/api/search?fromLatitude=48.8575&fromLongitude=2.3514&toLatitude=40.4167&toLongitude=3.7033&time=1723669200000'
+    );
+    expect(searchRequest.request.method).toBe('GET');
+    searchRequest.flush(searchRouteResponse);
   });
 });
