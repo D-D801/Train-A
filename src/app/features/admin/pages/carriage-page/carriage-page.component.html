@@ -1,18 +1,20 @@
 <button class="create-btn" appearance="primary" size="m" tuiButton (click)="onCreate()">Create</button>
 
-<div *ngIf="showForm()">
-  <dd-carriage-form
-    [carriage]="selectedCarriage"
-    (submitForm)="onSubmit($event)"
-    (cancelForm)="onCancel()"
-  ></dd-carriage-form>
-</div>
+@if (showForm()) {
+  <div>
+    <dd-carriage-form
+      [carriage]="selectedCarriage"
+      (submitForm)="onSubmit($event)"
+      (cancelForm)="onCancel()"
+    ></dd-carriage-form>
+  </div>
+}
 
-<div *ngFor="let carriage of combinedCarriages$ | async">
+@for (carriage of allCarriages(); track carriage.name) {
   <div class="carriage-item">
     <dd-carriage-preview [carriage]="carriage"></dd-carriage-preview>
     <div>
       <button class="edit-btn" appearance="primary" size="s" tuiButton (click)="onEdit(carriage)">Edit</button>
     </div>
   </div>
-</div>
+}

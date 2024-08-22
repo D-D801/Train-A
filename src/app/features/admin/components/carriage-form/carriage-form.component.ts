@@ -41,7 +41,7 @@ export class CarriageFormComponent implements OnChanges {
 
   @Input() public carriage: Carriage | null = null;
 
-  @Output() public submitForm = new EventEmitter<Carriage>(undefined);
+  @Output() public submitForm = new EventEmitter<Carriage>();
 
   @Output() public cancelForm = new EventEmitter<null>();
 

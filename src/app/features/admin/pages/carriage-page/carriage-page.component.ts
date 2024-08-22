@@ -1,5 +1,4 @@
-import { AsyncPipe, NgFor, NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder } from '@angular/forms';
 import { AlertService } from '@core/services/alert/alert.service';
@@ -8,39 +7,51 @@ import { CarriagePreviewComponent } from '@features/admin/components/carriage-pr
 import { Carriage } from '@features/admin/interfaces/carriage.interface';
 import { CarriageApiService } from '@features/admin/services/carriage-api/carriage-api.service';
 import { TuiButton } from '@taiga-ui/core';
-import { BehaviorSubject, combineLatest, map, Subject } from 'rxjs';
 
 @Component({
   selector: 'dd-carriage-page',
   standalone: true,
-  imports: [CarriagePreviewComponent, CarriageFormComponent, NgFor, NgIf, TuiButton, AsyncPipe],
+  imports: [CarriagePreviewComponent, CarriageFormComponent, TuiButton],
   templateUrl: './carriage-page.component.html',
   styleUrl: './carriage-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CarriagePageComponent implements OnInit {
+export class CarriagePageComponent {
   private readonly carriageApiService = inject(CarriageApiService);
 
   private readonly fb = inject(FormBuilder);
 
-  protected showForm = signal(false);
+  protected readonly showForm = signal(false);
 
   private readonly destroy = inject(DestroyRef);
 
   private readonly alert = inject(AlertService);
 
-  private readonly refreshTrigger = new Subject<void>();
+  // public carriages = toSignal(this.carriageApiService.getCarriages(), { initialValue: [] });
+  private readonly carriages = signal<Carriage[]>([]);
 
-  public readonly carriages$ = this.carriageApiService.getCarriages();
+  public newCarriages = signal<Carriage[]>([]);
 
   public selectedCarriage: Carriage | null = null;
 
-  private readonly newCarriages$ = new BehaviorSubject<Carriage[]>([]);
+  public allCarriages = computed(() => [...this.newCarriages(), ...this.carriages()]);
 
-  public readonly newCarriages$$ = this.newCarriages$.asObservable();
+  public constructor() {
+    this.loadCarriages();
+  }
 
-  public ngOnInit() {
-    this.refreshTrigger.next();
+  private loadCarriages() {
+    this.carriageApiService
+      .getCarriages()
+      .pipe(takeUntilDestroyed(this.destroy))
+      .subscribe({
+        next: (carriages) => {
+          this.carriages.set(carriages);
+        },
+        error: ({ error: { message } }) => {
+          this.alert.open({ message, label: 'Error', appearance: 'error' });
+        },
+      });
   }
 
   public onCreate() {
@@ -60,7 +71,8 @@ export class CarriagePageComponent implements OnInit {
         .pipe(takeUntilDestroyed(this.destroy))
         .subscribe({
           next: () => {
-            this.afterSave(carriageData);
+            this.showForm.set(false);
+            this.loadCarriages();
           },
           error: ({ error: { message } }) => {
             this.alert.open({ message, label: 'Error', appearance: 'error' });
@@ -72,7 +84,10 @@ export class CarriagePageComponent implements OnInit {
         .pipe(takeUntilDestroyed(this.destroy))
         .subscribe({
           next: () => {
-            this.afterSave(carriageData);
+            this.showForm.set(false);
+            this.newCarriages.update((newCarriages) => {
+              return [carriageData, ...newCarriages];
+            });
           },
           error: ({ error: { message } }) => {
             this.alert.open({ message, label: 'Error', appearance: 'error' });
@@ -81,17 +96,7 @@ export class CarriagePageComponent implements OnInit {
     }
   }
 
-  public afterSave(newCarriage: Carriage) {
-    this.showForm.set(false);
-    const currentNewCarriages = this.newCarriages$.getValue();
-    this.newCarriages$.next([newCarriage, ...currentNewCarriages]);
-  }
-
   public onCancel() {
     this.showForm.set(false);
   }
-
-  public readonly combinedCarriages$ = combineLatest([this.carriages$, this.newCarriages$$]).pipe(
-    map(([carriagesFromApi, newCarriages$$]) => [...newCarriages$$, ...carriagesFromApi])
-  );
 }
