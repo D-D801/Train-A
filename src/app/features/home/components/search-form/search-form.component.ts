@@ -1,6 +1,6 @@
 import { AsyncPipe, NgIf, NgForOf, NgTemplateOutlet, TitleCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TuiButton, TuiDataList, TuiInitialsPipe, TuiTextfield } from '@taiga-ui/core';
 
 import { TuiDay, TuiLet, TuiTime } from '@taiga-ui/cdk';
@@ -43,6 +43,8 @@ type InputName = 'from' | 'to';
 export class SearchFormComponent implements OnInit {
   private readonly searchService = inject(SearchService);
 
+  private readonly fb = inject(FormBuilder);
+
   private readonly locationService = inject(LocationApiService);
 
   private readonly destroy = inject(DestroyRef);
@@ -55,10 +57,10 @@ export class SearchFormComponent implements OnInit {
 
   private selectedCityIndex: number = 0;
 
-  public searchForm = new FormGroup({
-    from: new FormControl('', [Validators.required]),
-    to: new FormControl('', [Validators.required]),
-    date: new FormControl<[TuiDay, TuiTime]>([TuiDay.currentUtc(), new TuiTime(0, 0)], dateValidator()),
+  public searchForm = this.fb.group({
+    from: this.fb.control('', [Validators.required]),
+    to: this.fb.control('', [Validators.required]),
+    date: this.fb.control<[TuiDay, TuiTime]>([TuiDay.currentUtc(), new TuiTime(0, 0)], dateValidator()),
   });
 
   public ngOnInit() {
