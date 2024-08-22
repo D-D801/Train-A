@@ -2,11 +2,11 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { SearchFormComponent } from '../../components/search-form/search-form.component';
 
 @Component({
-  selector: 'dd-search-page',
+  selector: 'dd-home-page',
   standalone: true,
   imports: [SearchFormComponent],
-  templateUrl: './search-page.component.html',
-  styleUrl: './search-page.component.scss',
+  templateUrl: './home-page.component.html',
+  styleUrl: './home-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SearchPageComponent {}
+export class HomePageComponent {}

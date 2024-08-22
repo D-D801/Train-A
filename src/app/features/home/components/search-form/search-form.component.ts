@@ -6,13 +6,13 @@ import { TuiButton, TuiDataList, TuiInitialsPipe, TuiTextfield } from '@taiga-ui
 import { TuiDay, TuiLet, TuiTime } from '@taiga-ui/cdk';
 import { TuiDataListWrapper } from '@taiga-ui/kit';
 import { TuiInputDateTimeModule, TuiInputModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
-import { SearchService } from '@features/search/services/search/search.service';
+import { SearchService } from '@features/home/services/search/search.service';
 import { debounceTime } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { LocationApiService } from '@features/search/services/location-api/location-api.service';
-import { CityInfo } from '@features/search/interfaces/city-info';
-import { dateValidator } from '@features/search/validators/date';
-import { CityCoordinates } from '@features/search/interfaces/search-route-response';
+import { LocationApiService } from '@features/home/services/location-api/location-api.service';
+import { CityInfo } from '@features/home/interfaces/city-info';
+import { dateValidator } from '@features/home/validators/date';
+import { CityCoordinates } from '@features/home/interfaces/search-route-response';
 
 type InputName = 'from' | 'to';
 
@@ -61,7 +61,7 @@ export class SearchFormComponent implements OnInit {
     date: new FormControl<[TuiDay, TuiTime]>([TuiDay.currentUtc(), new TuiTime(0, 0)], dateValidator()),
   });
 
-  public ngOnInit(): void {
+  public ngOnInit() {
     const { from, to } = this.searchForm.controls;
     from.valueChanges.pipe(debounceTime(1000), takeUntilDestroyed(this.destroy)).subscribe(() => {
       if (!this.from.value) return;

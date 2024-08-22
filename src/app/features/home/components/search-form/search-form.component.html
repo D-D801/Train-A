@@ -1,12 +1,20 @@
-<form class="container" [formGroup]="searchForm" (ngSubmit)="search()">
+<form class="tui-form__row_multi-fields" [formGroup]="searchForm" (ngSubmit)="search()">
   <ng-container [ngTemplateOutlet]="input" [ngTemplateOutletContext]="{ title: 'from' }"></ng-container>
   <ng-container [ngTemplateOutlet]="input" [ngTemplateOutletContext]="{ title: 'to' }"></ng-container>
-  <tui-input-date-time formControlName="date" timeMode="HH:MM"> Choose date and time </tui-input-date-time>
-  <button tuiButton appearance="primary" size="m" type="submit">Search</button>
+  <tui-input-date-time class="tui-form__multi-field" formControlName="date" timeMode="HH:MM">
+    Choose date and time
+  </tui-input-date-time>
+  <button class="tui-form__multi-field tui-form__button" tuiButton appearance="primary" size="m" type="submit">
+    Search
+  </button>
 </form>
 
 <ng-template #input let-title="title">
-  <tui-input *tuiLet="cities() as cities" [formControl]="$any(searchForm.controls)[title]" class="search-input">
+  <tui-input
+    *tuiLet="cities() as cities"
+    [formControl]="$any(searchForm.controls)[title]"
+    class="tui-form__multi-field"
+  >
     {{ title | titlecase }}
     <input placeholder="Type city name" tuiTextfieldLegacy />
     <ng-container *ngIf="cities?.length">
