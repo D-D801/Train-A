@@ -1,4 +1,4 @@
-import { NgFor, NgIf, AsyncPipe } from '@angular/common';
+import { NgFor, AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, Output, OnChanges } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Carriage } from '@features/admin/interfaces/carriage.interface';
@@ -16,7 +16,6 @@ import { CarriagePreviewComponent } from '../carriage-preview/carriage-preview.c
     ReactiveFormsModule,
     TuiFieldErrorPipe,
     NgFor,
-    NgIf,
     TuiButton,
     AsyncPipe,
     TuiInputModule,

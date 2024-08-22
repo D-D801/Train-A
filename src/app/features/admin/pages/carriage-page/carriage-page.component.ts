@@ -61,39 +61,51 @@ export class CarriagePageComponent {
 
   public onEdit(carriage: Carriage) {
     this.selectedCarriage = carriage;
+    if (!this.selectedCarriage.code) {
+      this.selectedCarriage.code = this.selectedCarriage.name;
+    }
     this.showForm.set(true);
   }
 
   public onSubmit(carriageData: Carriage) {
     if (carriageData.code) {
-      this.carriageApiService
-        .updateCarriage(carriageData)
-        .pipe(takeUntilDestroyed(this.destroy))
-        .subscribe({
-          next: () => {
-            this.showForm.set(false);
-            this.loadCarriages();
-          },
-          error: ({ error: { message } }) => {
-            this.alert.open({ message, label: 'Error', appearance: 'error' });
-          },
-        });
+      this.updateCarriage(carriageData);
     } else {
-      this.carriageApiService
-        .createCarriage(carriageData)
-        .pipe(takeUntilDestroyed(this.destroy))
-        .subscribe({
-          next: () => {
-            this.showForm.set(false);
-            this.newCarriages.update((newCarriages) => {
-              return [carriageData, ...newCarriages];
-            });
-          },
-          error: ({ error: { message } }) => {
-            this.alert.open({ message, label: 'Error', appearance: 'error' });
-          },
-        });
+      this.createCarriage(carriageData);
     }
+  }
+
+  public createCarriage(carriageData: Carriage) {
+    this.carriageApiService
+      .createCarriage(carriageData)
+      .pipe(takeUntilDestroyed(this.destroy))
+      .subscribe({
+        next: () => {
+          this.showForm.set(false);
+          this.newCarriages.update((newCarriages) => {
+            return [carriageData, ...newCarriages];
+          });
+        },
+        error: ({ error: { message } }) => {
+          this.alert.open({ message, label: 'Error', appearance: 'error' });
+        },
+      });
+  }
+
+  public updateCarriage(carriageData: Carriage) {
+    this.carriageApiService
+      .updateCarriage(carriageData)
+      .pipe(takeUntilDestroyed(this.destroy))
+      .subscribe({
+        next: () => {
+          this.showForm.set(false);
+          this.loadCarriages();
+          this.newCarriages.set([]);
+        },
+        error: ({ error: { message } }) => {
+          this.alert.open({ message, label: 'Error', appearance: 'error' });
+        },
+      });
   }
 
   public onCancel() {

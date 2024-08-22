@@ -9,6 +9,10 @@
   position: absolute;
   left: 0;
   margin-top: 1rem;
+
+  @media (width <= 960px) {
+    position: static;
+  }
 }
 
 form {
