@@ -1,36 +1,25 @@
 <form class="container" [formGroup]="searchForm" (ngSubmit)="search()">
-  <tui-input *tuiLet="cities() as cities" formControlName="from" class="search-input">
-    From
-    <input placeholder="Type city name" tuiTextfieldLegacy />
-    <ng-container *ngIf="cities?.length">
-      <tui-data-list *tuiDataList>
-        <button
-          *ngFor="let city of cities; index as i"
-          tuiOption
-          [value]="city.name"
-          (click)="onSelected(city, 'from', i)"
-        >
-          {{ city.name }}, {{ city.country }}
-        </button>
-      </tui-data-list>
-    </ng-container>
-  </tui-input>
-  <tui-input *tuiLet="cities() as cities" formControlName="to" class="search-input">
-    To
-    <input placeholder="Type city name" tuiTextfieldLegacy />
-    <ng-container *ngIf="cities?.length">
-      <tui-data-list *tuiDataList>
-        <button
-          *ngFor="let city of cities; index as i"
-          tuiOption
-          [value]="city.name"
-          (click)="onSelected(city, 'to', i)"
-        >
-          {{ city.name }}, {{ city.country }}
-        </button>
-      </tui-data-list>
-    </ng-container>
-  </tui-input>
+  <ng-container [ngTemplateOutlet]="input" [ngTemplateOutletContext]="{ title: 'from' }"></ng-container>
+  <ng-container [ngTemplateOutlet]="input" [ngTemplateOutletContext]="{ title: 'to' }"></ng-container>
   <tui-input-date-time formControlName="date" timeMode="HH:MM"> Choose date and time </tui-input-date-time>
   <button tuiButton appearance="primary" size="m" type="submit">Search</button>
 </form>
+
+<ng-template #input let-title="title">
+  <tui-input *tuiLet="cities() as cities" [formControl]="$any(searchForm.controls)[title]" class="search-input">
+    {{ title | titlecase }}
+    <input placeholder="Type city name" tuiTextfieldLegacy />
+    <ng-container *ngIf="cities?.length">
+      <tui-data-list *tuiDataList>
+        <button
+          *ngFor="let city of cities; index as i"
+          tuiOption
+          [value]="city.name"
+          (click)="onSelected(city, title, i)"
+        >
+          {{ city.name }}, {{ city.country }}
+        </button>
+      </tui-data-list>
+    </ng-container>
+  </tui-input>
+</ng-template>
