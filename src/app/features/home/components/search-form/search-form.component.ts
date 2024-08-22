@@ -10,9 +10,10 @@ import { SearchService } from '@features/home/services/search/search.service';
 import { debounceTime } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { LocationApiService } from '@features/home/services/location-api/location-api.service';
-import { CityInfo } from '@features/home/interfaces/city-info';
 import { dateValidator } from '@features/home/validators/date';
-import { CityCoordinates } from '@features/home/interfaces/search-route-response';
+import { SearchApiService } from '@features/home/services/search-api/search-api.service';
+import { CityCoordinates } from '@features/home/interfaces/city-coordinates.interface';
+import { CityInfo } from '@features/home/interfaces/city-info.interface';
 
 type InputName = 'from' | 'to';
 
@@ -42,6 +43,8 @@ type InputName = 'from' | 'to';
 })
 export class SearchFormComponent implements OnInit {
   private readonly searchService = inject(SearchService);
+
+  private readonly searchApiService = inject(SearchApiService);
 
   private readonly fb = inject(FormBuilder);
 
@@ -113,7 +116,7 @@ export class SearchFormComponent implements OnInit {
       const [{ day, month, year }, { hours, minutes }] = this.date.value;
       date = new Date(day, month, year, hours, minutes).valueOf();
     }
-    this.searchService
+    this.searchApiService
       .search({
         fromLatitude: this.fromCityCoordinates.latitude,
         fromLongitude: this.fromCityCoordinates.longitude,
