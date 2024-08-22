@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormBuilder } from '@angular/forms';
 import { AlertService } from '@core/services/alert/alert.service';
 import { CarriageFormComponent } from '@features/admin/components/carriage-form/carriage-form.component';
 import { CarriagePreviewComponent } from '@features/admin/components/carriage-preview/carriage-preview.component';
 import { Carriage } from '@features/admin/interfaces/carriage.interface';
 import { CarriageApiService } from '@features/admin/services/carriage-api/carriage-api.service';
 import { TuiButton } from '@taiga-ui/core';
+import { switchMap } from 'rxjs';
 
 @Component({
   selector: 'dd-carriage-page',
@@ -19,15 +19,12 @@ import { TuiButton } from '@taiga-ui/core';
 export class CarriagePageComponent {
   private readonly carriageApiService = inject(CarriageApiService);
 
-  private readonly fb = inject(FormBuilder);
-
   protected readonly showForm = signal(false);
 
   private readonly destroy = inject(DestroyRef);
 
   private readonly alert = inject(AlertService);
 
-  // public carriages = toSignal(this.carriageApiService.getCarriages(), { initialValue: [] });
   private readonly carriages = signal<Carriage[]>([]);
 
   public newCarriages = signal<Carriage[]>([]);
@@ -37,12 +34,7 @@ export class CarriagePageComponent {
   public allCarriages = computed(() => [...this.newCarriages(), ...this.carriages()]);
 
   public constructor() {
-    this.loadCarriages();
-  }
-
-  private loadCarriages() {
-    this.carriageApiService
-      .getCarriages()
+    this.loadCarriages()
       .pipe(takeUntilDestroyed(this.destroy))
       .subscribe({
         next: (carriages) => {
@@ -54,6 +46,10 @@ export class CarriagePageComponent {
       });
   }
 
+  private loadCarriages() {
+    return this.carriageApiService.getCarriages();
+  }
+
   public onCreate() {
     this.selectedCarriage = null;
     this.showForm.set(true);
@@ -61,9 +57,6 @@ export class CarriagePageComponent {
 
   public onEdit(carriage: Carriage) {
     this.selectedCarriage = carriage;
-    if (!this.selectedCarriage.code) {
-      this.selectedCarriage.code = this.selectedCarriage.name;
-    }
     this.showForm.set(true);
   }
 
@@ -76,14 +69,21 @@ export class CarriagePageComponent {
   }
 
   public createCarriage(carriageData: Carriage) {
+    const isCarriage = this.carriages().some((item) => item.name === carriageData.name);
+    const isCarriageNew = this.newCarriages().some((item) => item.name === carriageData.name);
+    if (isCarriage || isCarriageNew) {
+      this.alert.open({ message: 'Carriage already exists', label: 'Error', appearance: 'error' });
+      return;
+    }
     this.carriageApiService
       .createCarriage(carriageData)
       .pipe(takeUntilDestroyed(this.destroy))
       .subscribe({
-        next: () => {
+        next: ({ code }) => {
           this.showForm.set(false);
+          const car = { ...carriageData, code };
           this.newCarriages.update((newCarriages) => {
-            return [carriageData, ...newCarriages];
+            return [car, ...newCarriages];
           });
         },
         error: ({ error: { message } }) => {
@@ -95,11 +95,14 @@ export class CarriagePageComponent {
   public updateCarriage(carriageData: Carriage) {
     this.carriageApiService
       .updateCarriage(carriageData)
-      .pipe(takeUntilDestroyed(this.destroy))
+      .pipe(
+        takeUntilDestroyed(this.destroy),
+        switchMap(() => this.loadCarriages())
+      )
       .subscribe({
-        next: () => {
+        next: (carriages) => {
+          this.carriages.set(carriages);
           this.showForm.set(false);
-          this.loadCarriages();
           this.newCarriages.set([]);
         },
         error: ({ error: { message } }) => {

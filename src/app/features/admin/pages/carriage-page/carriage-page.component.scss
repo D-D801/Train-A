@@ -1,8 +1,18 @@
+@import '@taiga-ui/core/styles/taiga-ui-local';
+
 :host {
   display: flex;
   flex-direction: column;
   gap: 2rem;
   width: 40rem;
+
+  @media #{$tui-mobile} {
+    width: 25rem;
+  }
+
+  @media #{$tui-mobile-interval} {
+    width: 20rem;
+  }
 }
 
 .create-btn {
@@ -10,7 +20,7 @@
   left: 0;
   margin-top: 1rem;
 
-  @media (width <= 960px) {
+  @media #{$tui-tablet} {
     position: static;
   }
 }

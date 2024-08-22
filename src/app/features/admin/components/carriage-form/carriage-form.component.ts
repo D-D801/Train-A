@@ -31,11 +31,11 @@ export class CarriageFormComponent implements OnChanges {
   protected min = 1;
 
   public carriageForm = this.fb.group({
-    code: [''],
-    name: ['', Validators.required],
-    rows: [1, Validators.required],
-    leftSeats: [1, Validators.required],
-    rightSeats: [1, Validators.required],
+    code: this.fb.control(''),
+    name: this.fb.control('', Validators.required),
+    rows: this.fb.control(1, Validators.required),
+    leftSeats: this.fb.control(1, Validators.required),
+    rightSeats: this.fb.control(1, Validators.required),
   });
 
   @Input() public carriage: Carriage | null = null;
