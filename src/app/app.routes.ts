@@ -6,8 +6,7 @@ export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   {
     path: 'home',
-    loadComponent: () =>
-      import('@features/search/pages/search-page/search-page.component').then((m) => m.SearchPageComponent),
+    loadComponent: () => import('@features/home/pages/home-page/home-page.component').then((m) => m.HomePageComponent),
   },
   {
     path: 'registration',
