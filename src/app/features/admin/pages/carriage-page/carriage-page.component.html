@@ -10,7 +10,7 @@
   </div>
 }
 
-@for (carriage of allCarriages(); track carriage.name) {
+@for (carriage of allCarriages(); track carriage.code) {
   <div class="carriage-item">
     <dd-carriage-preview [carriage]="carriage"></dd-carriage-preview>
     <div>
