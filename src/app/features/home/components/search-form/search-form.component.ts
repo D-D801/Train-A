@@ -14,6 +14,7 @@ import { dateValidator } from '@features/home/validators/date';
 import { SearchApiService } from '@features/home/services/search-api/search-api.service';
 import { CityCoordinates } from '@features/home/interfaces/city-coordinates.interface';
 import { CityInfo } from '@features/home/interfaces/city-info.interface';
+import { AlertService } from '@core/services/alert/alert.service';
 
 type InputName = 'from' | 'to';
 
@@ -50,6 +51,8 @@ export class SearchFormComponent implements OnInit {
 
   private readonly locationService = inject(LocationApiService);
 
+  private readonly alert = inject(AlertService);
+
   private readonly destroy = inject(DestroyRef);
 
   public cities = this.searchService.cities;
@@ -82,20 +85,25 @@ export class SearchFormComponent implements OnInit {
     this.locationService
       .getLocationCoordinates(city)
       .pipe(takeUntilDestroyed(this.destroy))
-      .subscribe((receivedCities) => {
-        const { lat, lon } = receivedCities[this.selectedCityIndex];
-        if (inputName === 'from') {
-          this.fromCityCoordinates = {
-            latitude: lat,
-            longitude: lon,
-          };
-        } else {
-          this.toCityCoordinates = {
-            latitude: lat,
-            longitude: lon,
-          };
-        }
-        this.searchService.setCities(receivedCities);
+      .subscribe({
+        next: (receivedCities) => {
+          const { lat, lon } = receivedCities[this.selectedCityIndex];
+          if (inputName === 'from') {
+            this.fromCityCoordinates = {
+              latitude: lat,
+              longitude: lon,
+            };
+          } else {
+            this.toCityCoordinates = {
+              latitude: lat,
+              longitude: lon,
+            };
+          }
+          this.searchService.setCities(receivedCities);
+        },
+        error: ({ error: { message } }) => {
+          this.alert.open({ message, label: 'Error:', appearance: 'error' });
+        },
       });
   }
 
@@ -109,6 +117,7 @@ export class SearchFormComponent implements OnInit {
     }
   }
 
+  // TODO: For result list: If no rides are available, a message indicating that no rides are available must be displayed.
   public search() {
     if (this.searchForm.invalid) return;
     let date = 0;
@@ -125,7 +134,11 @@ export class SearchFormComponent implements OnInit {
         time: date,
       })
       .pipe(takeUntilDestroyed(this.destroy))
-      .subscribe();
+      .subscribe({
+        error: ({ error: { message } }) => {
+          this.alert.open({ message, label: 'Error:', appearance: 'error' });
+        },
+      });
   }
 
   public get from() {
