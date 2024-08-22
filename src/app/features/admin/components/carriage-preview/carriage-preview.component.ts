@@ -1,5 +1,5 @@
 import { NgFor } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, input, signal } from '@angular/core';
 import { Carriage } from '@features/admin/interfaces/carriage.interface';
 
 @Component({
@@ -10,34 +10,44 @@ import { Carriage } from '@features/admin/interfaces/carriage.interface';
   styleUrl: './carriage-preview.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CarriagePreviewComponent implements OnChanges {
-  @Input({ required: true }) public carriage!: Carriage;
+export class CarriagePreviewComponent {
+  public seatNumbers = signal<Array<{ leftRow: number[]; rightRow: number[] }>>([]);
 
-  public seatNumbers: Array<{ leftRow: number[]; rightRow: number[] }> = [];
+  public carriage = input.required<Carriage | null>();
 
-  public ngOnChanges(changes: SimpleChanges): void {
-    if (changes['carriage']) {
-      this.updateSeatNumbers();
-    }
+  public constructor() {
+    effect(
+      () => {
+        if (this.carriage()) {
+          this.updateSeatNumbers();
+        }
+      },
+      { allowSignalWrites: true }
+    );
   }
 
   private updateSeatNumbers(): void {
     let currentSeatNumber = 1;
 
-    this.seatNumbers = Array.from({ length: this.carriage.rows }, () => {
-      const leftRow = Array.from({ length: this.carriage.leftSeats }, () => {
-        const seatNumber = currentSeatNumber;
-        currentSeatNumber += 1;
-        return seatNumber;
-      });
+    const carriage = this.carriage() as Carriage;
+    if (!carriage) return;
 
-      const rightRow = Array.from({ length: this.carriage.rightSeats }, () => {
-        const seatNumber = currentSeatNumber;
-        currentSeatNumber += 1;
-        return seatNumber;
-      });
+    this.seatNumbers.set(
+      Array.from({ length: carriage.rows }, () => {
+        const leftRow = Array.from({ length: carriage.leftSeats }, () => {
+          const seatNumber = currentSeatNumber;
+          currentSeatNumber += 1;
+          return seatNumber;
+        });
 
-      return { leftRow: leftRow.reverse(), rightRow: rightRow.reverse() };
-    });
+        const rightRow = Array.from({ length: carriage.rightSeats }, () => {
+          const seatNumber = currentSeatNumber;
+          currentSeatNumber += 1;
+          return seatNumber;
+        });
+
+        return { leftRow: leftRow.reverse(), rightRow: rightRow.reverse() };
+      })
+    );
   }
 }

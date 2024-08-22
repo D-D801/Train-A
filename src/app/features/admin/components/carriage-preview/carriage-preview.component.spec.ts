@@ -1,28 +1,32 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { Carriage } from '@features/admin/interfaces/carriage.interface';
+import { Component } from '@angular/core';
 import { CarriagePreviewComponent } from './carriage-preview.component';
 
+@Component({
+  template: ` <dd-carriage-preview [carriage]="carriage"></dd-carriage-preview>`,
+  standalone: true,
+})
+class TestPreviewComponent {
+  public carriage = {
+    rows: 2,
+    leftSeats: 3,
+    rightSeats: 3,
+  } as Carriage;
+}
+
 describe('CarriagePreviewComponent', () => {
-  let component: CarriagePreviewComponent;
-  let fixture: ComponentFixture<CarriagePreviewComponent>;
+  let component: TestPreviewComponent;
+  let fixture: ComponentFixture<TestPreviewComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CarriagePreviewComponent],
+      imports: [CarriagePreviewComponent, TestPreviewComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(CarriagePreviewComponent);
+    fixture = TestBed.createComponent(TestPreviewComponent);
     component = fixture.componentInstance;
-
-    component.carriage = {
-      code: 'ABC123',
-      name: 'Test Carriage',
-      rows: 10,
-      leftSeats: 20,
-      rightSeats: 20,
-    } as Carriage;
-
     fixture.detectChanges();
   });
 
