@@ -50,6 +50,8 @@ export class CarriageFormComponent {
       if (carriage) {
         const { name, rows, leftSeats, rightSeats } = carriage;
         this.carriageForm.patchValue({ name, rows, leftSeats, rightSeats });
+      } else {
+        this.carriageForm.patchValue({ name: '', rows: 0, leftSeats: 0, rightSeats: 0 });
       }
     });
   }
