@@ -1,3 +1,5 @@
+import { Segment } from './segment.interface';
+
 export interface Route {
   id: number;
   path: number[];
@@ -7,14 +9,5 @@ export interface Route {
 
 interface Schedule {
   rideId: number;
-  segments: Segments[];
-}
-
-interface Segments {
-  time: [string, string];
-  price: Price;
-}
-
-interface Price {
-  [carriage: string]: number;
+  segments: Segment[];
 }
