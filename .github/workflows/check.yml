@@ -6,9 +6,7 @@ on:
       - 'develop/'
 
   pull_request:
-    branches:
-      - main
-      - 'develop/'
+    types: [opened, reopened]
 
   workflow_dispatch:
 
