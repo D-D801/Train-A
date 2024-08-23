@@ -1,5 +1,5 @@
 import { NgFor, AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, Output, OnChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, inject, Output, OnChanges, Input } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Carriage } from '@features/admin/interfaces/carriage.interface';
 import { TuiError, TuiButton } from '@taiga-ui/core';
@@ -26,6 +26,12 @@ import { CarriagePreviewComponent } from '../carriage-preview/carriage-preview.c
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CarriageFormComponent implements OnChanges {
+  @Input() public carriage: Carriage | null = null;
+
+  @Output() public submitForm = new EventEmitter<Carriage>();
+
+  @Output() public cancelForm = new EventEmitter<null>();
+
   private readonly fb = inject(NonNullableFormBuilder);
 
   protected min = 1;
@@ -37,12 +43,6 @@ export class CarriageFormComponent implements OnChanges {
     leftSeats: this.fb.control(1, Validators.required),
     rightSeats: this.fb.control(1, Validators.required),
   });
-
-  @Input() public carriage: Carriage | null = null;
-
-  @Output() public submitForm = new EventEmitter<Carriage>();
-
-  @Output() public cancelForm = new EventEmitter<null>();
 
   public ngOnChanges() {
     if (this.carriage) {
