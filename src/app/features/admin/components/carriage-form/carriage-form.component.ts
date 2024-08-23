@@ -1,4 +1,4 @@
-import { NgFor, AsyncPipe } from '@angular/common';
+import { NgFor, AsyncPipe, NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, EventEmitter, inject, Output, input, effect } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Carriage } from '@features/admin/interfaces/carriage.interface';
@@ -20,6 +20,7 @@ import { CarriagePreviewComponent } from '../carriage-preview/carriage-preview.c
     AsyncPipe,
     TuiInputModule,
     TuiInputNumberModule,
+    NgTemplateOutlet,
   ],
   templateUrl: './carriage-form.component.html',
   styleUrl: './carriage-form.component.scss',
