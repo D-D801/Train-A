@@ -1,16 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Component, NO_ERRORS_SCHEMA } from '@angular/core';
+import { Component } from '@angular/core';
 import { provideHttpClient } from '@angular/common/http';
 import { ProfileFieldComponent } from './profile-field.component';
 
 @Component({
-  template: `<dd-profile-field [label]="label" [text]="text"></dd-profile-field>`,
+  template: `<dd-profile-field label="email" text="user@example.com"></dd-profile-field>`,
 })
-class TestHostComponent {
-  public label = 'email';
-
-  public text = 'user@example.com';
-}
+class TestHostComponent {}
 
 describe('ProfileFieldComponent', () => {
   let fixture: ComponentFixture<TestHostComponent>;
@@ -20,7 +16,6 @@ describe('ProfileFieldComponent', () => {
       declarations: [TestHostComponent],
       imports: [ProfileFieldComponent],
       providers: [provideHttpClient()],
-      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TestHostComponent);

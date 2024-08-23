@@ -51,7 +51,7 @@ export class CarriageFormComponent {
         const { name, rows, leftSeats, rightSeats } = carriage;
         this.carriageForm.patchValue({ name, rows, leftSeats, rightSeats });
       } else {
-        this.carriageForm.patchValue({ name: '', rows: 0, leftSeats: 0, rightSeats: 0 });
+        this.carriageForm.patchValue({ name: '', rows: 1, leftSeats: 1, rightSeats: 1 });
       }
     });
   }
