@@ -65,10 +65,8 @@ section {
     left: -2px;
 
     width: 10px;
-    height: 23px;
+    height: 24px;
 
-    border-top: 1px solid var(--tui-status-neutralt);
-    border-bottom: 1px solid var(--tui-status-neutral);
     border-left: 1px solid var(--tui-status-neutral);
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
@@ -82,6 +80,38 @@ section {
 
 @media #{$tui-mobile} {
   .carriage {
+    flex-direction: column;
     justify-content: flex-start;
+  }
+
+  .column {
+    flex-direction: row-reverse;
+    gap: 20px;
+  }
+
+  .seats-right,
+  .seats-left {
+    flex-direction: row-reverse;
+  }
+
+  .seat {
+    &::before {
+      content: none;
+    }
+
+    &::after {
+      content: '';
+
+      position: absolute;
+      top: 12px;
+      left: -2px;
+
+      width: 24px;
+      height: 10px;
+
+      border-bottom: 1px solid var(--tui-status-neutral);
+      border-bottom-right-radius: 5px;
+      border-bottom-left-radius: 5px;
+    }
   }
 }
