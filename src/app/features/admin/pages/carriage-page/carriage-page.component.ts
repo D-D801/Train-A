@@ -19,11 +19,11 @@ import { switchMap } from 'rxjs';
 export class CarriagePageComponent {
   private readonly carriageApiService = inject(CarriageApiService);
 
-  public readonly showForm = signal(false);
-
   private readonly destroy = inject(DestroyRef);
 
   private readonly alert = inject(AlertService);
+
+  public readonly showForm = signal(false);
 
   private readonly _carriages = signal<Carriage[]>([]);
 
@@ -31,9 +31,9 @@ export class CarriagePageComponent {
 
   public newCarriages = signal<Carriage[]>([]);
 
-  public selectedCarriage: Carriage | null = null;
-
   public allCarriages = computed(() => [...this.newCarriages(), ...this._carriages()]);
+
+  public selectedCarriage: Carriage | null = null;
 
   public constructor() {
     this.loadCarriages()
@@ -68,6 +68,10 @@ export class CarriagePageComponent {
     } else {
       this.createCarriage(carriageData);
     }
+  }
+
+  public onCancel() {
+    this.showForm.set(false);
   }
 
   public createCarriage(carriageData: Carriage) {
@@ -111,9 +115,5 @@ export class CarriagePageComponent {
           this.alert.open({ message, label: 'Error', appearance: 'error' });
         },
       });
-  }
-
-  public onCancel() {
-    this.showForm.set(false);
   }
 }

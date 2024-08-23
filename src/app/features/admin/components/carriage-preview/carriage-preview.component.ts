@@ -11,9 +11,9 @@ import { Carriage } from '@features/admin/interfaces/carriage.interface';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CarriagePreviewComponent {
-  public seatNumbers = signal<Array<{ leftRow: number[]; rightRow: number[] }>>([]);
-
   public carriage = input.required<Carriage | null>();
+
+  public seatNumbers = signal<Array<{ leftRow: number[]; rightRow: number[] }>>([]);
 
   public constructor() {
     effect(
