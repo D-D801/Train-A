@@ -19,26 +19,28 @@ import { switchMap } from 'rxjs';
 export class CarriagePageComponent {
   private readonly carriageApiService = inject(CarriageApiService);
 
-  protected readonly showForm = signal(false);
+  public readonly showForm = signal(false);
 
   private readonly destroy = inject(DestroyRef);
 
   private readonly alert = inject(AlertService);
 
-  private readonly carriages = signal<Carriage[]>([]);
+  private readonly _carriages = signal<Carriage[]>([]);
+
+  public readonly carriages = this._carriages.asReadonly();
 
   public newCarriages = signal<Carriage[]>([]);
 
   public selectedCarriage: Carriage | null = null;
 
-  public allCarriages = computed(() => [...this.newCarriages(), ...this.carriages()]);
+  public allCarriages = computed(() => [...this.newCarriages(), ...this._carriages()]);
 
   public constructor() {
     this.loadCarriages()
       .pipe(takeUntilDestroyed(this.destroy))
       .subscribe({
         next: (carriages) => {
-          this.carriages.set(carriages);
+          this._carriages.set(carriages);
         },
         error: ({ error: { message } }) => {
           this.alert.open({ message, label: 'Error', appearance: 'error' });
@@ -46,7 +48,7 @@ export class CarriagePageComponent {
       });
   }
 
-  private loadCarriages() {
+  public loadCarriages() {
     return this.carriageApiService.getCarriages();
   }
 
@@ -69,7 +71,7 @@ export class CarriagePageComponent {
   }
 
   public createCarriage(carriageData: Carriage) {
-    const isCarriage = this.carriages().some((item) => item.name === carriageData.name);
+    const isCarriage = this._carriages().some((item) => item.name === carriageData.name);
     const isCarriageNew = this.newCarriages().some((item) => item.name === carriageData.name);
     if (isCarriage || isCarriageNew) {
       this.alert.open({ message: 'Carriage already exists', label: 'Error', appearance: 'error' });
@@ -101,7 +103,7 @@ export class CarriagePageComponent {
       )
       .subscribe({
         next: (carriages) => {
-          this.carriages.set(carriages);
+          this._carriages.set(carriages);
           this.showForm.set(false);
           this.newCarriages.set([]);
         },

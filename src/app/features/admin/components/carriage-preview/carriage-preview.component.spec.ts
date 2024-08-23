@@ -1,20 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Carriage } from '@features/admin/interfaces/carriage.interface';
 import { Component } from '@angular/core';
 import { CarriagePreviewComponent } from './carriage-preview.component';
 
 @Component({
-  template: ` <dd-carriage-preview [carriage]="carriage"></dd-carriage-preview>`,
+  template: `<div carriage="carriage"></div>`,
   standalone: true,
 })
-class TestPreviewComponent {
-  public carriage = {
-    rows: 2,
-    leftSeats: 3,
-    rightSeats: 3,
-  } as Carriage;
-}
+class TestPreviewComponent {}
 
 describe('CarriagePreviewComponent', () => {
   let component: TestPreviewComponent;
