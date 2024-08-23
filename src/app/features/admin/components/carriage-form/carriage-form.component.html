@@ -23,7 +23,7 @@
   }
 
   <button appearance="primary" size="m" tuiButton (click)="onSubmit()">
-    @if (carriage?.code) {
+    @if (carriage()?.code) {
       Update
     } @else {
       Save

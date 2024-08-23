@@ -1,5 +1,5 @@
 import { NgFor, AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, EventEmitter, inject, Output, OnChanges, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, inject, Output, input, effect } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Carriage } from '@features/admin/interfaces/carriage.interface';
 import { TuiError, TuiButton } from '@taiga-ui/core';
@@ -25,8 +25,8 @@ import { CarriagePreviewComponent } from '../carriage-preview/carriage-preview.c
   styleUrl: './carriage-form.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CarriageFormComponent implements OnChanges {
-  @Input() public carriage: Carriage | null = null;
+export class CarriageFormComponent {
+  public carriage = input.required<Carriage | null>();
 
   @Output() public submitForm = new EventEmitter<Carriage>();
 
@@ -44,10 +44,14 @@ export class CarriageFormComponent implements OnChanges {
     rightSeats: this.fb.control(1, Validators.required),
   });
 
-  public ngOnChanges() {
-    if (this.carriage) {
-      this.carriageForm.patchValue(this.carriage);
-    }
+  public constructor() {
+    effect(() => {
+      const carriage = this.carriage();
+      if (carriage) {
+        const { name, rows, leftSeats, rightSeats } = carriage;
+        this.carriageForm.patchValue({ name, rows, leftSeats, rightSeats });
+      }
+    });
   }
 
   public onSubmit() {
