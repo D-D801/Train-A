@@ -4,7 +4,7 @@ import { of, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import { LocalStorageService } from '@core/services/local-storage/local-storage.service';
 import { TuiAlertService } from '@taiga-ui/core';
-import { mockTokenResponse, mockUser } from '@shared/constants/mock-user-data';
+import { mockTokenResponse, mockUser } from '@shared/constants/mock-data/mock-user-data';
 import { LocalStorageKey } from '@shared/enums/local-storage-key.enum';
 import { AuthApiService } from '../auth-api/auth-api.service';
 import { AuthService } from './auth.service';

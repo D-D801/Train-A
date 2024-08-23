@@ -4,7 +4,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { ProfileFieldComponent } from './profile-field.component';
 
 @Component({
-  template: `<dd-profile-field [label]="label" [text]="text"></dd-profile-field>`,
+  template: `<dd-profile-field [label]="label" text="text"></dd-profile-field>`,
 })
 class TestHostComponent {
   public label = 'email';
