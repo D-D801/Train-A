@@ -49,10 +49,10 @@ export class CarriageFormComponent {
     effect(() => {
       const carriage = this.carriage();
       if (carriage) {
-        const { name, rows, leftSeats, rightSeats } = carriage;
-        this.carriageForm.patchValue({ name, rows, leftSeats, rightSeats });
+        const { code, name, rows, leftSeats, rightSeats } = carriage;
+        this.carriageForm.patchValue({ code, name, rows, leftSeats, rightSeats });
       } else {
-        this.carriageForm.patchValue({ name: '', rows: 1, leftSeats: 1, rightSeats: 1 });
+        this.carriageForm.patchValue({ code: '', name: '', rows: 1, leftSeats: 1, rightSeats: 1 });
       }
     });
   }

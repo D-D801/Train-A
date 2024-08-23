@@ -1,13 +1,13 @@
 import { NgFor } from '@angular/common';
 import { ChangeDetectionStrategy, Component, effect, input, signal } from '@angular/core';
 import { Carriage } from '@features/admin/interfaces/carriage.interface';
-import { TuiSurface, TuiTitle } from '@taiga-ui/core';
+import { TuiAppearance, TuiSurface, TuiTitle } from '@taiga-ui/core';
 import { TuiCardLarge, TuiHeader } from '@taiga-ui/layout';
 
 @Component({
   selector: 'dd-carriage-preview',
   standalone: true,
-  imports: [NgFor, TuiCardLarge, TuiSurface, TuiTitle, TuiHeader],
+  imports: [NgFor, TuiCardLarge, TuiSurface, TuiTitle, TuiHeader, TuiAppearance],
   templateUrl: './carriage-preview.component.html',
   styleUrl: './carriage-preview.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

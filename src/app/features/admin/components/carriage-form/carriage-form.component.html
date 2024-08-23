@@ -1,26 +1,26 @@
 <form class="tui-form__row" [formGroup]="carriageForm">
-  <ng-container [ngTemplateOutlet]="input" [ngTemplateOutletContext]="{ title: 'name', label: 'Name' }"></ng-container>
-  <ng-container [ngTemplateOutlet]="input" [ngTemplateOutletContext]="{ title: 'rows', label: 'Rows' }"></ng-container>
-  <ng-container
-    [ngTemplateOutlet]="input"
-    [ngTemplateOutletContext]="{ title: 'leftSeats', label: 'Left Seats' }"
-  ></ng-container>
-  <ng-container
-    [ngTemplateOutlet]="input"
-    [ngTemplateOutletContext]="{ title: 'rightSeats', label: 'Right Seats' }"
-  ></ng-container>
+  <div class="tui-form__row">
+    <tui-input formControlName="name">
+      Name
+      <input tuiTextfieldLegacy />
+    </tui-input>
+    <tui-error formControlName="name" [error]="[] | tuiFieldError | async" />
+  </div>
+  <div class="tui-form__row">
+    <tui-input-number [min]="min" class="input" formControlName="rows"> Rows </tui-input-number>
+    <tui-error formControlName="rows" [error]="[] | tuiFieldError | async" />
+  </div>
+  <div class="tui-form__row">
+    <tui-input-number [min]="min" class="input" formControlName="leftSeats"> LeftSeats </tui-input-number>
+    <tui-error formControlName="leftSeats" [error]="[] | tuiFieldError | async" />
+  </div>
+  <div class="tui-form__row">
+    <tui-input-number [min]="min" class="input" formControlName="rightSeats"> RightSeats </tui-input-number>
+    <tui-error formControlName="rightSeats" [error]="[] | tuiFieldError | async" />
+  </div>
 
-  <ng-template #input let-title="title" let-label="label">
-    <div class="tui-form__row">
-      <tui-input [formControl]="$any(carriageForm.controls)[title]">
-        {{ label }}
-        <input tuiTextfieldLegacy />
-      </tui-input>
-      <tui-error [formControl]="$any(carriageForm.controls)[title]" [error]="[] | tuiFieldError | async" />
-    </div>
-  </ng-template>
   @if (carriageForm.valid) {
-    <dd-carriage-preview [carriage]="carriageForm.getRawValue()"></dd-carriage-preview>
+    <dd-carriage-preview class="preview" [carriage]="carriageForm.getRawValue()"></dd-carriage-preview>
   }
 
   <div class="tui-form__buttons tui-form__buttons_align_end">
