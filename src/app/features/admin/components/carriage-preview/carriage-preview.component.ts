@@ -29,21 +29,23 @@ export class CarriagePreviewComponent {
   private updateSeatNumbers(): void {
     let currentSeatNumber = 1;
 
+    const setSeatNumber = () => {
+      const seatNumber = currentSeatNumber;
+      currentSeatNumber += 1;
+      return seatNumber;
+    };
+
     const carriage = this.carriage() as Carriage;
     if (!carriage) return;
 
     this.seatNumbers.set(
       Array.from({ length: carriage.rows }, () => {
         const leftRow = Array.from({ length: carriage.leftSeats }, () => {
-          const seatNumber = currentSeatNumber;
-          currentSeatNumber += 1;
-          return seatNumber;
+          return setSeatNumber();
         });
 
         const rightRow = Array.from({ length: carriage.rightSeats }, () => {
-          const seatNumber = currentSeatNumber;
-          currentSeatNumber += 1;
-          return seatNumber;
+          return setSeatNumber();
         });
 
         return { leftRow: leftRow.reverse(), rightRow: rightRow.reverse() };
