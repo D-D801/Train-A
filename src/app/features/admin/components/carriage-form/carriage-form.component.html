@@ -1,12 +1,12 @@
 <form class="tui-form__row" [formGroup]="carriageForm">
-  <div class="tui-form__row">
+  <!--  <div class="tui-form__row">
     <tui-input formControlName="name">
       Name
       <input tuiTextfieldLegacy />
     </tui-input>
     <tui-error formControlName="name" [error]="[] | tuiFieldError | async" />
   </div>
-  <div class="tui-form__row">
+    <div class="tui-form__row">
     <tui-input-number [min]="min" class="input" formControlName="rows"> Rows </tui-input-number>
     <tui-error formControlName="rows" [error]="[] | tuiFieldError | async" />
   </div>
@@ -17,7 +17,27 @@
   <div class="tui-form__row">
     <tui-input-number [min]="min" class="input" formControlName="rightSeats"> RightSeats </tui-input-number>
     <tui-error formControlName="rightSeats" [error]="[] | tuiFieldError | async" />
-  </div>
+  </div> -->
+  <ng-container [ngTemplateOutlet]="input" [ngTemplateOutletContext]="{ title: 'name', label: 'Name' }"></ng-container>
+  <ng-container [ngTemplateOutlet]="input" [ngTemplateOutletContext]="{ title: 'rows', label: 'Rows' }"></ng-container>
+  <ng-container
+    [ngTemplateOutlet]="input"
+    [ngTemplateOutletContext]="{ title: 'leftSeats', label: 'LeftSeats' }"
+  ></ng-container>
+  <ng-container
+    [ngTemplateOutlet]="input"
+    [ngTemplateOutletContext]="{ title: 'rightSeats', label: 'RightSeats' }"
+  ></ng-container>
+
+  <ng-template #input let-title="title" let-label="label">
+    <div class="tui-form__row">
+      <tui-input formControlName="{{ title }}">
+        {{ label }}
+        <input tuiTextfieldLegacy />
+      </tui-input>
+      <tui-error formControlName="{{ title }}" [error]="[] | tuiFieldError | async" />
+    </div>
+  </ng-template>
   @if (carriageForm.valid) {
     <dd-carriage-preview [carriage]="carriageForm.getRawValue()"></dd-carriage-preview>
   }
