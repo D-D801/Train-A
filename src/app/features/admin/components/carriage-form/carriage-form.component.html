@@ -1,54 +1,37 @@
 <form class="tui-form__row" [formGroup]="carriageForm">
-  <!--  <div class="tui-form__row">
-    <tui-input formControlName="name">
-      Name
-      <input tuiTextfieldLegacy />
-    </tui-input>
-    <tui-error formControlName="name" [error]="[] | tuiFieldError | async" />
-  </div>
-    <div class="tui-form__row">
-    <tui-input-number [min]="min" class="input" formControlName="rows"> Rows </tui-input-number>
-    <tui-error formControlName="rows" [error]="[] | tuiFieldError | async" />
-  </div>
-  <div class="tui-form__row">
-    <tui-input-number [min]="min" class="input" formControlName="leftSeats"> LeftSeats </tui-input-number>
-    <tui-error formControlName="leftSeats" [error]="[] | tuiFieldError | async" />
-  </div>
-  <div class="tui-form__row">
-    <tui-input-number [min]="min" class="input" formControlName="rightSeats"> RightSeats </tui-input-number>
-    <tui-error formControlName="rightSeats" [error]="[] | tuiFieldError | async" />
-  </div> -->
   <ng-container [ngTemplateOutlet]="input" [ngTemplateOutletContext]="{ title: 'name', label: 'Name' }"></ng-container>
   <ng-container [ngTemplateOutlet]="input" [ngTemplateOutletContext]="{ title: 'rows', label: 'Rows' }"></ng-container>
   <ng-container
     [ngTemplateOutlet]="input"
-    [ngTemplateOutletContext]="{ title: 'leftSeats', label: 'LeftSeats' }"
+    [ngTemplateOutletContext]="{ title: 'leftSeats', label: 'Left Seats' }"
   ></ng-container>
   <ng-container
     [ngTemplateOutlet]="input"
-    [ngTemplateOutletContext]="{ title: 'rightSeats', label: 'RightSeats' }"
+    [ngTemplateOutletContext]="{ title: 'rightSeats', label: 'Right Seats' }"
   ></ng-container>
 
   <ng-template #input let-title="title" let-label="label">
     <div class="tui-form__row">
-      <tui-input formControlName="{{ title }}">
+      <tui-input [formControl]="$any(carriageForm.controls)[title]">
         {{ label }}
         <input tuiTextfieldLegacy />
       </tui-input>
-      <tui-error formControlName="{{ title }}" [error]="[] | tuiFieldError | async" />
+      <tui-error [formControl]="$any(carriageForm.controls)[title]" [error]="[] | tuiFieldError | async" />
     </div>
   </ng-template>
   @if (carriageForm.valid) {
     <dd-carriage-preview [carriage]="carriageForm.getRawValue()"></dd-carriage-preview>
   }
 
-  <button appearance="primary" size="m" tuiButton (click)="onSubmit()">
-    @if (carriage()?.code) {
-      Update
-    } @else {
-      Save
-    }
-  </button>
+  <div class="tui-form__buttons tui-form__buttons_align_end">
+    <button appearance="primary" size="m" tuiButton (click)="onSubmit()">
+      @if (carriage()?.code) {
+        Update
+      } @else {
+        Save
+      }
+    </button>
 
-  <button appearance="error" size="m" tuiButton (click)="onCancel()">Cancel</button>
+    <button appearance="error" size="m" tuiButton (click)="onCancel()">Cancel</button>
+  </div>
 </form>
