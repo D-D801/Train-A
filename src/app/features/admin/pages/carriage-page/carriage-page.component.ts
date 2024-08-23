@@ -76,8 +76,8 @@ export class CarriagePageComponent {
   }
 
   public createCarriage(carriageData: Carriage) {
-    const isCarriage = this._carriages().some((item) => item.name === carriageData.name);
-    const isCarriageNew = this.newCarriages().some((item) => item.name === carriageData.name);
+    const isCarriage = this._carriages().some((item) => item.code === carriageData.name);
+    const isCarriageNew = this.newCarriages().some((item) => item.code === carriageData.name);
     if (isCarriage || isCarriageNew) {
       this.alert.open({ message: 'Carriage already exists', label: 'Error', appearance: 'error' });
       return;
