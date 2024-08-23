@@ -1,9 +1,8 @@
 @if (carriage()) {
-  <div tuiCardLarge="normal" tuiSurface="elevated">
+  <div tuiCardLarge="normal" tuiAppearance="secondary" tuiSurface class="highlight">
     <header tuiHeader>
       <h2 tuiTitle>{{ carriage()?.name }}</h2>
     </header>
-
     <section>
       <div class="carriage">
         <div class="column" *ngFor="let row of seatNumbers()">

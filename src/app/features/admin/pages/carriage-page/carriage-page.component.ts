@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AlertService } from '@core/services/alert/alert.service';
+import { CarriageCardComponent } from '@features/admin/components/carriage-card/carriage-card.component';
 import { CarriageFormComponent } from '@features/admin/components/carriage-form/carriage-form.component';
 import { CarriagePreviewComponent } from '@features/admin/components/carriage-preview/carriage-preview.component';
 import { Carriage } from '@features/admin/interfaces/carriage.interface';
@@ -11,7 +12,7 @@ import { switchMap } from 'rxjs';
 @Component({
   selector: 'dd-carriage-page',
   standalone: true,
-  imports: [CarriagePreviewComponent, CarriageFormComponent, TuiButton],
+  imports: [CarriagePreviewComponent, CarriageFormComponent, CarriageCardComponent, TuiButton],
   templateUrl: './carriage-page.component.html',
   styleUrl: './carriage-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
