@@ -1,0 +1,9 @@
+@import '@taiga-ui/core/styles/taiga-ui-local';
+
+.submit {
+  flex: 0 1 10rem;
+
+  @media #{$tui-mobile} {
+    flex: 1 1 10rem;
+  }
+}

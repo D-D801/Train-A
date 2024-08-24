@@ -6,7 +6,8 @@ export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   {
     path: 'home',
-    loadComponent: () => import('@features/home/pages/home-page/home-page.component').then((m) => m.HomePageComponent),
+    loadComponent: () =>
+      import('@features/search/pages/home-page/home-page.component').then((m) => m.HomePageComponent),
   },
   {
     path: 'registration',
@@ -26,13 +27,6 @@ export const routes: Routes = [
     path: 'profile',
     loadComponent: () =>
       import('@features/auth/pages/profile-page/profile-page.component').then((m) => m.ProfilePageComponent),
-    canMatch: [authGuard],
-  },
-
-  {
-    path: 'orders',
-    loadComponent: () =>
-      import('@features/TrainA/pages/orders-page/orders-page.component').then((m) => m.OrdersPageComponent),
     canMatch: [authGuard],
   },
   {
