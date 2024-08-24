@@ -1,0 +1,25 @@
+<form *ngIf="isEditMode; else viewMode" [formGroup]="form()" class="wrapper" (ngSubmit)="save()">
+  <div class="input" *ngFor="let controlName of form().controls | keyvalue">
+    <div [ngSwitch]="typeInputs()">
+      <tui-input *ngSwitchCase="'text'" [formControlName]="controlName.key">
+        <input [placeholder]="controlName.key | titlecase" tuiTextfieldLegacy />
+      </tui-input>
+
+      <tui-input-date-time *ngSwitchCase="'date'" [formControlName]="controlName.key"> </tui-input-date-time>
+
+      <tui-error [formControlName]="controlName.key" [error]="[] | tuiFieldError | async" />
+    </div>
+  </div>
+  <button tuiIconButton appearance="icon" iconStart="@tui.save" size="m" type="submit">Save</button>
+</form>
+
+<ng-template #viewMode>
+  <div class="wrapper">
+    <div class="text-block" *ngFor="let controlName of form().controls | keyvalue">
+      {{ form().get(controlName.key)?.value }}
+    </div>
+    <button tuiIconButton appearance="icon" iconStart="@tui.pencil" size="s" type="button" (click)="enableEditMode()">
+      Edit
+    </button>
+  </div>
+</ng-template>

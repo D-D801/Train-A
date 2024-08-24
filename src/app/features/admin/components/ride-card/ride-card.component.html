@@ -1,0 +1,11 @@
+<div tuiCardLarge tuiSurface="elevated">
+  <header tuiHeader>
+    <h3 tuiTitle>Ride {{ ride().rideId }}</h3>
+  </header>
+
+  <section>
+    @for (segment of ride().segments; track segment.time; let i = $index) {
+      <dd-station-card [segment]="segment"></dd-station-card>
+    }
+  </section>
+</div>
