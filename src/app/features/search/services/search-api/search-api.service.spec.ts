@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { SearchRouteResponse } from '@features/home/interfaces/search-route-response.interface';
-import { SearchRouteParams } from '@features/home/interfaces/search-route-params.interface';
+import { SearchRouteResponse } from '@features/search/interfaces/search-route-response.interface';
+import { SearchRouteParams } from '@features/search/interfaces/search-route-params.interface';
 import { SearchApiService } from './search-api.service';
 
 describe('SearchService', () => {

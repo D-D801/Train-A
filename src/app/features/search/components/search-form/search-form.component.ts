@@ -6,14 +6,14 @@ import { TuiButton, TuiDataList, TuiInitialsPipe, TuiTextfield } from '@taiga-ui
 import { TuiDay, TuiLet, TuiTime } from '@taiga-ui/cdk';
 import { TuiDataListWrapper } from '@taiga-ui/kit';
 import { TuiInputDateTimeModule, TuiInputModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
-import { SearchService } from '@features/home/services/search/search.service';
+import { SearchService } from '@features/search/services/search/search.service';
 import { debounceTime } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { LocationApiService } from '@features/home/services/location-api/location-api.service';
-import { dateValidator } from '@features/home/validators/date';
-import { SearchApiService } from '@features/home/services/search-api/search-api.service';
-import { CityCoordinates } from '@features/home/interfaces/city-coordinates.interface';
-import { CityInfo } from '@features/home/interfaces/city-info.interface';
+import { LocationApiService } from '@features/search/services/location-api/location-api.service';
+import { dateValidator } from '@features/search/validators/date';
+import { SearchApiService } from '@features/search/services/search-api/search-api.service';
+import { CityCoordinates } from '@features/search/interfaces/city-coordinates.interface';
+import { CityInfo } from '@features/search/interfaces/city-info.interface';
 import { AlertService } from '@core/services/alert/alert.service';
 
 type InputName = 'from' | 'to';

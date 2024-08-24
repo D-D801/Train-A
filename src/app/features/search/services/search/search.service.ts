@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { CityInfo } from '@features/home/interfaces/city-info.interface';
+import { CityInfo } from '@features/search/interfaces/city-info.interface';
 
 @Injectable({
   providedIn: 'root',

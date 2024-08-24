@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SearchApiService } from '@features/home/services/search-api/search-api.service';
-import { LocationApiService } from '@features/home/services/location-api/location-api.service';
+import { SearchApiService } from '@features/search/services/search-api/search-api.service';
+import { LocationApiService } from '@features/search/services/location-api/location-api.service';
 import { HomePageComponent } from './home-page.component';
 
 describe('HomePageComponent', () => {
