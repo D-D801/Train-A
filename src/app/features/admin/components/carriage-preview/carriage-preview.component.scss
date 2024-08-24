@@ -5,17 +5,13 @@ header {
 }
 
 section {
-  overflow: auto;
-  align-items: center;
-  justify-content: center;
-
   color: var(--tui-text-secondary);
-
   border: 1px dashed;
   border-radius: 0.75rem;
 }
 
 .carriage {
+  overflow: auto;
   display: flex;
   flex-direction: row;
   gap: 10px;
