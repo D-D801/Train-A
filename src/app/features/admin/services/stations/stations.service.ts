@@ -9,7 +9,15 @@ export class StationsService {
 
   public cities = this._cities.asReadonly();
 
+  private readonly _existingStations = signal<StationListItem[]>([]);
+
+  public existingStations = this._cities.asReadonly();
+
   public setCities(receivedCities: StationListItem[]) {
+    this._cities.set(receivedCities);
+  }
+
+  public setExistingStations(receivedCities: StationListItem[]) {
     this._cities.set(receivedCities);
   }
 }

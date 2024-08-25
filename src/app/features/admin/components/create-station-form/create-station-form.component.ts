@@ -2,6 +2,7 @@ import { NgForOf, NgIf, NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { AlertService } from '@core/services/alert/alert.service';
 import { NewStation } from '@features/admin/interfaces/new-station.interface';
 import { StationListItem } from '@features/admin/interfaces/station-list-item.interface';
 import { StationsApiService } from '@features/admin/services/stations-api/stations-api.service';
@@ -23,6 +24,8 @@ export class CreateStationFormComponent implements OnInit {
   private readonly stationsApiService = inject(StationsApiService);
 
   private readonly stationsService = inject(StationsService);
+
+  private readonly alert = inject(AlertService);
 
   private readonly destroy = inject(DestroyRef);
 
@@ -72,7 +75,14 @@ export class CreateStationFormComponent implements OnInit {
       longitude: +this.longitude.value,
       relations: this.relations,
     };
-    this.stationsApiService.createNewStation(body);
+    this.stationsApiService
+      .createNewStation(body)
+      .pipe(takeUntilDestroyed(this.destroy))
+      .subscribe({
+        error: ({ error: { message } }) => {
+          this.alert.open({ message, label: 'Error', appearance: 'error' });
+        },
+      });
   }
 
   public get connectedStations() {
