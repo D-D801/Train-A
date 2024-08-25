@@ -1,11 +1,16 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { TrainRoute } from '@features/admin/interfaces/train-route.interface';
+import { TuiIcon, TuiTitle } from '@taiga-ui/core';
+import { TuiHeader } from '@taiga-ui/layout';
 
 @Component({
   selector: 'dd-route-card',
   standalone: true,
-  imports: [],
+  imports: [TuiHeader, TuiTitle, TuiIcon],
   templateUrl: './route-card.component.html',
   styleUrl: './route-card.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RouteCardComponent {}
+export class RouteCardComponent {
+  public trainRoute = input.required<TrainRoute>();
+}

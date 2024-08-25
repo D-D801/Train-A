@@ -1,3 +1,4 @@
+import { provideHttpClient } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { RouteFormComponent } from './route-form.component';
@@ -9,6 +10,7 @@ describe('RouteFormComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [RouteFormComponent],
+      providers: [provideHttpClient()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(RouteFormComponent);

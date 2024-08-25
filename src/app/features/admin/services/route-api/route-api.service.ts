@@ -1,5 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
+import { Carriage } from '@features/admin/interfaces/carriage.interface';
+import { Station } from '@features/admin/interfaces/station.interface';
 import { TrainRoute } from '@features/admin/interfaces/train-route.interface';
 
 @Injectable({
@@ -22,5 +24,13 @@ export class RouteApiService {
 
   public deleteRoute(route: TrainRoute) {
     return this.http.delete<TrainRoute>(`/api/route/${route.id}`);
+  }
+
+  public getCarriages() {
+    return this.http.get<Carriage[]>('/api/carriage');
+  }
+
+  public getStations() {
+    return this.http.get<Station[]>('/api/station');
   }
 }

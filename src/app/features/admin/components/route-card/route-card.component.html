@@ -1,1 +1,14 @@
-<p>route-card works!</p>
+<header tuiHeader>
+  <h2 tuiTitle>Route {{ trainRoute().id }}</h2>
+
+  <aside tuiAccessories>
+    <tui-icon icon="@tui.pen" />
+    <tui-icon icon="@tui.bus" />
+    <tui-icon icon="@tui.trash" />
+  </aside>
+</header>
+
+<section class="card-description"><span class="subtitle">Path:</span> {{ trainRoute().path.join(', ') }}</section>
+<section class="card-description">
+  <span class="subtitle">Carriages:</span> {{ trainRoute().carriages.join(', ') }}
+</section>
