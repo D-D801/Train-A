@@ -4,11 +4,13 @@ import { RouteCardComponent } from '@features/admin/components/route-card/route-
 import { RouteFormComponent } from '@features/admin/components/route-form/route-form/route-form.component';
 import { TrainRoute } from '@features/admin/interfaces/train-route.interface';
 import { RouteApiService } from '@features/admin/services/route-api/route-api.service';
+import { TuiSurface } from '@taiga-ui/core';
+import { TuiCardLarge } from '@taiga-ui/layout';
 
 @Component({
   selector: 'dd-route-tab',
   standalone: true,
-  imports: [RouteFormComponent, RouteCardComponent],
+  imports: [RouteFormComponent, RouteCardComponent, TuiCardLarge, TuiSurface],
   templateUrl: './route-tab.component.html',
   styleUrl: './route-tab.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -24,7 +26,7 @@ export class RouteTabComponent {
     this.getRoutes()
       .pipe(takeUntilDestroyed(this.destroy))
       .subscribe((trainRoutes) => {
-        this.routes.set(trainRoutes);
+        this.routes.set(trainRoutes.slice(0, 3));
       });
   }
 

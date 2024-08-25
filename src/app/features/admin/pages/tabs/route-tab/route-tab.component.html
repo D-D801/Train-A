@@ -1,4 +1,8 @@
-<dd-route-form> </dd-route-form>
-@for (tab of [1, 2]; track tab) {
-  <dd-route-card></dd-route-card>
+@if (routes()[0]) {
+  <dd-route-form [trainRoute]="routes()[0]"></dd-route-form>
+}
+@for (trainRoute of routes(); track trainRoute.id) {
+  <div tuiCardLarge tuiSurface="elevated" class="tui-space_top-4">
+    <dd-route-card [trainRoute]="trainRoute"></dd-route-card>
+  </div>
 }

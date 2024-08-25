@@ -1,1 +1,33 @@
-<p>route-form works!</p>
+<div tuiCardLarge tuiSurface="elevated" class="tui-space_top-4">
+  <form [formGroup]="form">
+    <div class="tui-form__row tui-form__row_multi-fields">
+      <div class="tui-form__row_half-width tui-form__row_multi-field" formArrayName="stations">
+        @for (station of form.controls.stations.controls; track $index) {
+          <tui-select [formControl]="$any(station)" [valueContent]="trainPath">
+            choose
+            <tui-data-list-wrapper *tuiDataList [itemContent]="trainPath" [items]="connectedToStations()[$index]" />
+          </tui-select>
+        }
+      </div>
+      <div class="tui-form__row_half-width tui-form__row_multi-field" formArrayName="carriages">
+        @for (station of form.controls.carriages.controls; track $index) {
+          <tui-select [formControl]="$any(station)" [valueContent]="carriageTemplate">
+            choose
+            <tui-data-list-wrapper *tuiDataList [itemContent]="carriageTemplate" [items]="carriages()" />
+          </tui-select>
+        }
+      </div>
+    </div>
+  </form>
+</div>
+
+<ng-template #trainPath let-city>
+  <span>
+    {{ city }}
+  </span>
+</ng-template>
+<ng-template #carriageTemplate let-carriage>
+  <span>
+    {{ carriage }}
+  </span>
+</ng-template>
