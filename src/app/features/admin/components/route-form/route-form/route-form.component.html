@@ -1,21 +1,68 @@
 <div tuiCardLarge tuiSurface="elevated" class="tui-space_top-4">
-  <form [formGroup]="form">
-    <div class="tui-form__row tui-form__row_multi-fields">
-      <div class="tui-form__row_half-width tui-form__row_multi-field" formArrayName="stations">
-        @for (station of form.controls.stations.controls; track $index) {
+  <form class="form" [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="form-columns">
+      <div class="form-rows tui-form__row_multi-fields" formArrayName="path">
+        @for (station of form.controls.path.controls; track $index) {
           <tui-select [formControl]="$any(station)" [valueContent]="trainPath">
             choose
             <tui-data-list-wrapper *tuiDataList [itemContent]="trainPath" [items]="connectedToStations()[$index]" />
           </tui-select>
         }
+        <div class="from-buttons">
+          <button class="button" size="s" tuiButton type="button" (click)="addControl(ControlsType.path)">
+            <tui-icon icon="@tui.plus" />
+          </button>
+          <button
+            class="button"
+            size="s"
+            tuiButton
+            type="button"
+            (click)="removeControl(ControlsType.path)"
+            [disabled]="form.controls.path.length <= 3"
+          >
+            <tui-icon icon="@tui.minus" />
+          </button>
+          <button class="button" size="s" tuiButton type="button" (click)="resetStations(ControlsType.path)">
+            Reset
+          </button>
+        </div>
       </div>
-      <div class="tui-form__row_half-width tui-form__row_multi-field" formArrayName="carriages">
+
+      <div class="form-rows" formArrayName="carriages">
         @for (station of form.controls.carriages.controls; track $index) {
           <tui-select [formControl]="$any(station)" [valueContent]="carriageTemplate">
             choose
             <tui-data-list-wrapper *tuiDataList [itemContent]="carriageTemplate" [items]="carriages()" />
           </tui-select>
         }
+        <div class="from-buttons">
+          <button class="button" size="s" tuiButton type="button" (click)="addControl(ControlsType.carriages)">
+            <tui-icon icon="@tui.plus" />
+          </button>
+          <button
+            class="button"
+            size="s"
+            tuiButton
+            type="button"
+            (click)="removeControl(ControlsType.carriages)"
+            [disabled]="form.controls.carriages.length <= 3"
+          >
+            <tui-icon icon="@tui.minus" />
+          </button>
+          <button class="button" size="s" tuiButton type="button" (click)="resetStations(ControlsType.carriages)">
+            Reset
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div tuiHeader="m">
+      <h3 tuiTitle>Route {{ trainRoute() ? trainRoute().id : '' }}</h3>
+
+      <div tuiAccessories>
+        <button size="m" tuiButton type="submit" [disabled]="form.invalid">
+          {{ trainRoute() ? 'Update' : 'Save' }}
+        </button>
       </div>
     </div>
   </form>
