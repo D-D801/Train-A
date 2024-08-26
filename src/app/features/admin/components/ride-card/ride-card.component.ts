@@ -14,4 +14,6 @@ import { StationCardComponent } from '../station-card/station-card.component';
 })
 export class RideCardComponent {
   public ride = input.required<Schedule>();
+
+  public path = input.required<number[]>();
 }

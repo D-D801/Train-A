@@ -4,8 +4,8 @@
   </header>
 
   <section>
-    @for (segment of ride().segments; track segment.time; let i = $index) {
-      <dd-station-card [segment]="segment"></dd-station-card>
+    @for (station of path(); track station; let i = $index) {
+      <dd-station-card [station]="station" [segment]="ride().segments[i]"></dd-station-card>
     }
   </section>
 </div>

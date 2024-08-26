@@ -1,9 +1,13 @@
 <!-- TODO: add routerLink = route-page -->
 <button tuiIconButton appearance="icon" iconStart="@tui.chevron-left" size="m" type="submit">Back</button>
-<h2>
-  Route <span>{{ routeInfo()?.id }}</span>
-</h2>
-<button appearance="primary" size="s" tuiButton>Create</button>
-@for (rideCard of routeInfo()?.schedule; track rideCard.rideId) {
-  <dd-ride-card [ride]="rideCard"></dd-ride-card>
+@let routeInfo = routeInformation();
+@if (routeInfo) {
+  <h2>
+    Route <span>{{ routeInfo.id }}</span>
+  </h2>
+  <button appearance="primary" size="s" tuiButton>Create</button>
+
+  @for (rideCard of routeInfo.schedule; let i = $index; track rideCard.rideId) {
+    <dd-ride-card [ride]="rideCard" [path]="routeInfo.path"></dd-ride-card>
+  }
 }

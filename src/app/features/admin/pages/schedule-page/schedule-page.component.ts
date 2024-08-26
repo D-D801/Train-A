@@ -22,9 +22,10 @@ export class SchedulePageComponent {
 
   private readonly alert = inject(AlertService);
 
-  protected routeInfo = toSignal(
+  protected routeInformation = toSignal(
     this.routeApiService.getRoute(17).pipe(
       tap({
+        // next: ({ path, schedule }) => console.log(path, schedule),
         error: ({ error: { message } }) => {
           this.alert.open({ message, label: 'Error', appearance: 'error' });
         },

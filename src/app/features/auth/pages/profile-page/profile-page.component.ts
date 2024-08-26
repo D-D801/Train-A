@@ -11,7 +11,11 @@ import { ProfileApiService } from '@features/auth/services/profile-api/profile-a
 import { LocalStorageService } from '@core/services/local-storage/local-storage.service';
 import { LocalStorageKey } from '@shared/enums/local-storage-key.enum';
 import { tap } from 'rxjs';
-import { ProfileFieldComponent } from '../../components/profile-field/profile-field.component';
+import { TextSwitchFormComponent } from '@shared/components/text-switch-form/text-switch-form.component';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { tuiMarkControlAsTouchedAndValidate } from '@taiga-ui/cdk';
+import { emailValidator } from '@features/auth/validators';
+
 import { ChangePasswordDialogComponent } from '../../components/change-password-dialog/change-password-dialog/change-password-dialog.component';
 
 @Component({
@@ -20,11 +24,11 @@ import { ChangePasswordDialogComponent } from '../../components/change-password-
   imports: [
     TuiAvatar,
     TuiAutoColorPipe,
-    ProfileFieldComponent,
     TuiButton,
     ChangePasswordDialogComponent,
     NgIf,
     AsyncPipe,
+    TextSwitchFormComponent,
   ],
   templateUrl: './profile-page.component.html',
   styleUrl: './profile-page.component.scss',
@@ -45,6 +49,8 @@ export class ProfilePageComponent {
 
   private readonly router = inject(Router);
 
+  private readonly fb = inject(FormBuilder);
+
   private readonly dialog = this.dialogs
     .open<number>(new PolymorpheusComponent(ChangePasswordDialogComponent), {
       dismissible: true,
@@ -52,8 +58,20 @@ export class ProfilePageComponent {
     })
     .pipe(takeUntilDestroyed());
 
+  public nameForm = this.fb.group({
+    name: this.fb.control('', [Validators.required]),
+  });
+
+  public emailForm = this.fb.group({
+    email: this.fb.control('', [Validators.required, emailValidator()]),
+  });
+
   protected userInformation = this.profileApiService.getUserInformation().pipe(
     tap({
+      next: (userInfo) => {
+        this.nameForm.setValue({ name: userInfo.name });
+        this.emailForm.setValue({ email: userInfo.email });
+      },
       error: ({ error: { message } }) => {
         this.alert.open({ message, label: 'Error', appearance: 'error' });
         this.router.navigate(['/home']);
@@ -61,6 +79,29 @@ export class ProfilePageComponent {
     }),
     takeUntilDestroyed(this.destroy)
   );
+
+  protected saveName = () => this.saveForm(this.nameForm, 'name');
+
+  protected saveEmail = () => this.saveForm(this.emailForm, 'email');
+
+  protected saveForm(form: FormGroup, fieldName: 'name' | 'email') {
+    tuiMarkControlAsTouchedAndValidate(form);
+    const fieldValue = form.get(fieldName)?.value;
+
+    if (form.valid && fieldValue) {
+      this.profileApiService
+        .updateUserInformation({ [fieldName]: fieldValue })
+        .pipe(takeUntilDestroyed(this.destroy))
+        .subscribe({
+          next: () => {
+            this.alert.open({ message: fieldValue, label: `Change ${fieldName}` });
+          },
+          error: ({ error: { message } }) => {
+            this.alert.open({ message, label: 'Error', appearance: 'error' });
+          },
+        });
+    }
+  }
 
   protected logout() {
     this.authService

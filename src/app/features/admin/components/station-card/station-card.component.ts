@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, effect, inject, input } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Segment } from '@features/admin/interfaces/segment.interface';
 import { TextSwitchFormComponent } from '@shared/components/text-switch-form/text-switch-form.component';
 import { TuiDay, TuiTime } from '@taiga-ui/cdk';
@@ -26,17 +26,50 @@ import { TuiInputModule } from '@taiga-ui/legacy';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StationCardComponent {
-  public segment = input.required<Segment>();
+  public station = input.required<number>();
+
+  public segment = input<Segment>();
 
   private readonly fb = inject(FormBuilder);
 
   protected timeForm = this.fb.group({
-    from: this.fb.control<[TuiDay | null, TuiTime | null]>([new TuiDay(2017, 2, 15), new TuiTime(12, 30)]),
-    to: this.fb.control<[TuiDay | null, TuiTime | null]>([new TuiDay(2017, 2, 15), new TuiTime(12, 30)]),
+    departure: this.fb.control<[TuiDay, TuiTime] | []>([]),
+    arrival: this.fb.control<[TuiDay, TuiTime] | []>([]),
   });
+
+  protected priceForm = this.fb.group({});
+
+  public constructor() {
+    effect(() => {
+      const segment = this.segment();
+
+      if (!segment) return;
+
+      const { time, price } = segment;
+
+      const departure = new Date(time[0]);
+      const arrival = new Date(time[1]);
+
+      const departureTime = new TuiTime(departure.getHours(), departure.getMinutes());
+      const arrivalTime = new TuiTime(arrival.getHours(), arrival.getMinutes());
+
+      this.timeForm.setValue({
+        departure: [TuiDay.fromLocalNativeDate(departure), departureTime],
+        arrival: [TuiDay.fromLocalNativeDate(arrival), arrivalTime],
+      });
+
+      const priceControls = Object.keys(price).reduce(
+        (acc, key) => {
+          acc[key] = this.fb.control(price[key]);
+          return acc;
+        },
+        {} as { [key: string]: FormControl<number | null> }
+      );
+
+      this.priceForm = this.fb.group(priceControls);
+    });
+  }
 
   // eslint-disable-next-line class-methods-use-this
   public onSave = () => {};
-
-  protected city = 'London';
 }

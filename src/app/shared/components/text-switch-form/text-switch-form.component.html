@@ -2,10 +2,12 @@
   <div class="input" *ngFor="let controlName of form().controls | keyvalue">
     <div [ngSwitch]="typeInputs()">
       <tui-input *ngSwitchCase="'text'" [formControlName]="controlName.key">
+        {{ controlName.key | titlecase }}
         <input [placeholder]="controlName.key | titlecase" tuiTextfieldLegacy />
       </tui-input>
-
-      <tui-input-date-time *ngSwitchCase="'date'" [formControlName]="controlName.key"> </tui-input-date-time>
+      <tui-input-date-time *ngSwitchCase="'date'" [formControlName]="controlName.key">
+        {{ controlName.key | titlecase }}</tui-input-date-time
+      >
 
       <tui-error [formControlName]="controlName.key" [error]="[] | tuiFieldError | async" />
     </div>
@@ -16,6 +18,7 @@
 <ng-template #viewMode>
   <div class="wrapper">
     <div class="text-block" *ngFor="let controlName of form().controls | keyvalue">
+      <h3>{{ controlName.key | titlecase }}</h3>
       {{ form().get(controlName.key)?.value }}
     </div>
     <button tuiIconButton appearance="icon" iconStart="@tui.pencil" size="s" type="button" (click)="enableEditMode()">
