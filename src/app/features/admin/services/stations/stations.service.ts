@@ -5,19 +5,15 @@ import { StationListItem } from '@features/admin/interfaces/station-list-item.in
   providedIn: 'root',
 })
 export class StationsService {
-  private readonly _cities = signal<StationListItem[]>([]);
+  private readonly _stations = signal<StationListItem[]>([]);
 
-  public cities = this._cities.asReadonly();
+  public stations = this._stations.asReadonly();
 
-  private readonly _existingStations = signal<StationListItem[]>([]);
-
-  public existingStations = this._cities.asReadonly();
-
-  public setCities(receivedCities: StationListItem[]) {
-    this._cities.set(receivedCities);
+  public setStations(receivedStations: StationListItem[]) {
+    this._stations.set(receivedStations);
   }
 
-  public setExistingStations(receivedCities: StationListItem[]) {
-    this._cities.set(receivedCities);
+  public deleteStationFromList(id: number) {
+    this._stations.update((stations) => stations.filter((station) => station.id !== id));
   }
 }

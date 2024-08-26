@@ -1,1 +1,21 @@
-<p>existing-stations-list works!</p>
+<div tuiPlatform="web" *ngFor="let station of stations()">
+  <div tuiCardLarge tuiSurface="elevated">
+    <header tuiHeader>
+      <h2 tuiTitle>{{ station.city }}</h2>
+      <div>Latitude: {{ station.latitude }}; Longitude: {{ station.longitude }}</div>
+    </header>
+
+    <section>
+      Connected to:
+      <span *ngFor="let station of station.connectedTo">
+        {{ station.id }}
+      </span>
+    </section>
+
+    <footer>
+      <button appearance="secondary" size="m" tuiButton type="button" (click)="deleteStation(station.id)">
+        Delete
+      </button>
+    </footer>
+  </div>
+</div>

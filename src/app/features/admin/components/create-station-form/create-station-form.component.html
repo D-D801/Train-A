@@ -13,14 +13,15 @@
     [ngTemplateOutletContext]="{ label: 'Longitude', control: 'longitude' }"
   ></ng-container>
 
+  <div class="tui-form__header">Connected stations</div>
   <div formArrayName="connectedStations" *ngFor="let tag of connectedStations.controls; let i = index">
-    <tui-input *tuiLet="cities() as cities" [formControlName]="i" class="tui-form__row">
+    <tui-input *tuiLet="stations() as stations" [formControlName]="i" class="tui-form__row">
       Connected City
       <input placeholder="Type city name" tuiTextfieldLegacy />
-      <ng-container *ngIf="cities?.length">
+      <ng-container *ngIf="stations?.length">
         <tui-data-list *tuiDataList>
-          <button *ngFor="let city of cities" tuiOption [value]="city.city" (click)="onSelected(city, i)">
-            {{ city.city }}
+          <button *ngFor="let station of stations" tuiOption [value]="station.city" (click)="onSelected(station, i)">
+            {{ station.city }}
           </button>
         </tui-data-list>
       </ng-container>
