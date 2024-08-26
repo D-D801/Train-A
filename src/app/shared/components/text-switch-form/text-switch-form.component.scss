@@ -1,18 +1,10 @@
 .wrapper {
   display: flex;
   gap: 1rem;
-  align-items: center;
+  align-items: end;
   justify-content: space-between;
 
-  height: 3.5rem;
-}
-
-h3 {
-  margin-bottom: 0.7rem;
-}
-
-input {
-  padding-top: 0 !important;
+  height: 5rem;
 }
 
 .input {
