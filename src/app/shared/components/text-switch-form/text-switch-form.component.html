@@ -18,7 +18,7 @@
 <ng-template #viewMode>
   <div class="wrapper">
     <div class="text-block" *ngFor="let controlName of form().controls | keyvalue">
-      <h3>{{ controlName.key | titlecase }}</h3>
+      <h4>{{ controlName.key | titlecase }}</h4>
       {{ form().get(controlName.key)?.value }}
     </div>
     <button tuiIconButton appearance="icon" iconStart="@tui.pencil" size="s" type="button" (click)="enableEditMode()">

@@ -41,11 +41,11 @@ export class RouteApiService {
     return this.httpClient.get<Station[]>('/api/station');
   }
 
-  public createNewRide(routeId: number, body: Segment[]) {
+  public createNewRide(routeId: number, body: Segment) {
     return this.httpClient.post<{ id: number }>(`/api/route/${routeId}/ride`, body);
   }
 
-  public updateRide(routeId: number, rideId: number, body: Segment[]) {
+  public updateRide(routeId: number, rideId: number, body: { segments: Partial<Segment>[] }) {
     return this.httpClient.put(`/api/route/${routeId}/ride/${rideId}`, body);
   }
 }

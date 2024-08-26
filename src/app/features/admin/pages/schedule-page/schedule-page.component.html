@@ -8,6 +8,6 @@
   <button appearance="primary" size="s" tuiButton>Create</button>
 
   @for (rideCard of routeInfo.schedule; let i = $index; track rideCard.rideId) {
-    <dd-ride-card [ride]="rideCard" [path]="routeInfo.path"></dd-ride-card>
+    <dd-ride-card [ride]="rideCard" [routeId]="routeInfo.id" [path]="routeInfo.path"></dd-ride-card>
   }
 }

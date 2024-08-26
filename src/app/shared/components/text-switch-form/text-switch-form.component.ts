@@ -1,8 +1,17 @@
 import { AsyncPipe, KeyValuePipe, NgFor, NgIf, NgSwitch, NgSwitchCase, TitleCasePipe } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, effect, inject, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  inject,
+  input,
+  OnInit,
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { DateTimeTransformerService } from '@features/admin/services/date-time-transformer/date-time-transformer.service';
+import { DateTimeTransformerService } from '@shared/services/date-time-transformer/date-time-transformer.service';
 import { TuiAutoFocus } from '@taiga-ui/cdk';
 import { TuiButton, TuiError } from '@taiga-ui/core';
 import { TUI_DATE_TIME_VALUE_TRANSFORMER, TuiFieldErrorPipe, TuiInputInline } from '@taiga-ui/kit';
@@ -38,34 +47,38 @@ import { TuiInputDateTimeModule, TuiInputModule } from '@taiga-ui/legacy';
     },
   ],
 })
-export class TextSwitchFormComponent {
+export class TextSwitchFormComponent implements OnInit {
   public form = input.required<FormGroup>();
 
   public typeInputs = input.required<string>();
 
   public onSave = input.required<() => void>();
 
+  private readonly destroy = inject(DestroyRef);
+
   public cdr = inject(ChangeDetectorRef);
 
   public isEditMode = false;
 
-  public constructor() {
-    effect(() => {
-      const formGroup = this.form();
-
-      if (formGroup) {
-        formGroup.valueChanges.subscribe(() => {
-          this.cdr.markForCheck();
-        });
-      }
-    });
+  public ngOnInit(): void {
+    this.initFormSubscription();
   }
 
-  public enableEditMode(): void {
+  private initFormSubscription() {
+    const formGroup = this.form();
+
+    if (formGroup) {
+      formGroup.valueChanges.pipe(takeUntilDestroyed(this.destroy)).subscribe(() => {
+        this.cdr.markForCheck();
+      });
+    }
+  }
+
+  public enableEditMode() {
     this.isEditMode = true;
   }
 
-  public save(): void {
+  public save() {
     if (this.form().valid) {
       this.onSave()();
       this.isEditMode = false;

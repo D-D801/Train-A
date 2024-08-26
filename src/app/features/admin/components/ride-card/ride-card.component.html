@@ -1,11 +1,18 @@
 <div tuiCardLarge tuiSurface="elevated">
   <header tuiHeader>
-    <h3 tuiTitle>Ride {{ ride().rideId }}</h3>
+    <h4 tuiTitle>Ride {{ ride().rideId }}</h4>
   </header>
 
   <section>
-    @for (station of path(); track station; let i = $index) {
-      <dd-station-card [station]="station" [segment]="ride().segments[i]"></dd-station-card>
+    @let segments = ride().segments;
+    @if (segments.length > 0) {
+      @for (segment of segments; track segment; let i = $index) {
+        <dd-station-card
+          [station]="[path()[i], path()[i + 1]]"
+          [segments]="{ segments, index: i }"
+          [ids]="{ routeId: routeId(), rideId: ride().rideId }"
+        ></dd-station-card>
+      }
     }
   </section>
 </div>

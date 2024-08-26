@@ -16,6 +16,8 @@ import { RideCardComponent } from '../../components/ride-card/ride-card.componen
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SchedulePageComponent {
+  protected routeId = 13;
+
   private readonly routeApiService = inject(RouteApiService);
 
   private readonly destroy = inject(DestroyRef);
@@ -23,7 +25,7 @@ export class SchedulePageComponent {
   private readonly alert = inject(AlertService);
 
   protected routeInformation = toSignal(
-    this.routeApiService.getRoute(17).pipe(
+    this.routeApiService.getRoute(this.routeId).pipe(
       tap({
         // next: ({ path, schedule }) => console.log(path, schedule),
         error: ({ error: { message } }) => {

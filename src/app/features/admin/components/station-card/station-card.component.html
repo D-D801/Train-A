@@ -1,13 +1,11 @@
 <div tuiCardLarge tuiSurface="flat">
   <header tuiHeader>
-    <h3 tuiTitle>{{ station() }}</h3>
+    <h4 tuiTitle>{{ station()[0] }}</h4>
+    <h4 tuiTitle>{{ station()[1] }}</h4>
   </header>
   <section>
-    @if (segment()) {
-      <dd-text-switch-form [form]="timeForm" [typeInputs]="'date'" [onSave]="onSave"></dd-text-switch-form>
-      <dd-text-switch-form [form]="priceForm" [typeInputs]="'text'" [onSave]="onSave"></dd-text-switch-form>
-    }
-
-    <form></form>
+    <dd-text-switch-form class="time" [form]="timeForm" [typeInputs]="'date'" [onSave]="save"></dd-text-switch-form>
+    <h3>Prices</h3>
+    <dd-text-switch-form [form]="priceForm" [typeInputs]="'text'" [onSave]="save"></dd-text-switch-form>
   </section>
 </div>
