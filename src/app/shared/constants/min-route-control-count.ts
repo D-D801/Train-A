@@ -1,0 +1,1 @@
+export const MIN_ROUTE_FORM_CONTROL_COUNT = 3;

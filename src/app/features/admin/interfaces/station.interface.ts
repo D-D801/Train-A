@@ -6,7 +6,7 @@ export interface Station {
   connectedTo: ConnectedStation[];
 }
 
-interface ConnectedStation {
+export interface ConnectedStation {
   id: number;
-  distance: number;
+  distance?: number;
 }
