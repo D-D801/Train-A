@@ -1,0 +1,28 @@
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-columns {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.form-rows {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.from-buttons {
+  display: flex;
+  gap: 0.4rem;
+  justify-content: center;
+  min-width: 2rem;
+}
+
+.button {
+  align-self: center;
+}

@@ -15,15 +15,15 @@ export class RouteApiService {
   }
 
   public createRoute(route: TrainRoute) {
-    return this.http.post<TrainRoute>('/api/route', route);
+    return this.http.post<{ id: number }>('/api/route', route);
   }
 
   public updateRoute(route: TrainRoute) {
-    return this.http.put<TrainRoute>(`/api/route/${route.id}`, route);
+    return this.http.put<{ id: number }>(`/api/route/${route.id}`, route);
   }
 
   public deleteRoute(route: TrainRoute) {
-    return this.http.delete<TrainRoute>(`/api/route/${route.id}`);
+    return this.http.delete(`/api/route/${route.id}`);
   }
 
   public getCarriages() {
