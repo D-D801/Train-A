@@ -31,7 +31,7 @@ export class CreateStationFormComponent implements OnInit {
 
   private readonly fb = inject(FormBuilder);
 
-  public readonly cities = this.stationsService.cities;
+  public readonly stations = this.stationsService.stations;
 
   public relations: number[] = [];
 
@@ -44,12 +44,6 @@ export class CreateStationFormComponent implements OnInit {
 
   // TODO: place the retrieveStationList method in another location in code
   public ngOnInit() {
-    this.stationsApiService
-      .retrieveStationList()
-      .pipe(takeUntilDestroyed(this.destroy))
-      .subscribe((stations) => {
-        this.stationsService.setCities(stations);
-      });
     this.connectedStations.valueChanges.pipe(debounceTime(1000), takeUntilDestroyed(this.destroy)).subscribe(() => {
       const lastControl = this.connectedStations.at(this.connectedStations.length - 1);
       if (lastControl.value !== '') {
