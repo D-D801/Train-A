@@ -27,7 +27,6 @@ export class SchedulePageComponent {
   protected routeInformation = toSignal(
     this.routeApiService.getRoute(this.routeId).pipe(
       tap({
-        // next: ({ path, schedule }) => console.log(path, schedule),
         error: ({ error: { message } }) => {
           this.alert.open({ message, label: 'Error', appearance: 'error' });
         },
