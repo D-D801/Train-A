@@ -10,6 +10,11 @@ export const routes: Routes = [
       import('@features/search/pages/home-page/home-page.component').then((m) => m.HomePageComponent),
   },
   {
+    path: 'trip/:id',
+    loadComponent: () =>
+      import('@features/search/pages/search-detail/search-detail.component').then((m) => m.SearchDetailComponent),
+  },
+  {
     path: 'registration',
     loadComponent: () =>
       import('@features/auth/pages/registration-page/registration-page.component').then(

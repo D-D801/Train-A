@@ -21,7 +21,7 @@ interface Route {
   id: number;
   path: number[];
   carriages: string[];
-  schedule: Ride[];
+  schedule: Ride[] | Ride;
 }
 
 interface Ride {
@@ -29,10 +29,17 @@ interface Ride {
   segments: RoadSection[];
 }
 
-interface RoadSection {
+export interface RoadSection {
   time: string[];
   price: {
     [carriageType: string]: number;
   };
   occupiedSeats: number[];
+}
+
+export interface Trip {
+  rideId: number;
+  path: number[];
+  carriages: string[];
+  schedule: Ride;
 }

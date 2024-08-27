@@ -1,0 +1,16 @@
+:host {
+  width: 50rem;
+}
+
+div.tab-content {
+  display: none;
+}
+
+div.active {
+  display: block;
+}
+
+.type {
+  display: flex;
+  flex-direction: column;
+}
