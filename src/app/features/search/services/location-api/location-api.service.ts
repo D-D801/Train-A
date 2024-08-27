@@ -16,4 +16,10 @@ export class LocationApiService {
       `${environment.baseLocationApiUrl}/direct?q=${city}&limit=${responseLimit}&appid=${environment.locationApiKey}`
     );
   }
+
+  public getLocation(lat: number, lon: number) {
+    return this.httpClient.get(
+      `${environment.baseLocationApiUrl}/reverse?lat=${lat}&lon=${lon}&limit=1&appid=${environment.locationApiKey}`
+    );
+  }
 }

@@ -16,4 +16,8 @@ export class StationsService {
   public deleteStationFromList(id: number) {
     this._stations.update((stations) => stations.filter((station) => station.id !== id));
   }
+
+  public getStation(id: number) {
+    return this.stations().find((station: StationListItem) => station.id === id);
+  }
 }

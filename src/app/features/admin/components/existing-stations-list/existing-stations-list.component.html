@@ -3,19 +3,23 @@
     <header tuiHeader>
       <h2 tuiTitle>{{ station.city }}</h2>
       <div>Latitude: {{ station.latitude }}; Longitude: {{ station.longitude }}</div>
+      <button
+        appearance="secondary"
+        size="m"
+        tuiButton
+        type="button"
+        (click)="deleteStation(station.id)"
+        class="tui-form__button"
+      >
+        <img alt="" [src]="'@tui.trash' | tuiIcon" />
+      </button>
     </header>
 
     <section>
       Connected to:
       <span *ngFor="let station of station.connectedTo">
-        {{ station.id }}
+        {{ getStations(station.id)?.city }}
       </span>
     </section>
-
-    <footer>
-      <button appearance="secondary" size="m" tuiButton type="button" (click)="deleteStation(station.id)">
-        Delete
-      </button>
-    </footer>
   </div>
 </div>

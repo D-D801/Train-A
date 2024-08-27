@@ -4,11 +4,12 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { StationsApiService } from '@features/admin/services/stations-api/stations-api.service';
 import { StationsService } from '@features/admin/services/stations/stations.service';
 import { CreateStationFormComponent } from '@features/admin/components/create-station-form/create-station-form.component';
+import { TuiScrollbar } from '@taiga-ui/core';
 
 @Component({
   selector: 'dd-stations-page',
   standalone: true,
-  imports: [CreateStationFormComponent, ExistingStationsListComponent],
+  imports: [CreateStationFormComponent, ExistingStationsListComponent, TuiScrollbar],
   templateUrl: './stations-page.component.html',
   styleUrl: './stations-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
