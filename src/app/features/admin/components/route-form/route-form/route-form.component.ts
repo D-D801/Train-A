@@ -7,6 +7,7 @@ import {
   effect,
   inject,
   input,
+  output,
   signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -51,7 +52,9 @@ enum ControlsType {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RouteFormComponent {
-  public readonly trainRoute = input.required<TrainRoute>();
+  public readonly trainRoute = input<TrainRoute>();
+
+  public save = output();
 
   private readonly alert = inject(AlertService);
 
@@ -88,13 +91,15 @@ export class RouteFormComponent {
       });
     this.routeApiService.getStations().subscribe((data) => {
       this.stations.set(data);
-      if (this.trainRoute()) this.updateAvailableStations(this.trainRoute().path);
+      if (this.trainRoute()) this.updateAvailableStations(this.trainRoute()?.path || []);
       else this.updateAvailableStations(new Array(MIN_ROUTE_FORM_CONTROL_COUNT).fill(null));
     });
     effect(() => {
       if (this.trainRoute()) {
-        this.trainRoute().path.forEach((station) => this.form.controls.path.push(this.fb.control(station)));
-        this.trainRoute().carriages.forEach((carriage) => this.form.controls.carriages.push(this.fb.control(carriage)));
+        this.trainRoute()?.path.forEach((station) => this.form.controls.path.push(this.fb.control(station)));
+        this.trainRoute()?.carriages.forEach((carriage) =>
+          this.form.controls.carriages.push(this.fb.control(carriage))
+        );
       } else {
         this.addInitialControls(ControlsType.path);
         this.addInitialControls(ControlsType.carriages);
@@ -177,10 +182,11 @@ export class RouteFormComponent {
   public onSubmit() {
     if (this.trainRoute()) {
       this.routeApiService
-        .updateRoute({ ...this.form.value, id: this.trainRoute().id } as TrainRoute)
+        .updateRoute({ ...this.form.value, id: this.trainRoute()?.id } as TrainRoute)
         .pipe(takeUntilDestroyed(this.destroy))
         .subscribe({
           next: (data) => {
+            this.save.emit();
             this.alert.open({
               message: `Route ${data.id} successfully updated.`,
               label: 'Success',
@@ -197,6 +203,7 @@ export class RouteFormComponent {
         .pipe(takeUntilDestroyed(this.destroy))
         .subscribe({
           next: (data) => {
+            this.save.emit();
             this.alert.open({
               message: `Route ${data.id} successfully created.`,
               label: 'Success',

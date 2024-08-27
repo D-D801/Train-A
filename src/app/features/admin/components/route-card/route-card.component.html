@@ -2,9 +2,9 @@
   <h2 tuiTitle>Route {{ trainRoute().id }}</h2>
 
   <aside tuiAccessories>
-    <tui-icon icon="@tui.pen" />
-    <tui-icon icon="@tui.bus" />
-    <tui-icon icon="@tui.trash" />
+    <tui-icon class="accessories" icon="@tui.pen" (click)="edit.emit(trainRoute().id)" />
+    <tui-icon class="accessories" icon="@tui.bus" />
+    <tui-icon class="accessories" icon="@tui.trash" />
   </aside>
 </header>
 

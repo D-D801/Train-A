@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { TrainRoute } from '@features/admin/interfaces/train-route.interface';
 import { TuiIcon, TuiTitle } from '@taiga-ui/core';
 import { TuiHeader } from '@taiga-ui/layout';
@@ -13,4 +13,6 @@ import { TuiHeader } from '@taiga-ui/layout';
 })
 export class RouteCardComponent {
   public trainRoute = input.required<TrainRoute>();
+
+  public edit = output<number | undefined>();
 }
