@@ -7,6 +7,7 @@ import { RouteApiService } from '@features/admin/services/route-api/route-api.se
 import { TextSwitchFormComponent } from '@shared/components/text-switch-form/text-switch-form.component';
 import { TuiDay, TuiTime } from '@taiga-ui/cdk';
 import { TuiButton, TuiError, TuiIcon, TuiSurface, TuiTitle } from '@taiga-ui/core';
+import { TuiAccordion } from '@taiga-ui/kit';
 import { TuiCardLarge, TuiHeader } from '@taiga-ui/layout';
 import { TuiInputModule } from '@taiga-ui/legacy';
 
@@ -25,6 +26,7 @@ import { TuiInputModule } from '@taiga-ui/legacy';
     TextSwitchFormComponent,
     TuiInputModule,
     TuiIcon,
+    TuiAccordion,
   ],
   templateUrl: './station-card.component.html',
   styleUrl: './station-card.component.scss',

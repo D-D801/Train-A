@@ -1,11 +1,25 @@
-<div tuiCardLarge tuiSurface="flat">
-  <header tuiHeader>
-    <h4 tuiTitle>{{ station()[0] }}</h4>
-    <h4 tuiTitle>{{ station()[1] }}</h4>
-  </header>
-  <section>
-    <dd-text-switch-form class="time" [form]="timeForm" [typeInputs]="'date'" [onSave]="save"></dd-text-switch-form>
-    <h3>Prices</h3>
-    <dd-text-switch-form [form]="priceForm" [typeInputs]="'text'" [onSave]="save"></dd-text-switch-form>
-  </section>
-</div>
+<tui-accordion>
+  <div tuiCardLarge tuiSurface="flat">
+    <tui-accordion-item [open]="false">
+      <header class="train-path" tuiHeader>
+        <h4 tuiTitle class="start">{{ station()[0] }}</h4>
+        <tui-icon icon="@tui.map-pin" />
+        <div class="line"></div>
+        <tui-icon icon="@tui.map-pin" />
+        <h4 tuiTitle>{{ station()[1] }}</h4>
+      </header>
+      <ng-template tuiAccordionItemContent>
+        <section>
+          <dd-text-switch-form
+            class="time"
+            [form]="timeForm"
+            [typeInputs]="'date'"
+            [onSave]="save"
+          ></dd-text-switch-form>
+          <h3>Prices</h3>
+          <dd-text-switch-form [form]="priceForm" [typeInputs]="'text'" [onSave]="save"></dd-text-switch-form>
+        </section>
+      </ng-template>
+    </tui-accordion-item>
+  </div>
+</tui-accordion>
