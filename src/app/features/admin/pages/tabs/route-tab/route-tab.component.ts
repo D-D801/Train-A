@@ -5,7 +5,7 @@ import { RouteCardComponent } from '@features/admin/components/route-card/route-
 import { RouteFormComponent } from '@features/admin/components/route-form/route-form/route-form.component';
 import { TrainRoute } from '@features/admin/interfaces/train-route.interface';
 import { RouteApiService } from '@features/admin/services/route-api/route-api.service';
-import { TuiButton, TuiDialogService, TuiSurface } from '@taiga-ui/core';
+import { TuiButton, TuiDialogService, TuiLoader, tuiLoaderOptionsProvider, TuiSurface } from '@taiga-ui/core';
 import { TUI_CONFIRM, TuiConfirmData } from '@taiga-ui/kit';
 import { TuiCardLarge } from '@taiga-ui/layout';
 import { filter, switchMap } from 'rxjs';
@@ -13,7 +13,14 @@ import { filter, switchMap } from 'rxjs';
 @Component({
   selector: 'dd-route-tab',
   standalone: true,
-  imports: [RouteFormComponent, RouteCardComponent, TuiCardLarge, TuiSurface, TuiButton],
+  imports: [RouteFormComponent, RouteCardComponent, TuiCardLarge, TuiSurface, TuiButton, TuiLoader],
+  providers: [
+    tuiLoaderOptionsProvider({
+      size: 'xl',
+      inheritColor: false,
+      overlay: true,
+    }),
+  ],
   templateUrl: './route-tab.component.html',
   styleUrl: './route-tab.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -33,16 +40,20 @@ export class RouteTabComponent {
 
   public readonly isEdit = signal(false);
 
+  public readonly isLoading = signal(false);
+
   public constructor() {
     this.getRoutes();
   }
 
   public getRoutes() {
+    this.isLoading.set(true);
     this.routeService
       .getRoutes()
       .pipe(takeUntilDestroyed(this.destroy))
       .subscribe((trainRoutes) => {
         this.routes.set(trainRoutes);
+        this.isLoading.set(false);
       });
   }
 

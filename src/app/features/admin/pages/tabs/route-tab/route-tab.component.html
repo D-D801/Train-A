@@ -7,8 +7,10 @@
 } @else {
   <button size="m" tuiButton (click)="onCreate()">Create</button>
 }
-@for (trainRoute of routes(); track trainRoute.id) {
-  <div tuiCardLarge tuiSurface="elevated" class="tui-space_top-4">
-    <dd-route-card [trainRoute]="trainRoute" (edit)="onEdit($event)" (delete)="onDelete($event)"></dd-route-card>
-  </div>
-}
+<tui-loader class="loader" [showLoader]="isLoading()">
+  @for (trainRoute of routes(); track trainRoute.id) {
+    <div tuiCardLarge tuiSurface="elevated" class="tui-space_top-4">
+      <dd-route-card [trainRoute]="trainRoute" (edit)="onEdit($event)" (delete)="onDelete($event)"></dd-route-card>
+    </div>
+  }
+</tui-loader>
