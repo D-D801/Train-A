@@ -1,8 +1,14 @@
-@if (routes()[0]) {
-  <dd-route-form [trainRoute]="routes()[1222]"></dd-route-form>
+@if (isEdit()) {
+  @if (currentRouteId() !== null) {
+    <dd-route-form [trainRoute]="routes()[currentRouteId() ?? 0]" (save)="onSave()"></dd-route-form>
+  } @else {
+    <dd-route-form (save)="onSave()"></dd-route-form>
+  }
+} @else {
+  <button size="m" tuiButton (click)="onCreate()">Create</button>
 }
 @for (trainRoute of routes(); track trainRoute.id) {
   <div tuiCardLarge tuiSurface="elevated" class="tui-space_top-4">
-    <dd-route-card [trainRoute]="trainRoute"></dd-route-card>
+    <dd-route-card [trainRoute]="trainRoute" (edit)="onEdit($event)"></dd-route-card>
   </div>
 }
