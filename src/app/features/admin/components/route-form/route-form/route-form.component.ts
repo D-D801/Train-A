@@ -96,6 +96,8 @@ export class RouteFormComponent {
     });
     effect(() => {
       if (this.trainRoute()) {
+        this.form.controls.path.clear();
+        this.form.controls.carriages.clear();
         this.trainRoute()?.path.forEach((station) => this.form.controls.path.push(this.fb.control(station)));
         this.trainRoute()?.carriages.forEach((carriage) =>
           this.form.controls.carriages.push(this.fb.control(carriage))
