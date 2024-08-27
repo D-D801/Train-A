@@ -1,0 +1,32 @@
+.train-path {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  position: relative;
+}
+
+h4 {
+  margin: 0;
+  padding: 0 1rem;
+  font-size: 1rem;
+  white-space: nowrap;
+  width: max-content;
+}
+
+tui-icon {
+  color: var(--tui-background-accent-1);
+}
+
+[tuiHeader] [tuiTitle] {
+  flex-grow: 0;
+}
+
+.line {
+  position: relative;
+  top: 100%;
+  flex-grow: 1;
+  height: 1px;
+  background-color: var(--tui-background-accent-1);
+  margin: 0 1rem;
+}
