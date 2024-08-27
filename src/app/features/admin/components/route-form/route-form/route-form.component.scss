@@ -3,15 +3,31 @@
   flex-direction: column;
 }
 
+.overflow-visible {
+  overflow: visible;
+}
+
+.form-header {
+  position: sticky;
+  z-index: 1;
+  top: 0;
+
+  padding: 0.5rem 0;
+
+  background-color: white;
+  border-bottom: 1px solid var(--tui-background-neutral-2);
+}
+
 .form-columns {
   display: flex;
   gap: 0.5rem;
-  margin-bottom: 0.5rem;
+  justify-content: space-evenly;
+  margin: 0.5rem 0;
 }
 
 .form-rows {
   display: flex;
-  flex: 1 1 0;
+  flex: 0 1 20rem;
   flex-direction: column;
   gap: 0.5rem;
 }
