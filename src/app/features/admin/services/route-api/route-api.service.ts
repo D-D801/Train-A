@@ -10,7 +10,7 @@ import { TrainRoute } from '@features/admin/interfaces/train-route.interface';
 export class RouteApiService {
   private readonly http = inject(HttpClient);
 
-  public getRoute() {
+  public getRoutes() {
     return this.http.get<TrainRoute[]>('/api/route');
   }
 

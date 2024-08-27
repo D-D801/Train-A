@@ -15,4 +15,6 @@ export class RouteCardComponent {
   public trainRoute = input.required<TrainRoute>();
 
   public edit = output<number | undefined>();
+
+  public delete = output<TrainRoute | undefined>();
 }
