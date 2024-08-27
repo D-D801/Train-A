@@ -7,6 +7,9 @@ import { NewStation } from '@features/admin/interfaces/new-station.interface';
 import { StationListItem } from '@features/admin/interfaces/station-list-item.interface';
 import { StationsApiService } from '@features/admin/services/stations-api/stations-api.service';
 import { StationsService } from '@features/admin/services/stations/stations.service';
+import { CityInfo } from '@features/home/interfaces/city-info.interface';
+import { LocationApiService } from '@features/home/services/location-api/location-api.service';
+import { SearchService } from '@features/home/services/search/search.service';
 import { TuiLet } from '@taiga-ui/cdk';
 import { TuiButton, TuiDataList } from '@taiga-ui/core';
 import { TuiInputModule } from '@taiga-ui/legacy';
@@ -21,9 +24,15 @@ import { debounceTime } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateStationFormComponent implements OnInit {
+  private readonly searchService = inject(SearchService);
+
   private readonly stationsApiService = inject(StationsApiService);
 
   private readonly stationsService = inject(StationsService);
+
+  private readonly locationService = inject(LocationApiService);
+
+  public cities = this.searchService.cities;
 
   private readonly alert = inject(AlertService);
 
@@ -50,13 +59,42 @@ export class CreateStationFormComponent implements OnInit {
         this.connectedStations.push(this.createConnectedStationControl());
       }
     });
+
+    this.cityName.valueChanges.pipe(debounceTime(1000), takeUntilDestroyed(this.destroy)).subscribe((city) => {
+      if (!city) return;
+      this.locationService
+        .getLocationCoordinates(city)
+        .pipe(takeUntilDestroyed(this.destroy))
+        .subscribe({
+          next: (receivedCities) => {
+            const { lat, lon } = receivedCities[0];
+            this.latitude.setValue(lat.toString());
+            this.longitude.setValue(lon.toString());
+          },
+          error: ({ error: { message } }) => {
+            this.alert.open({ message, label: 'Error:', appearance: 'error' });
+          },
+        });
+    });
+
+    this.locationService
+      .getLocation(55.751244, 37.618423)
+      .pipe(takeUntilDestroyed(this.destroy))
+      // eslint-disable-next-line no-console
+      .subscribe({ next: (value) => console.log(value), error: (error) => console.log(error) });
   }
 
   private createConnectedStationControl() {
     return this.fb.control('');
   }
 
+  public onSelectedCity(city: CityInfo) {
+    this.latitude.setValue(city.lat.toString());
+    this.longitude.setValue(city.lon.toString());
+  }
+
   public onSelected(station: StationListItem, index: number) {
+    if (this.relations.includes(index)) return;
     this.connectedStations.controls[index].setValue(station.city);
     this.relations[index] = station.id;
   }
