@@ -100,6 +100,7 @@ export class CreateStationFormComponent implements OnInit {
   }
 
   public createStation() {
+    if (this.stationsService.stations().find((station) => station.city === this.cityName.value)) return;
     if (!this.cityName.value || !this.latitude.value || !this.longitude.value) return;
     const body: NewStation = {
       city: this.cityName.value,
