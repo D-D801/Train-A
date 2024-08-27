@@ -1,0 +1,26 @@
+<p>Station {{ fromStation }}- Station {{ toStation }}</p>
+
+@if (ride()) {
+  <p>Ride {{ ride()?.rideId }}</p>
+}
+
+<section class="horizontal">
+  <nav tuiTabs [(activeItemIndex)]="activeItemIndex">
+    @for (type of carriageTypes; track $index) {
+      <button tuiTab class="type">
+        {{ type }}
+        <div>{{ priceMap[type] || 0 }}{{ '$' | tuiCurrency }}</div>
+      </button>
+    }
+  </nav>
+  <div
+    *ngFor="let type of carriageTypes; let i = index"
+    class="tab-content"
+    [ngClass]="{ active: activeItemIndex === i }"
+  >
+    <div *ngFor="let carriage of carriageList[type]">
+      <h3>Car {{ carriage.index }}:</h3>
+      <dd-carriage-preview class="preview" [carriage]="getCarriageByName(carriage.carriage)"></dd-carriage-preview>
+    </div>
+  </div>
+</section>

@@ -13,9 +13,5 @@
 @for (carriage of allCarriages(); track carriage.code) {
   <div class="carriage-item">
     <dd-carriage-card [carriage]="carriage" (editCarriage)="onEdit($event)"></dd-carriage-card>
-    <!-- <dd-carriage-preview [carriage]="carriage"></dd-carriage-preview>
-    <div>
-      <button class="edit-btn" appearance="primary" size="s" tuiButton (click)="onEdit(carriage)">Edit</button>
-    </div> -->
   </div>
 }
