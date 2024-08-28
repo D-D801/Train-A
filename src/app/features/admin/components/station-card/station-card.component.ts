@@ -1,7 +1,7 @@
 import { KeyValuePipe, TitleCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, input } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormBuilder, FormControl, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AlertService } from '@core/services/alert/alert.service';
 import { Segment } from '@features/admin/interfaces/segment.interface';
 import { RouteApiService } from '@features/admin/services/route-api/route-api.service';
@@ -17,6 +17,7 @@ import {
   TuiTextfieldControllerModule,
 } from '@taiga-ui/legacy';
 import { TuiCurrencyPipe } from '@taiga-ui/addon-commerce';
+import { tap } from 'rxjs';
 
 @Component({
   selector: 'dd-station-card',
@@ -63,8 +64,8 @@ export class StationCardComponent {
   public save = () => this.saveSegment();
 
   protected timeForm = this.fb.group({
-    departure: this.fb.control<[TuiDay, TuiTime] | []>([]),
-    arrival: this.fb.control<[TuiDay, TuiTime] | []>([]),
+    departure: this.fb.control<[TuiDay, TuiTime] | []>([], [Validators.required]),
+    arrival: this.fb.control<[TuiDay, TuiTime] | []>([], [Validators.required]),
   });
 
   protected priceForm = this.fb.group({});
@@ -91,7 +92,7 @@ export class StationCardComponent {
 
       const priceControls = Object.keys(price).reduce(
         (acc, key) => {
-          acc[key] = this.fb.control(price[key]);
+          acc[key] = this.fb.control(price[key], [Validators.required, Validators.min(0)]);
           return acc;
         },
         {} as { [key: string]: FormControl<number | null> }
@@ -141,7 +142,14 @@ export class StationCardComponent {
       .updateRide(routeId, rideId, {
         segments: segments.segments,
       })
-      .pipe(takeUntilDestroyed(this.destroy))
+      .pipe(
+        tap({
+          error: ({ error: { message } }) => {
+            this.alert.open({ message, label: 'Error', appearance: 'error' });
+          },
+        }),
+        takeUntilDestroyed(this.destroy)
+      )
       .subscribe();
   }
 }

@@ -48,4 +48,8 @@ export class RouteApiService {
   public updateRide(routeId: number, rideId: number, body: { segments: Partial<Segment>[] }) {
     return this.httpClient.put(`/api/route/${routeId}/ride/${rideId}`, body);
   }
+
+  public deleteRide(routeId: number, rideId: number) {
+    return this.httpClient.delete(`/api/route/${routeId}/ride/${rideId}`);
+  }
 }
