@@ -1,5 +1,5 @@
-import { NgFor } from '@angular/common';
-import { ChangeDetectionStrategy, Component, effect, input, signal } from '@angular/core';
+import { NgClass, NgFor } from '@angular/common';
+import { ChangeDetectionStrategy, Component, effect, EventEmitter, Input, input, Output, signal } from '@angular/core';
 import { Carriage } from '@features/admin/interfaces/carriage.interface';
 import { TuiAppearance, TuiSurface, TuiTitle } from '@taiga-ui/core';
 import { TuiCardLarge, TuiHeader } from '@taiga-ui/layout';
@@ -7,15 +7,25 @@ import { TuiCardLarge, TuiHeader } from '@taiga-ui/layout';
 @Component({
   selector: 'dd-carriage-preview',
   standalone: true,
-  imports: [NgFor, TuiCardLarge, TuiSurface, TuiTitle, TuiHeader, TuiAppearance],
+  imports: [NgFor, TuiCardLarge, TuiSurface, TuiTitle, TuiHeader, TuiAppearance, NgClass],
   templateUrl: './carriage-preview.component.html',
   styleUrl: './carriage-preview.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CarriagePreviewComponent {
+  @Input() public isClick = false;
+
+  @Input() public isShowTitle = true;
+
+  @Output() public seatSelected = new EventEmitter<{ seatNumber: number; carriageType: string }>();
+
   public carriage = input.required<Carriage | null>();
 
   public seatNumbers = signal<Array<{ leftRow: number[]; rightRow: number[] }>>([]);
+
+  public selectedSeat: number | null = null;
+
+  public reservedSeats: Set<number> = new Set();
 
   public constructor() {
     effect(
@@ -53,5 +63,25 @@ export class CarriagePreviewComponent {
         return { leftRow: leftRow.reverse(), rightRow: rightRow.reverse() };
       })
     );
+  }
+
+  public onSeatClick(seatNumber: number) {
+    if (!this.isClick) return;
+    if (this.selectedSeat === seatNumber) {
+      this.selectedSeat = null;
+    } else {
+      this.selectedSeat = seatNumber;
+    }
+    const carriageType = this.carriage()?.name;
+    if (!carriageType || !this.selectedSeat) return;
+    this.seatSelected.emit({ seatNumber: this.selectedSeat, carriageType });
+  }
+
+  public isSeatSelected(seatNumber: number) {
+    return this.selectedSeat === seatNumber;
+  }
+
+  public isSeatReserved(seatNumber: number) {
+    return this.reservedSeats.has(seatNumber);
   }
 }

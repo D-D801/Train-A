@@ -1,14 +1,26 @@
 @if (carriage()) {
   <div tuiCardLarge="normal" tuiAppearance="secondary" tuiSurface class="highlight">
-    <header tuiHeader>
-      <h2 tuiTitle>{{ carriage()?.name }}</h2>
-    </header>
+    @if (isShowTitle) {
+      <header tuiHeader>
+        <h2 tuiTitle>{{ carriage()?.name }}</h2>
+      </header>
+    }
     <section>
       <div class="carriage">
         <div class="column" *ngFor="let row of seatNumbers()">
           <div class="seats-right">
             @for (seatNumber of row.rightRow; track seatNumber) {
-              <div class="seat">
+              <div
+                class="seat"
+                [ngClass]="{
+                  selected: isSeatSelected(seatNumber) && isClick,
+                  reserved: isSeatReserved(seatNumber),
+                  clickable: isClick,
+                }"
+                (click)="onSeatClick(seatNumber)"
+                (keydown)="onSeatClick(seatNumber)"
+                tabindex="0"
+              >
                 {{ seatNumber }}
               </div>
             }
@@ -16,7 +28,17 @@
           <div class="aisle"></div>
           <div class="seats-left">
             @for (seatNumber of row.leftRow; track seatNumber) {
-              <div class="seat">
+              <div
+                class="seat"
+                [ngClass]="{
+                  selected: isSeatSelected(seatNumber) && isClick,
+                  reserved: isSeatReserved(seatNumber),
+                  clickable: isClick,
+                }"
+                (click)="onSeatClick(seatNumber)"
+                (keydown)="onSeatClick(seatNumber)"
+                tabindex="0"
+              >
                 {{ seatNumber }}
               </div>
             }
