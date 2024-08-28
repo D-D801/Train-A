@@ -1,23 +1,22 @@
 <tui-accordion>
   <div tuiCardLarge tuiSurface="elevated" class="ride-card">
-    <tui-accordion-item [open]="false">
-      <header tuiHeader>
-        <h4 tuiTitle>Ride {{ ride().rideId }}</h4>
-      </header>
-      <ng-template tuiAccordionItemContent>
-        <section>
-          @let segments = ride().segments;
-          @if (segments.length > 0) {
-            @for (segment of segments; track segment; let i = $index) {
-              <dd-station-card
-                [station]="[path()[i], path()[i + 1]]"
-                [segments]="{ segments, index: i }"
-                [ids]="{ routeId: routeId(), rideId: ride().rideId }"
-              ></dd-station-card>
-            }
+    @let segments = ride().segments;
+    @if (segments.length > 0) {
+      <tui-accordion-item [open]="false">
+        <header tuiHeader>
+          <h4>Ride {{ ride().rideId }}</h4>
+        </header>
+
+        <ng-template tuiAccordionItemContent>
+          @for (segment of segments; track segment; let i = $index) {
+            <dd-station-card
+              [station]="[path()[i], path()[i + 1]]"
+              [ids]="{ routeId: routeId(), rideId: ride().rideId }"
+              [segments]="{ segments: segments, indexSegment: i }"
+            ></dd-station-card>
           }
-        </section>
-      </ng-template>
-    </tui-accordion-item>
+        </ng-template>
+      </tui-accordion-item>
+    }
   </div>
 </tui-accordion>

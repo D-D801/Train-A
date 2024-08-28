@@ -1,4 +1,4 @@
-import { AsyncPipe, KeyValuePipe, NgFor, NgIf, NgSwitch, NgSwitchCase, TitleCasePipe } from '@angular/common';
+import { AsyncPipe, KeyValuePipe, NgFor, NgSwitch, NgSwitchCase, TitleCasePipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -11,11 +11,17 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { DateTimeTransformerService } from '@shared/services/date-time-transformer/date-time-transformer.service';
+import { TuiCurrencyPipe } from '@taiga-ui/addon-commerce';
 import { TuiAutoFocus } from '@taiga-ui/cdk';
-import { TuiButton, TuiError } from '@taiga-ui/core';
-import { TUI_DATE_TIME_VALUE_TRANSFORMER, TuiFieldErrorPipe, TuiInputInline } from '@taiga-ui/kit';
-import { TuiInputDateTimeModule, TuiInputModule } from '@taiga-ui/legacy';
+import { TuiButton, tuiDateFormatProvider, TuiError } from '@taiga-ui/core';
+import { TuiFieldErrorPipe, TuiInputInline } from '@taiga-ui/kit';
+import {
+  TuiInputDateTimeModule,
+  TuiInputModule,
+  TuiInputNumberModule,
+  TuiTextfieldControllerModule,
+} from '@taiga-ui/legacy';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'dd-text-switch-form',
@@ -23,7 +29,6 @@ import { TuiInputDateTimeModule, TuiInputModule } from '@taiga-ui/legacy';
   imports: [
     TuiInputInline,
     TuiButton,
-    NgIf,
     TuiAutoFocus,
     ReactiveFormsModule,
     TuiFieldErrorPipe,
@@ -36,16 +41,14 @@ import { TuiInputDateTimeModule, TuiInputModule } from '@taiga-ui/legacy';
     KeyValuePipe,
     TitleCasePipe,
     TuiInputDateTimeModule,
+    TuiCurrencyPipe,
+    TuiTextfieldControllerModule,
+    TuiInputNumberModule,
   ],
   templateUrl: './text-switch-form.component.html',
   styleUrl: './text-switch-form.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [
-    {
-      provide: TUI_DATE_TIME_VALUE_TRANSFORMER,
-      useClass: DateTimeTransformerService,
-    },
-  ],
+  providers: [tuiDateFormatProvider({ mode: 'DMY' })],
 })
 export class TextSwitchFormComponent implements OnInit {
   public form = input.required<FormGroup>();
@@ -61,14 +64,10 @@ export class TextSwitchFormComponent implements OnInit {
   public isEditMode = false;
 
   public ngOnInit(): void {
-    this.initFormSubscription();
-  }
-
-  private initFormSubscription() {
     const formGroup = this.form();
 
     if (formGroup) {
-      formGroup.valueChanges.pipe(takeUntilDestroyed(this.destroy)).subscribe(() => {
+      formGroup.valueChanges.pipe(take(1), takeUntilDestroyed(this.destroy)).subscribe(() => {
         this.cdr.markForCheck();
       });
     }

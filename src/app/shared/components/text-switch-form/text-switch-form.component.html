@@ -1,28 +1,46 @@
-<form *ngIf="isEditMode; else viewMode" [formGroup]="form()" class="wrapper" (ngSubmit)="save()">
-  <div class="input" *ngFor="let controlName of form().controls | keyvalue">
-    <div [ngSwitch]="typeInputs()">
-      <tui-input *ngSwitchCase="'text'" [formControlName]="controlName.key">
-        {{ controlName.key | titlecase }}
-        <input [placeholder]="controlName.key | titlecase" tuiTextfieldLegacy />
-      </tui-input>
-      <tui-input-date-time *ngSwitchCase="'date'" [formControlName]="controlName.key">
-        {{ controlName.key | titlecase }}</tui-input-date-time
-      >
-
-      <tui-error [formControlName]="controlName.key" [error]="[] | tuiFieldError | async" />
+@if (isEditMode) {
+  <form class="wrapper" [formGroup]="form()" (ngSubmit)="save()">
+    <div class="inputs">
+      @for (controlName of form().controls | keyvalue; track $index) {
+        @switch (typeInputs()) {
+          @case ('text') {
+            <tui-input class="input" [formControlName]="controlName.key">
+              {{ controlName.key | titlecase }}
+              <input [placeholder]="controlName.key | titlecase" tuiTextfieldLegacy />
+            </tui-input>
+          }
+          @case ('time') {
+            <tui-input-date-time class="input" [formControlName]="controlName.key">
+              {{ controlName.key | titlecase }}</tui-input-date-time
+            >
+          }
+          @case ('number') {
+            <tui-input-number
+              class="input"
+              [formControlName]="controlName.key"
+              [tuiTextfieldPrefix]="'USD' | tuiCurrency"
+            >
+              {{ controlName.key | titlecase }}
+            </tui-input-number>
+          }
+        }
+      }
     </div>
-  </div>
-  <button tuiIconButton appearance="icon" iconStart="@tui.save" size="m" type="submit">Save</button>
-</form>
-
-<ng-template #viewMode>
+    <button tuiIconButton appearance="icon" iconStart="@tui.save" size="m" type="submit">Save</button>
+  </form>
+} @else {
   <div class="wrapper">
-    <div class="text-block" *ngFor="let controlName of form().controls | keyvalue">
-      <h4>{{ controlName.key | titlecase }}</h4>
-      {{ form().get(controlName.key)?.value }}
+    <div class="inputs">
+      @for (controlName of form().controls | keyvalue; track $index) {
+        <div>
+          <span class="label">{{ controlName.key | titlecase }}:</span>
+          {{ form().get(controlName.key)?.value }}
+        </div>
+      }
     </div>
+
     <button tuiIconButton appearance="icon" iconStart="@tui.pencil" size="s" type="button" (click)="enableEditMode()">
       Edit
     </button>
   </div>
-</ng-template>
+}
