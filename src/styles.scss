@@ -17,3 +17,19 @@
 ::-webkit-scrollbar-thumb:hover {
   background-color: rgb(0 0 0 / 50%);
 }
+
+.time .wrapper .inputs {
+  flex-direction: column-reverse;
+}
+
+.profile .wrapper .inputs {
+  font-size: 1rem;
+}
+
+.profile div.wrapper {
+  margin: 1.5rem 0;
+}
+
+.profile .wrapper .label {
+  display: block;
+}

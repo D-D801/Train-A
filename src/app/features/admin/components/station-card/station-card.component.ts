@@ -1,3 +1,4 @@
+import { KeyValuePipe, TitleCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, input } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormControl, ReactiveFormsModule } from '@angular/forms';
@@ -9,7 +10,13 @@ import { TuiDay, TuiTime } from '@taiga-ui/cdk';
 import { TuiButton, TuiError, TuiIcon, TuiSurface, TuiTitle } from '@taiga-ui/core';
 import { TuiAccordion } from '@taiga-ui/kit';
 import { TuiCardLarge, TuiHeader } from '@taiga-ui/layout';
-import { TuiInputModule } from '@taiga-ui/legacy';
+import {
+  TuiInputDateTimeModule,
+  TuiInputModule,
+  TuiInputNumberModule,
+  TuiTextfieldControllerModule,
+} from '@taiga-ui/legacy';
+import { TuiCurrencyPipe } from '@taiga-ui/addon-commerce';
 
 @Component({
   selector: 'dd-station-card',
@@ -27,6 +34,12 @@ import { TuiInputModule } from '@taiga-ui/legacy';
     TuiInputModule,
     TuiIcon,
     TuiAccordion,
+    TuiInputDateTimeModule,
+    TuiInputNumberModule,
+    KeyValuePipe,
+    TitleCasePipe,
+    TuiCurrencyPipe,
+    TuiTextfieldControllerModule,
   ],
   templateUrl: './station-card.component.html',
   styleUrl: './station-card.component.scss',
@@ -35,7 +48,7 @@ import { TuiInputModule } from '@taiga-ui/legacy';
 export class StationCardComponent {
   public station = input.required<[number, number]>();
 
-  public segments = input<{ segments: Segment[]; index: number }>();
+  public segments = input<{ segments: Segment[]; indexSegment: number }>();
 
   public ids = input.required<{ routeId: number; rideId: number }>();
 
@@ -61,7 +74,7 @@ export class StationCardComponent {
       const segments = this.segments();
       if (!segments) return;
 
-      const segment = segments.segments[segments.index];
+      const segment = segments.segments[segments.indexSegment];
 
       const { time, price } = segment;
 
@@ -98,11 +111,29 @@ export class StationCardComponent {
 
     if (!(departure && arrival && price)) return;
 
-    const departureString = new Date(departure.toString()).toISOString();
-    const arrivalString = new Date(arrival.toString()).toISOString();
+    const [departureDay, departureTime] = departure;
+    const [arrivalDay, arrivalTime] = arrival;
 
-    segments.segments[segments.index] = {
-      time: [departureString, arrivalString],
+    if (!(departureDay && departureTime && arrivalTime && arrivalDay)) return;
+
+    const departureDate = new Date(
+      departureDay.year,
+      departureDay.month,
+      departureDay.day,
+      departureTime.hours,
+      departureTime.minutes
+    );
+
+    const arrivalDate = new Date(
+      arrivalDay.year,
+      arrivalDay.month,
+      arrivalDay.day,
+      arrivalTime.hours,
+      arrivalTime.minutes
+    );
+
+    segments.segments[segments.indexSegment] = {
+      time: [departureDate.toDateString(), arrivalDate.toDateString()],
       price,
     };
 
