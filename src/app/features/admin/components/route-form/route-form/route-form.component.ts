@@ -94,15 +94,10 @@ export class RouteFormComponent {
 
     this.routeApiService.getStations().subscribe((data) => {
       this.stations.set(data);
-      let availableStations;
-      if (this.trainRoute()) {
-        availableStations = updateAvailableStations(this.trainRoute()?.path || [], this.stations());
-      } else {
-        availableStations = updateAvailableStations(
-          new Array(MIN_ROUTE_FORM_CONTROL_COUNT).fill(null),
-          this.stations()
-        );
-      }
+      const availableStations = this.trainRoute()
+        ? updateAvailableStations(this.trainRoute()?.path || [], this.stations())
+        : updateAvailableStations(new Array(MIN_ROUTE_FORM_CONTROL_COUNT).fill(null), this.stations());
+
       this.connectedToStations.set(availableStations);
     });
 
