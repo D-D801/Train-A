@@ -1,4 +1,4 @@
-import { AsyncPipe, KeyValuePipe, NgFor, NgSwitch, NgSwitchCase, TitleCasePipe } from '@angular/common';
+import { AsyncPipe, KeyValuePipe, TitleCasePipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -11,38 +11,24 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { TuiCurrencyPipe } from '@taiga-ui/addon-commerce';
-import { TuiAutoFocus } from '@taiga-ui/cdk';
 import { TuiButton, tuiDateFormatProvider, TuiError } from '@taiga-ui/core';
-import { TuiFieldErrorPipe, TuiInputInline } from '@taiga-ui/kit';
-import {
-  TuiInputDateTimeModule,
-  TuiInputModule,
-  TuiInputNumberModule,
-  TuiTextfieldControllerModule,
-} from '@taiga-ui/legacy';
+import { TuiFieldErrorPipe } from '@taiga-ui/kit';
+import { TuiInputDateTimeModule, TuiInputModule, TuiInputNumberModule } from '@taiga-ui/legacy';
 import { take } from 'rxjs';
 
 @Component({
   selector: 'dd-text-switch-form',
   standalone: true,
   imports: [
-    TuiInputInline,
     TuiButton,
-    TuiAutoFocus,
     ReactiveFormsModule,
     TuiFieldErrorPipe,
     TuiError,
     AsyncPipe,
     TuiInputModule,
-    NgSwitch,
-    NgSwitchCase,
-    NgFor,
     KeyValuePipe,
     TitleCasePipe,
     TuiInputDateTimeModule,
-    TuiCurrencyPipe,
-    TuiTextfieldControllerModule,
     TuiInputNumberModule,
   ],
   templateUrl: './text-switch-form.component.html',
@@ -59,9 +45,9 @@ export class TextSwitchFormComponent implements OnInit {
 
   private readonly destroy = inject(DestroyRef);
 
-  public cdr = inject(ChangeDetectorRef);
+  private readonly cdr = inject(ChangeDetectorRef);
 
-  public isEditMode = false;
+  protected isEditMode = false;
 
   public ngOnInit(): void {
     const formGroup = this.form();
@@ -73,11 +59,11 @@ export class TextSwitchFormComponent implements OnInit {
     }
   }
 
-  public enableEditMode() {
+  protected enableEditMode() {
     this.isEditMode = true;
   }
 
-  public save() {
+  protected save() {
     if (this.form().valid) {
       this.onSave()();
       this.isEditMode = false;

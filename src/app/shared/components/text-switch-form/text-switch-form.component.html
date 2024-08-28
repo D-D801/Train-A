@@ -9,17 +9,13 @@
               <input [placeholder]="controlName.key | titlecase" tuiTextfieldLegacy />
             </tui-input>
           }
-          @case ('time') {
+          @case ('date-time') {
             <tui-input-date-time class="input" [formControlName]="controlName.key">
               {{ controlName.key | titlecase }}</tui-input-date-time
             >
           }
           @case ('number') {
-            <tui-input-number
-              class="input"
-              [formControlName]="controlName.key"
-              [tuiTextfieldPrefix]="'USD' | tuiCurrency"
-            >
+            <tui-input-number class="input" [formControlName]="controlName.key">
               {{ controlName.key | titlecase }}
             </tui-input-number>
           }
