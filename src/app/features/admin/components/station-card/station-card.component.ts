@@ -133,7 +133,7 @@ export class StationCardComponent {
     );
 
     segments.segments[segments.indexSegment] = {
-      time: [departureDate.toDateString(), arrivalDate.toDateString()],
+      time: [departureDate.toISOString(), arrivalDate.toISOString()],
       price,
     };
 
