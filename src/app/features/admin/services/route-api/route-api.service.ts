@@ -30,6 +30,7 @@ export class RouteApiService {
     return this.http.get<Carriage[]>('/api/carriage');
   }
 
+  // todo: delete request carriages and station in favor of other services in the future
   public getStations() {
     return this.http.get<Station[]>('/api/station');
   }

@@ -8,7 +8,7 @@ import { RouteApiService } from '@features/admin/services/route-api/route-api.se
 import { TuiButton, TuiDialogService, TuiLoader, tuiLoaderOptionsProvider, TuiSurface } from '@taiga-ui/core';
 import { TUI_CONFIRM, TuiConfirmData } from '@taiga-ui/kit';
 import { TuiCardLarge } from '@taiga-ui/layout';
-import { filter, switchMap } from 'rxjs';
+import { filter, switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'dd-route-tab',
@@ -43,18 +43,18 @@ export class RouteTabComponent {
   public readonly isLoading = signal(false);
 
   public constructor() {
-    this.getRoutes();
+    this.updateRoutes().subscribe();
   }
 
-  public getRoutes() {
+  public updateRoutes() {
     this.isLoading.set(true);
-    this.routeService
-      .getRoutes()
-      .pipe(takeUntilDestroyed(this.destroy))
-      .subscribe((trainRoutes) => {
+    return this.routeService.getRoutes().pipe(
+      tap((trainRoutes) => {
         this.routes.set(trainRoutes);
         this.isLoading.set(false);
-      });
+      }),
+      takeUntilDestroyed(this.destroy)
+    );
   }
 
   public onEdit(id: number | undefined) {
@@ -65,7 +65,7 @@ export class RouteTabComponent {
 
   public onSave() {
     this.isEdit.set(false);
-    this.getRoutes();
+    this.updateRoutes().subscribe();
   }
 
   public onCreate() {
@@ -91,11 +91,11 @@ export class RouteTabComponent {
       .pipe(
         filter((response) => response),
         switchMap(() => this.routeService.deleteRoute(route)),
+        switchMap(() => this.updateRoutes()),
         takeUntilDestroyed(this.destroy)
       )
       .subscribe({
         next: () => {
-          this.getRoutes();
           this.alert.open({
             message: `Route ${route.id} successful deleted.`,
             label: 'Delete',
