@@ -20,6 +20,7 @@
             </tui-input-number>
           }
         }
+        <tui-error [formControlName]="controlName.key" [error]="[] | tuiFieldError | async" />
       }
     </div>
     <button tuiIconButton appearance="icon" iconStart="@tui.save" size="m" type="submit">Save</button>

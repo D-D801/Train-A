@@ -8,9 +8,19 @@
     </h2>
   </div>
 
-  <button class="create-button" appearance="primary" size="s" tuiButton>Create new ride</button>
+  <button class="create-button" appearance="primary" size="s" tuiButton (click)="isOpenNewRideForm = true">
+    Create new ride
+  </button>
+  @if (isOpenNewRideForm) {
+    <dd-new-ride-form [path]="routeInfo.path"></dd-new-ride-form>
+  }
 
   @for (rideCard of routeInfo.schedule; track rideCard.rideId) {
-    <dd-ride-card [ride]="rideCard" [routeId]="routeInfo.id" [path]="routeInfo.path"></dd-ride-card>
+    <dd-ride-card
+      [ride]="rideCard"
+      [routeId]="routeInfo.id"
+      [path]="routeInfo.path"
+      (delete)="onRideDelete($event)"
+    ></dd-ride-card>
   }
 }
