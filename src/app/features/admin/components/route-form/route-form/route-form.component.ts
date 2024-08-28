@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  computed,
   DestroyRef,
   effect,
   inject,
@@ -18,7 +19,7 @@ import { ConnectedStation, Station } from '@features/admin/interfaces/station.in
 import { TrainRoute } from '@features/admin/interfaces/train-route.interface';
 import { RouteApiService } from '@features/admin/services/route-api/route-api.service';
 import { MIN_ROUTE_FORM_CONTROL_COUNT } from '@shared/constants/min-route-control-count';
-import { TuiButton, TuiDataList, TuiIcon, TuiSurface, TuiTitle } from '@taiga-ui/core';
+import { TuiButton, TuiDataList, TuiIcon, TuiLoader, TuiSurface, TuiTitle } from '@taiga-ui/core';
 import { TuiAvatar } from '@taiga-ui/kit';
 import { TuiCardLarge, TuiHeader } from '@taiga-ui/layout';
 import { TuiSelectModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
@@ -46,6 +47,7 @@ enum ControlsType {
     TuiIcon,
     TuiHeader,
     TuiTitle,
+    TuiLoader,
   ],
   templateUrl: './route-form.component.html',
   styleUrl: './route-form.component.scss',
@@ -66,13 +68,21 @@ export class RouteFormComponent {
 
   private readonly cdr = inject(ChangeDetectorRef);
 
-  protected readonly connectedToStations = signal<number[][]>([]);
+  protected readonly connectedToStations = signal<string[][]>([]);
 
   protected readonly stations = signal<Station[]>([]);
 
   protected readonly carriages = signal<string[]>([]);
 
   protected readonly ControlsType = ControlsType;
+
+  private readonly allAvailableStations = computed(() =>
+    this.stations().map((station) => {
+      return {
+        id: station.id,
+      };
+    })
+  );
 
   public form = this.fb.group({
     path: this.fb.array([]),
@@ -98,7 +108,9 @@ export class RouteFormComponent {
       if (this.trainRoute()) {
         this.form.controls.path.clear();
         this.form.controls.carriages.clear();
-        this.trainRoute()?.path.forEach((station) => this.form.controls.path.push(this.fb.control(station)));
+        this.trainRoute()?.path.forEach((stationId) =>
+          this.form.controls.path.push(this.fb.control(this.stations()[stationId - 1]?.city ?? null))
+        );
         this.trainRoute()?.carriages.forEach((carriage) =>
           this.form.controls.carriages.push(this.fb.control(carriage))
         );
@@ -109,19 +121,19 @@ export class RouteFormComponent {
       this.cdr.detectChanges();
     });
 
-    this.form.controls.path.valueChanges.subscribe((data) => {
-      this.updateAvailableStations(data as number[]);
+    this.form.controls.path.valueChanges.subscribe(() => {
+      this.updateAvailableStations(this.getCityIds());
     });
   }
 
-  public updateAvailableStations(data: number[]) {
-    const allAvailableStations = this.stations().map((station) => {
-      return {
-        id: station.id,
-      };
-    });
+  private getCityIds() {
+    return this.form.controls.path.value.map(
+      (city) => this.stations().find((station) => station.city === city)?.id ?? null
+    );
+  }
 
-    const connectedToStations = data.map((stationId, index, array) => {
+  public updateAvailableStations(formControlsPathValue: (number | null)[]) {
+    const connectedToStations = formControlsPathValue.map((stationId, index, array) => {
       let availableStations: ConnectedStation[] = [];
       const prevStation = index > 0 ? array[index - 1] : null;
       const nextStation = index < array.length - 1 ? array[index + 1] : null;
@@ -136,11 +148,13 @@ export class RouteFormComponent {
         availableStations = prevStationConnect;
       } else if (nextStation != null) {
         availableStations = nextStationConnect;
-      } else if (prevStation === null && nextStation === null) availableStations = allAvailableStations;
+      } else if (prevStation === null && nextStation === null) availableStations = this.allAvailableStations();
       return availableStations;
     });
 
-    const connectedToStationsIds = connectedToStations.map((item) => item.map((item2) => item2.id));
+    const connectedToStationsIds = connectedToStations.map((item) =>
+      item.map((item2) => this.stations()[item2.id - 1]?.city)
+    );
 
     this.connectedToStations.set(connectedToStationsIds);
   }
@@ -182,9 +196,10 @@ export class RouteFormComponent {
   }
 
   public onSubmit() {
+    if (!this.getCityIds().every((a) => typeof a === 'number')) return;
     if (this.trainRoute()) {
       this.routeApiService
-        .updateRoute({ ...this.form.value, id: this.trainRoute()?.id } as TrainRoute)
+        .updateRoute({ ...this.form.value, path: this.getCityIds(), id: this.trainRoute()?.id } as TrainRoute)
         .pipe(takeUntilDestroyed(this.destroy))
         .subscribe({
           next: (data) => {
@@ -201,7 +216,7 @@ export class RouteFormComponent {
         });
     } else {
       this.routeApiService
-        .createRoute(this.form.value as TrainRoute)
+        .createRoute({ ...this.form.value, path: this.getCityIds() } as TrainRoute)
         .pipe(takeUntilDestroyed(this.destroy))
         .subscribe({
           next: (data) => {
