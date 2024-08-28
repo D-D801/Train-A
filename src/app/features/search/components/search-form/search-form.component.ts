@@ -10,7 +10,7 @@ import { SearchService } from '@features/search/services/search/search.service';
 import { debounceTime } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { LocationApiService } from '@features/search/services/location-api/location-api.service';
-import { dateValidator } from '@features/search/validators/date';
+import { dateValidator } from '@features/search/validators/date.validator';
 import { SearchApiService } from '@features/search/services/search-api/search-api.service';
 import { CityCoordinates } from '@features/search/interfaces/city-coordinates.interface';
 import { CityInfo } from '@features/search/interfaces/city-info.interface';
