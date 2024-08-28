@@ -15,10 +15,16 @@
           <h6 tuiTitle>Stations</h6>
         </div>
         @for (station of form.controls.path.controls; track $index) {
-          <tui-select [formControl]="$any(station)" [valueContent]="trainPath" tuiTextfieldSize="m">
-            Station
-            <tui-data-list-wrapper *tuiDataList [itemContent]="trainPath" [items]="connectedToStations()[$index]" />
-          </tui-select>
+          <tui-loader class="loader" size="m" [overlay]="true" [showLoader]="!stations()[$index]">
+            <tui-select [formControl]="$any(station)" [valueContent]="selectTemplate" tuiTextfieldSize="m">
+              Station
+              <tui-data-list-wrapper
+                *tuiDataList
+                [itemContent]="selectTemplate"
+                [items]="connectedToStations()[$index]"
+              />
+            </tui-select>
+          </tui-loader>
         }
         <div class="from-buttons">
           <button class="button" size="s" tuiButton type="button" (click)="addControl(ControlsType.path)">
@@ -45,9 +51,9 @@
           <h6 tuiTitle>Cariages</h6>
         </div>
         @for (station of form.controls.carriages.controls; track $index) {
-          <tui-select [formControl]="$any(station)" [valueContent]="carriageTemplate" tuiTextfieldSize="m">
+          <tui-select [formControl]="$any(station)" [valueContent]="selectTemplate" tuiTextfieldSize="m">
             Carriage type
-            <tui-data-list-wrapper *tuiDataList [itemContent]="carriageTemplate" [items]="carriages()" />
+            <tui-data-list-wrapper *tuiDataList [itemContent]="selectTemplate" [items]="carriages()" />
           </tui-select>
         }
         <div class="from-buttons">
@@ -73,13 +79,8 @@
   </form>
 </div>
 
-<ng-template #trainPath let-city>
+<ng-template #selectTemplate let-value>
   <span>
-    {{ city }}
-  </span>
-</ng-template>
-<ng-template #carriageTemplate let-carriage>
-  <span>
-    {{ carriage }}
+    {{ value }}
   </span>
 </ng-template>
