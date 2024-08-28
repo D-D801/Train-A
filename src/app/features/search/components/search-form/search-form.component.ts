@@ -87,7 +87,8 @@ export class SearchFormComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroy))
       .subscribe({
         next: (receivedCities) => {
-          const { lat, lon } = receivedCities[this.selectedCityIndex ?? 0];
+          if (!receivedCities) return;
+          const { lat, lon } = receivedCities[this.selectedCityIndex];
           if (inputName === 'from') {
             this.fromCityCoordinates = {
               latitude: lat,

@@ -1,8 +1,7 @@
 <div tuiPlatform="web" *ngFor="let station of stations()">
-  <div tuiCardLarge tuiSurface="elevated">
+  <div tuiCardLarge tuiSurface="elevated" class="tui-space_vertical-4">
     <header tuiHeader>
-      <h2 tuiTitle>{{ station.city }}</h2>
-      <div>Latitude: {{ station.latitude }}; Longitude: {{ station.longitude }}</div>
+      <div tuiTitle="m">{{ station.city }}</div>
       <button
         appearance="secondary"
         size="m"
@@ -16,10 +15,12 @@
     </header>
 
     <section>
-      Connected to:
-      <span *ngFor="let station of station.connectedTo">
-        {{ getStations(station.id)?.city }}
-      </span>
+      <div>
+        <div><span class="tui-text_body-l">Latitude: </span>{{ station.latitude }}</div>
+        <div><span class="tui-text_body-l">Longitude: </span>{{ station.longitude }}</div>
+      </div>
+      <span class="tui-text_body-l">Connected to:</span>
+      <span *ngFor="let station of station.connectedTo"> {{ getStations(station.id)?.city }} </span>
     </section>
   </div>
 </div>

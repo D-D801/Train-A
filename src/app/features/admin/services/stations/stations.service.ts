@@ -13,6 +13,10 @@ export class StationsService {
     this._stations.set(receivedStations);
   }
 
+  public addStationInList(station: StationListItem) {
+    this._stations.update((stations) => [...stations, station]);
+  }
+
   public deleteStationFromList(id: number) {
     this._stations.update((stations) => stations.filter((station) => station.id !== id));
   }
