@@ -1,12 +1,14 @@
 import { NgForOf, NgIf, NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AlertService } from '@core/services/alert/alert.service';
 import { NewStation } from '@features/admin/interfaces/new-station.interface';
 import { StationListItem } from '@features/admin/interfaces/station-list-item.interface';
 import { StationsApiService } from '@features/admin/services/stations-api/stations-api.service';
 import { StationsService } from '@features/admin/services/stations/stations.service';
+import { latitudeValidator } from '@features/admin/validators/latitude.validator';
+import { longitudeValidator } from '@features/admin/validators/longitude.validator';
 import { CityInfo } from '@features/home/interfaces/city-info.interface';
 import { LocationApiService } from '@features/home/services/location-api/location-api.service';
 import { SearchService } from '@features/home/services/search/search.service';
@@ -44,10 +46,12 @@ export class CreateStationFormComponent implements OnInit {
 
   public relations: number[] = [];
 
+  public createdStationId: number = 0;
+
   public createStationForm = this.fb.group({
-    cityName: this.fb.control(''),
-    latitude: this.fb.control(''),
-    longitude: this.fb.control(''),
+    cityName: this.fb.control('', Validators.required),
+    latitude: this.fb.control('', [Validators.required, latitudeValidator()]),
+    longitude: this.fb.control('', [Validators.required, longitudeValidator()]),
     connectedStations: this.fb.array([this.createConnectedStationControl()]),
   });
 
@@ -67,21 +71,14 @@ export class CreateStationFormComponent implements OnInit {
         .pipe(takeUntilDestroyed(this.destroy))
         .subscribe({
           next: (receivedCities) => {
-            const { lat, lon } = receivedCities[0];
-            this.latitude.setValue(lat.toString());
-            this.longitude.setValue(lon.toString());
+            if (!receivedCities) return;
+            this.searchService.setCities(receivedCities);
           },
           error: ({ error: { message } }) => {
             this.alert.open({ message, label: 'Error:', appearance: 'error' });
           },
         });
     });
-
-    this.locationService
-      .getLocation(55.751244, 37.618423)
-      .pipe(takeUntilDestroyed(this.destroy))
-      // eslint-disable-next-line no-console
-      .subscribe({ next: (value) => console.log(value), error: (error) => console.log(error) });
   }
 
   private createConnectedStationControl() {
@@ -100,6 +97,7 @@ export class CreateStationFormComponent implements OnInit {
   }
 
   public createStation() {
+    if (!this.createStationForm.valid) return;
     if (this.stationsService.stations().find((station) => station.city === this.cityName.value)) return;
     if (!this.cityName.value || !this.latitude.value || !this.longitude.value) return;
     const body: NewStation = {
@@ -112,6 +110,26 @@ export class CreateStationFormComponent implements OnInit {
       .createNewStation(body)
       .pipe(takeUntilDestroyed(this.destroy))
       .subscribe({
+        next: ({ id }) => {
+          this.createdStationId = id;
+          this.stationsApiService
+            .retrieveStationList()
+            .pipe(takeUntilDestroyed(this.destroy))
+            .subscribe({
+              next: (stations) => {
+                const createdStation = stations.find((station) => station.id === id);
+                if (!createdStation) return;
+                this.stationsService.addStationInList(createdStation);
+              },
+              error: () => {
+                this.alert.open({
+                  message: "Couldn't get an updated station list",
+                  label: 'Error',
+                  appearance: 'error',
+                });
+              },
+            });
+        },
         error: ({ error: { message } }) => {
           this.alert.open({ message, label: 'Error', appearance: 'error' });
         },

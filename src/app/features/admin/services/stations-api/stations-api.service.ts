@@ -35,13 +35,14 @@ export class StationsApiService {
   }
 
   public createNewStation(body: NewStation) {
-    return this.httpClient.post('/api/station', body);
+    return this.httpClient.post<{ id: number }>('/api/station', body);
   }
 
   public deleteStation(id: number) {
     this.httpClient.delete(`/api/station/${id}`);
   }
 
+  // TODO: move retrieveOrders to the order service when it's created
   public retrieveOrders() {
     return this.httpClient.get<Order[]>('/api/order');
   }
