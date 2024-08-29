@@ -1,4 +1,6 @@
-import { ChangeDetectionStrategy, Component, effect, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, input, output, signal } from '@angular/core';
+import { AlertService } from '@core/services/alert/alert.service';
+import { AuthService } from '@features/auth/services/auth/auth.service';
 import { SelectedOrder } from '@features/search/services/ride/ride.service';
 import { TuiButton } from '@taiga-ui/core';
 import { TuiPush, TuiPushDirective } from '@taiga-ui/kit';
@@ -20,6 +22,12 @@ export class OrderPanelComponent {
 
   public cancelTrip = output();
 
+  private readonly authService = inject(AuthService);
+
+  private readonly alert = inject(AlertService);
+
+  public isLoggedIn = this.authService.isLoggedIn;
+
   protected open = signal(false);
 
   public constructor() {
@@ -38,7 +46,11 @@ export class OrderPanelComponent {
   }
 
   public hendlerBookSeat() {
-    this.bookSeat.emit(this.selectedOrder());
+    if (this.isLoggedIn()) {
+      this.bookSeat.emit(this.selectedOrder());
+    } else {
+      this.alert.open({ message: 'No autorization', label: 'Error', appearance: 'error' });
+    }
   }
 
   public hendlerCancelTrip() {
