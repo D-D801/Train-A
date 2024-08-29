@@ -7,5 +7,5 @@
   <button *ngIf="!isLoggedIn()" appearance="primary" size="s" tuiButton [routerLink]="['/registration']">
     Sign Up
   </button>
-  <button *ngIf="isLoggedIn()" appearance="primary" size="s" tuiButton (click)="logout()">Logout</button>
+  <button *ngIf="isLoggedIn()" appearance="primary" size="m" tuiButton (click)="logout()">Logout</button>
 </nav>

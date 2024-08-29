@@ -1,9 +1,11 @@
-<div tuiCardLarge tuiSurface="elevated" class="ride-card">
-  <header tuiHeader>
-    <h4>New Ride</h4>
-  </header>
-
-  <form [formGroup]="rideForm" (ngSubmit)="onSubmit()">
+<div tuiCardLarge tuiSurface="elevated" class="overflow-visible">
+  <form [formGroup]="rideForm" (ngSubmit)="rideForm.valid && onSubmit()">
+    <div tuiHeader class="sticky-header">
+      <h2 tuiTitle>New Ride</h2>
+      <div tuiAccessories>
+        <button tuiButton size="m" type="submit" [disabled]="rideForm.invalid">Save New Ride</button>
+      </div>
+    </div>
     <div formArrayName="segments">
       @for (segment of path(); track segment; let i = $index) {
         @if (i !== path().length - 1) {
@@ -35,7 +37,7 @@
 
             <div class="prices">
               <h6>Prices:</h6>
-              @for (key of cars; track key) {
+              @for (key of carriages(); track key) {
                 <tui-input-number class="input" [formControlName]="key" placeholder="Enter price">
                   {{ key }}:
                 </tui-input-number>
@@ -45,6 +47,5 @@
         }
       }
     </div>
-    <button tuiButton size="m" type="submit" [disabled]="rideForm.invalid">Save</button>
   </form>
 </div>

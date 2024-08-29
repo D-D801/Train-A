@@ -1,6 +1,7 @@
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, input, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { RideService } from '@features/admin/services/ride/ride.service';
 import { TuiDay, TuiTime } from '@taiga-ui/cdk';
 import { TuiButton, TuiError, TuiSurface, TuiTitle } from '@taiga-ui/core';
 import { TuiAccordion, TuiFieldErrorPipe } from '@taiga-ui/kit';
@@ -35,9 +36,11 @@ import { TuiInputDateTimeModule, TuiInputNumberModule, TuiInputModule } from '@t
 export class NewRideFormComponent implements OnInit {
   public path = input.required<number[]>();
 
-  private readonly fb = inject(FormBuilder);
+  public carriages = input.required<string[]>();
 
-  public cars = ['car1', 'car2', 'car3', 'car4', 'car5'];
+  private readonly rideService = inject(RideService);
+
+  private readonly fb = inject(FormBuilder);
 
   protected rideForm = this.fb.group({
     segments: this.fb.array([]),
@@ -52,7 +55,7 @@ export class NewRideFormComponent implements OnInit {
         arrival: this.fb.control<[TuiDay, TuiTime] | null>(null, [Validators.required]),
       });
 
-      this.cars.forEach((priceKey) => {
+      this.carriages().forEach((priceKey) => {
         segmentGroup.addControl(priceKey, this.fb.control(0, [Validators.required]));
       });
 
@@ -66,5 +69,6 @@ export class NewRideFormComponent implements OnInit {
     } else {
       console.log('Форма невалидна');
     }
+    this.rideService.closeNewRideForm();
   }
 }

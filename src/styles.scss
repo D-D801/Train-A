@@ -33,3 +33,28 @@
 .profile .wrapper .label {
   display: block;
 }
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 2fr 2fr;
+  gap: 3rem;
+  margin-top: 2rem;
+}
+
+[tuiCardLarge].overflow-visible {
+  overflow: visible;
+}
+
+[tuiHeader].sticky-header {
+  position: sticky;
+  z-index: 1;
+  top: 0;
+
+  padding: 0.5rem 0;
+
+  background-color: var(--tui-background-elevation-1);
+  border-bottom: 1px solid var(--tui-background-neutral-2);
+
+  display: flex;
+  align-items: center;
+}

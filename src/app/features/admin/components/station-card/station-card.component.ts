@@ -4,7 +4,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AlertService } from '@core/services/alert/alert.service';
 import { Segment } from '@features/admin/interfaces/segment.interface';
-import { RouteApiService } from '@features/admin/services/route-api/route-api.service';
 import { TextSwitchFormComponent } from '@shared/components/text-switch-form/text-switch-form.component';
 import { TuiDay, TuiTime } from '@taiga-ui/cdk';
 import { TuiButton, TuiError, TuiIcon, TuiSurface, TuiTitle } from '@taiga-ui/core';
@@ -18,6 +17,7 @@ import {
 } from '@taiga-ui/legacy';
 import { TuiCurrencyPipe } from '@taiga-ui/addon-commerce';
 import { tap } from 'rxjs';
+import { RideApiService } from '@features/admin/services/ride-api/ride-api.service';
 
 @Component({
   selector: 'dd-station-card',
@@ -49,11 +49,11 @@ import { tap } from 'rxjs';
 export class StationCardComponent {
   public station = input.required<[number, number]>();
 
-  public segments = input<{ segments: Segment[]; indexSegment: number }>();
+  public segments = input.required<{ segments: Segment[]; indexSegment: number }>();
 
   public ids = input.required<{ routeId: number; rideId: number }>();
 
-  public readonly routeApiService = inject(RouteApiService);
+  public readonly rideApiService = inject(RideApiService);
 
   public readonly destroy = inject(DestroyRef);
 
@@ -138,7 +138,7 @@ export class StationCardComponent {
       price,
     };
 
-    this.routeApiService
+    this.rideApiService
       .updateRide(routeId, rideId, {
         segments: segments.segments,
       })
