@@ -20,8 +20,6 @@ export class OrderPanelComponent {
 
   public bookSeat = output<SelectedOrder>();
 
-  public cancelTrip = output();
-
   private readonly authService = inject(AuthService);
 
   private readonly alert = inject(AlertService);
@@ -51,9 +49,5 @@ export class OrderPanelComponent {
     } else {
       this.alert.open({ message: 'No autorization', label: 'Error', appearance: 'error' });
     }
-  }
-
-  public hendlerCancelTrip() {
-    this.cancelTrip.emit();
   }
 }

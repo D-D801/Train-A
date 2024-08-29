@@ -2,7 +2,6 @@
   [selectedOrder]="selectedOrder"
   [isBookSeat]="isBookSeat()"
   (bookSeat)="bookSeat($event)"
-  (cancelTrip)="cancelTrip()"
 ></dd-order-panel>
 
 <div tuiHeader class="header">
@@ -30,7 +29,7 @@
         <div>
           <h3>
             Car {{ carriage.index }}
-            <tui-chip appearance="floating">{{ freeSeats[carriage.index] }} seats</tui-chip>
+            <tui-chip appearance="whiteblock">{{ freeSeats[carriage.index] }} seats</tui-chip>
           </h3>
           <dd-carriage-preview
             [ngClass]="{
