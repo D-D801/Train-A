@@ -112,7 +112,7 @@ export class RideService {
     return totalSeatsBeforeCurrentCarriage + Number(seatNumber);
   }
 
-  public findSeatsInCarriages(
+  public getOccupieSeatsInCarriages(
     globalSeatNumbers: number[],
     carriages: string[]
   ): { carriageType: string; localSeatNumber: number; carriageIndex: number }[] {

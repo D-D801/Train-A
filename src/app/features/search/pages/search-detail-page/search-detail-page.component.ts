@@ -106,7 +106,7 @@ export class SearchDetailPageComponent {
         this.segments = ride.schedule.segments.slice(fromIndex, toIndex);
         this.price = this.rideService.setPrices(this.segments);
 
-        this.bookSeats = this.rideService.findSeatsInCarriages(this.segments[0].occupiedSeats, ride.carriages);
+        this.bookSeats = this.rideService.getOccupieSeatsInCarriages(this.segments[0].occupiedSeats, ride.carriages);
 
         this.freeSeats = this.rideService.getAvailableSeats(this.bookSeats, this.carriageList);
       }
@@ -201,18 +201,18 @@ export class SearchDetailPageComponent {
   }
 
   protected cancelTrip() {
-    this.ordersApiService
-      .deleteOrder(this.orderId())
-      .pipe(takeUntilDestroyed(this.destroy))
-      .subscribe({
-        next: () => {
-          this._isBookSeat.update((value) => !value);
-          this.options().isClick = true;
-        },
-        error: ({ error: { message } }) => {
-          this.alert.open({ message, label: 'Error', appearance: 'error' });
-        },
-      });
+    // this.ordersApiService
+    //   .deleteOrder(this.orderId())
+    //   .pipe(takeUntilDestroyed(this.destroy))
+    //   .subscribe({
+    //     next: () => {
+    //       this._isBookSeat.update((value) => !value);
+    //       this.options().isClick = true;
+    //     },
+    //     error: ({ error: { message } }) => {
+    //       this.alert.open({ message, label: 'Error', appearance: 'error' });
+    //     },
+    //   });
   }
 
   public getFilteredSeatsByCarriageIndex(carriageIndex: number) {
