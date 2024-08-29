@@ -2,19 +2,19 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
-import { SearchDetailComponent } from './search-detail.component';
+import { SearchDetailPageComponent } from './search-detail-page.component';
 
-describe('SearchDetailComponent', () => {
-  let component: SearchDetailComponent;
-  let fixture: ComponentFixture<SearchDetailComponent>;
+describe('SearchDetailPageComponent', () => {
+  let component: SearchDetailPageComponent;
+  let fixture: ComponentFixture<SearchDetailPageComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SearchDetailComponent],
+      imports: [SearchDetailPageComponent],
       providers: [provideRouter([]), provideHttpClient()],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(SearchDetailComponent);
+    fixture = TestBed.createComponent(SearchDetailPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

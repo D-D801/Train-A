@@ -1,6 +1,6 @@
 @if (carriage()) {
   <div tuiCardLarge="normal" tuiAppearance="secondary" tuiSurface class="highlight">
-    @if (isShowTitle) {
+    @if (options().isShowTitle) {
       <header tuiHeader>
         <h2 tuiTitle>{{ carriage()?.name }}</h2>
       </header>
@@ -13,9 +13,9 @@
               <div
                 class="seat"
                 [ngClass]="{
-                  selected: isSeatSelected(seatNumber) && isClick,
+                  selected: isSeatSelected(seatNumber) && options().isClick,
                   reserved: isSeatReserved(seatNumber),
-                  clickable: isClick,
+                  clickable: options().isClick,
                 }"
                 (click)="onSeatClick(seatNumber)"
                 (keydown)="onSeatClick(seatNumber)"
@@ -31,9 +31,9 @@
               <div
                 class="seat"
                 [ngClass]="{
-                  selected: isSeatSelected(seatNumber) && isClick,
+                  selected: isSeatSelected(seatNumber) && options().isClick,
                   reserved: isSeatReserved(seatNumber),
-                  clickable: isClick,
+                  clickable: options().isClick,
                 }"
                 (click)="onSeatClick(seatNumber)"
                 (keydown)="onSeatClick(seatNumber)"

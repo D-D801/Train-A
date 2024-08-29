@@ -1,3 +1,5 @@
+<dd-order-panel [selectedOrder]="selectedOrder" (bookSeat)="bookSeat($event)"></dd-order-panel>
+
 <p>Station {{ fromStation }}- Station {{ toStation }}</p>
 
 @if (ride()) {
@@ -7,23 +9,25 @@
 
 <section class="horizontal">
   <nav tuiTabs [(activeItemIndex)]="activeItemIndex">
-    @for (type of carriageTypes; track $index) {
+    @for (type of carriageTypes; track type) {
       <button tuiTab class="type">
         {{ type }}
-        <div>{{ price[type] || 0 }}{{ '$' | tuiCurrency }}</div>
+        <div>{{ '$' | tuiCurrency }}{{ price[type] || 0 }}</div>
       </button>
     }
   </nav>
-  @for (type of carriageTypes; track $index) {
+  @for (type of carriageTypes; track type) {
     <div class="tab-content" [ngClass]="{ active: activeItemIndex === $index }">
-      @for (carriage of carriageList[type]; track $index) {
+      @for (carriage of carriageList[type]; track carriage.index) {
         <div>
           <h3>Car {{ carriage.index }}:</h3>
           <dd-carriage-preview
+            [ngClass]="{
+              'selected-wrapper': getCarriageClass(carriage.index),
+            }"
             class="preview"
             [carriage]="getCarriageByName(carriage.carriage)"
-            [isClick]="true"
-            [isShowTitle]="false"
+            [options]="{ isClick: true, isShowTitle: false }"
             (seatSelected)="handleSeatSelected($event, carriage.index)"
           ></dd-carriage-preview>
         </div>

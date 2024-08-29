@@ -1,0 +1,26 @@
+.push {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+
+  &::after {
+    content: '';
+
+    position: absolute;
+    bottom: 5rem;
+
+    width: 90%;
+    height: 1px;
+
+    background: black;
+  }
+}
+
+.action {
+  width: 100%;
+  padding: 2rem 0 1rem;
+}
+
+.btn {
+  width: 100%;
+}

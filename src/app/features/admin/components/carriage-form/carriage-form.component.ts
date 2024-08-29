@@ -1,5 +1,5 @@
 import { NgFor, AsyncPipe, NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, EventEmitter, inject, Output, input, effect } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, effect, output } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Carriage } from '@features/admin/interfaces/carriage.interface';
 import { TuiError, TuiButton } from '@taiga-ui/core';
@@ -29,9 +29,9 @@ import { CarriagePreviewComponent } from '../carriage-preview/carriage-preview.c
 export class CarriageFormComponent {
   public carriage = input.required<Carriage | null>();
 
-  @Output() public submitForm = new EventEmitter<Carriage>();
+  public submitForm = output<Carriage>();
 
-  @Output() public cancelForm = new EventEmitter<null>();
+  public cancelForm = output<null>();
 
   private readonly fb = inject(NonNullableFormBuilder);
 
