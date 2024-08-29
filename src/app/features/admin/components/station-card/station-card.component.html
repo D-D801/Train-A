@@ -1,8 +1,8 @@
 <div class="grid-container">
   <div class="stations">
-    <p>{{ station()[0] }}</p>
-    <div></div>
-    <p>{{ station()[1] }}</p>
+    <h4>{{ station()[0] }}</h4>
+    <div class="station-divider"></div>
+    <h4>{{ station()[1] }}</h4>
   </div>
 
   <div class="time">
@@ -10,7 +10,7 @@
   </div>
 
   <div class="price">
-    <h3>Prices:</h3>
+    <h4>Prices:</h4>
     <dd-text-switch-form [form]="priceForm" [typeInputs]="'price'" [onSave]="save"></dd-text-switch-form>
   </div>
 </div>

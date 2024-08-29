@@ -29,23 +29,23 @@ export class RideCardComponent {
 
   private readonly rideApiService = inject(RideApiService);
 
+  private readonly dialogs = inject(TuiDialogService);
+
   public readonly destroy = inject(DestroyRef);
 
   public readonly alert = inject(AlertService);
 
-  private readonly dialogs = inject(TuiDialogService);
-
-  protected deleteRide(event: MouseEvent) {
+  public deleteRide(event: MouseEvent) {
     event.stopPropagation();
 
     this.dialogs
       .open<boolean>(TUI_CONFIRM, {
         label: 'Delete ride',
-        size: 's',
-        data: getDeletionConfirmationData('ride'),
+        size: 'm',
+        data: getDeletionConfirmationData(`Ride ${this.ride().rideId}`),
       })
       .pipe(
-        filter((isDelete) => isDelete),
+        filter((isConfirmed) => isConfirmed),
         switchMap(() => this.rideApiService.deleteRide(this.routeId(), this.ride().rideId)),
         takeUntilDestroyed(this.destroy)
       )
