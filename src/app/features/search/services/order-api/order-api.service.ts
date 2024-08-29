@@ -9,6 +9,6 @@ export class OrderApiService {
   private readonly httpClient = inject(HttpClient);
 
   public createOrder(order: OrderRequest) {
-    return this.httpClient.post('/api/order', order);
+    return this.httpClient.post<OrderRequest>('/api/order', order);
   }
 }

@@ -12,7 +12,9 @@ export const routes: Routes = [
   {
     path: 'trip/:id',
     loadComponent: () =>
-      import('@features/search/pages/search-detail/search-detail.component').then((m) => m.SearchDetailComponent),
+      import('@features/search/pages/search-detail-page/search-detail-page.component').then(
+        (m) => m.SearchDetailPageComponent
+      ),
   },
   {
     path: 'registration',

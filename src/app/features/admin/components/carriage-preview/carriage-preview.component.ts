@@ -1,5 +1,5 @@
 import { NgClass, NgFor } from '@angular/common';
-import { ChangeDetectionStrategy, Component, effect, EventEmitter, Input, input, Output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, input, output, signal } from '@angular/core';
 import { Carriage } from '@features/admin/interfaces/carriage.interface';
 import { TuiAppearance, TuiSurface, TuiTitle } from '@taiga-ui/core';
 import { TuiCardLarge, TuiHeader } from '@taiga-ui/layout';
@@ -13,13 +13,14 @@ import { TuiCardLarge, TuiHeader } from '@taiga-ui/layout';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CarriagePreviewComponent {
-  @Input() public isClick = false;
-
-  @Input() public isShowTitle = true;
-
-  @Output() public seatSelected = new EventEmitter<{ seatNumber: number; carriageType: string }>();
+  public options = input<{ isClick: boolean; isShowTitle: boolean }>({
+    isClick: false,
+    isShowTitle: true,
+  });
 
   public carriage = input.required<Carriage | null>();
+
+  public seatSelected = output<{ seatNumber: number; carriageType: string }>();
 
   public seatNumbers = signal<Array<{ leftRow: number[]; rightRow: number[] }>>([]);
 
@@ -66,7 +67,7 @@ export class CarriagePreviewComponent {
   }
 
   public onSeatClick(seatNumber: number) {
-    if (!this.isClick) return;
+    if (!this.options().isClick) return;
     if (this.selectedSeat === seatNumber) {
       this.selectedSeat = null;
     } else {

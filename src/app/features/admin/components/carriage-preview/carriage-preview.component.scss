@@ -1,5 +1,9 @@
 @import '@taiga-ui/core/styles/taiga-ui-local';
 
+:host.selected-wrapper .seat.selected {
+  background-color: rgb(243 168 88);
+}
+
 header {
   color: var(--tui-text-secondary);
 }
@@ -69,18 +73,14 @@ section {
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
   }
+}
 
-  &.clickable {
-    cursor: pointer;
-  }
+.seat.clickable {
+  cursor: pointer;
+}
 
-  &.selected {
-    background-color: rgb(243 168 88);
-  }
-
-  &.reserved {
-    background-color: rgb(182 178 178);
-  }
+.seat.reserved {
+  background-color: rgb(182 178 178);
 }
 
 .aisle {

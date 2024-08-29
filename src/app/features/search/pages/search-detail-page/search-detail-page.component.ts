@@ -10,22 +10,26 @@ import { SearchApiService } from '@features/search/services/search-api/search-ap
 import { TuiTab, TuiTabs } from '@taiga-ui/kit';
 import { map, switchMap } from 'rxjs';
 import { TuiCurrencyPipe } from '@taiga-ui/addon-commerce';
-import { CarriageList, Price, RideService } from '@features/search/services/ride/ride.service';
+import { CarriageList, Price, RideService, SelectedOrder } from '@features/search/services/ride/ride.service';
+import { OrderPanelComponent } from '@features/search/components/order-panel/order-panel.component';
+import { OrderApiService } from '@features/search/services/order-api/order-api.service';
 
 @Component({
-  selector: 'dd-search-detail',
+  selector: 'dd-search-detail-page',
   standalone: true,
-  imports: [TuiTabs, TuiTab, NgFor, NgClass, NgIf, CarriagePreviewComponent, TuiCurrencyPipe],
-  templateUrl: './search-detail.component.html',
-  styleUrl: './search-detail.component.scss',
+  imports: [TuiTabs, TuiTab, NgFor, NgClass, NgIf, CarriagePreviewComponent, TuiCurrencyPipe, OrderPanelComponent],
+  templateUrl: './search-detail-page.component.html',
+  styleUrl: './search-detail-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SearchDetailComponent {
+export class SearchDetailPageComponent {
   private readonly route = inject(ActivatedRoute);
 
   private readonly router = inject(Router);
 
   private readonly searchApiService = inject(SearchApiService);
+
+  private readonly orderApiService = inject(OrderApiService);
 
   private readonly carriageService = inject(CarriageService);
 
@@ -53,7 +57,9 @@ export class SearchDetailComponent {
 
   public price: Price = {};
 
-  public globalSeatNumber = 0;
+  public selectedOrder: SelectedOrder = { seatNumber: 0, carriageNumber: 0, globalSeatNumber: 0, price: 0 };
+
+  public selectedCarriageIndex: number | null = null;
 
   public constructor() {
     this.loadRide();
@@ -114,15 +120,47 @@ export class SearchDetailComponent {
   }
 
   public handleSeatSelected(event: { seatNumber: number; carriageType: string }, index: number) {
-    // console.log(`Seat number: ${event.seatNumber}, carriage type: ${event.carriageType}, Carriage index: ${index}`);
+    this.selectedOrder = {
+      ...this.selectedOrder,
+      seatNumber: event.seatNumber,
+      carriageNumber: index,
+      price: this.price[event.carriageType],
+    };
 
+    this.selectedCarriageIndex = index;
     const { seatNumber, carriageType } = event;
-    this.globalSeatNumber = this.rideService.calculateGlobalSeatNumber(
-      this._ride()?.carriages || [],
+    const carriages = this._ride()?.carriages;
+    if (!carriages) return;
+    this.selectedOrder.globalSeatNumber = this.rideService.calculateGlobalSeatNumber(
+      carriages,
       carriageType,
       index,
       seatNumber
     );
-    // console.log(`Global seat number: ${this.globalSeatNumber}`);
+    //  console.log(`Global seat number: ${this.selectedOrder.globalSeatNumber}`);
+  }
+
+  public getCarriageClass(index: number) {
+    return this.selectedCarriageIndex === index;
+  }
+
+  protected bookSeat(isOrder: boolean) {
+    if (!isOrder) return;
+    const rideId = this.ride()?.rideId;
+    const seat = this.selectedOrder.globalSeatNumber;
+    const stationStart = this.fromStation;
+    const stationEnd = this.toStation;
+    if (!rideId || !seat || !stationStart || !stationEnd) return;
+    this.orderApiService
+      .createOrder({ rideId, seat, stationStart, stationEnd })
+      .pipe(takeUntilDestroyed(this.destroy))
+      .subscribe({
+        next: () => {
+          this.loadRide();
+        },
+        error: ({ error: { message } }) => {
+          this.alert.open({ message, label: 'Error', appearance: 'error' });
+        },
+      });
   }
 }

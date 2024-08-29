@@ -19,6 +19,13 @@ export interface SeatsPerCarriage {
   [key: string]: number;
 }
 
+export interface SelectedOrder {
+  seatNumber: number;
+  carriageNumber: number;
+  globalSeatNumber: number;
+  price: number;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -73,15 +80,15 @@ export class RideService {
   }
 
   public calculateGlobalSeatNumber(
-    rideCarriages: string[],
+    carriages: string[],
     carriageType: string,
     index: number,
-    seatNumber: number
+    seatNumber: number | null
   ): number {
     let totalSeatsBeforeCurrentCarriage = 0;
 
-    for (let i = 0; i < rideCarriages.length; i += 1) {
-      const currentCarriageType = rideCarriages[i];
+    for (let i = 0; i < carriages.length; i += 1) {
+      const currentCarriageType = carriages[i];
 
       if (currentCarriageType === carriageType && i + 1 === index) {
         break;
@@ -93,6 +100,6 @@ export class RideService {
       }
     }
 
-    return totalSeatsBeforeCurrentCarriage + seatNumber;
+    return totalSeatsBeforeCurrentCarriage + Number(seatNumber);
   }
 }
