@@ -5,10 +5,10 @@
   (cancelTrip)="cancelTrip()"
 ></dd-order-panel>
 
-<p>Station {{ fromStation }}- Station {{ toStation }}</p>
+<h2>Station {{ fromStation }} -> Station {{ toStation }}</h2>
 
 @if (ride()) {
-  <p>{{ setTimes('start') }} - {{ setTimes('end') }}</p>
+  <h3>{{ setTimes('start') }} - {{ setTimes('end') }}</h3>
   <p>Ride {{ ride()?.rideId }}</p>
 }
 
@@ -25,7 +25,10 @@
     <div class="tab-content" [ngClass]="{ active: activeItemIndex === $index }">
       @for (carriage of carriageList[type]; track carriage.index) {
         <div>
-          <h3>Car {{ carriage.index }} ({{ freeSeats[carriage.index] }} seats)</h3>
+          <h3>
+            Car {{ carriage.index }}
+            <tui-chip appearance="floating">{{ freeSeats[carriage.index] }} seats</tui-chip>
+          </h3>
           <dd-carriage-preview
             [ngClass]="{
               'selected-wrapper': getCarriageClass(carriage.index),

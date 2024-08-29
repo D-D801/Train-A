@@ -7,7 +7,7 @@ import { CarriageService } from '@core/services/carriage/carriage.service';
 import { CarriagePreviewComponent } from '@features/admin/components/carriage-preview/carriage-preview.component';
 import { RoadSection, Trip } from '@features/search/interfaces/search-route-response.interface';
 import { SearchApiService } from '@features/search/services/search-api/search-api.service';
-import { TuiTab, TuiTabs } from '@taiga-ui/kit';
+import { TuiChip, TuiTab, TuiTabs } from '@taiga-ui/kit';
 import { map, switchMap } from 'rxjs';
 import { TuiCurrencyPipe } from '@taiga-ui/addon-commerce';
 import {
@@ -24,7 +24,17 @@ import { OrdersApiService } from '@features/orders/services/orders-api/orders-ap
 @Component({
   selector: 'dd-search-detail-page',
   standalone: true,
-  imports: [TuiTabs, TuiTab, NgFor, NgClass, NgIf, CarriagePreviewComponent, TuiCurrencyPipe, OrderPanelComponent],
+  imports: [
+    TuiTabs,
+    TuiTab,
+    NgFor,
+    NgClass,
+    NgIf,
+    CarriagePreviewComponent,
+    TuiCurrencyPipe,
+    OrderPanelComponent,
+    TuiChip,
+  ],
   templateUrl: './search-detail-page.component.html',
   styleUrl: './search-detail-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
