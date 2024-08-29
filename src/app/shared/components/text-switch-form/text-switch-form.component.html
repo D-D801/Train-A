@@ -14,8 +14,12 @@
               {{ controlName.key | titlecase }}</tui-input-date-time
             >
           }
-          @case ('number') {
-            <tui-input-number class="input" [formControlName]="controlName.key">
+          @case ('price') {
+            <tui-input-number
+              class="input"
+              [formControlName]="controlName.key"
+              [tuiTextfieldPrefix]="'USD' | tuiCurrency"
+            >
               {{ controlName.key | titlecase }}
             </tui-input-number>
           }
@@ -31,7 +35,7 @@
       @for (controlName of form().controls | keyvalue; track $index) {
         <div>
           <span class="label">{{ controlName.key | titlecase }}:</span>
-          {{ form().get(controlName.key)?.value }}
+          {{ isPrice() }}{{ form().get(controlName.key)?.value }}
         </div>
       }
     </div>

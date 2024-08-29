@@ -3,7 +3,7 @@ import { Injectable, signal } from '@angular/core';
 @Injectable({
   providedIn: 'root',
 })
-export class RideService {
+export class NewRideService {
   private readonly _isOpenNewRideForm = signal(false);
 
   public isOpenNewRideForm = this._isOpenNewRideForm.asReadonly();

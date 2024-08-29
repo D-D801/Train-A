@@ -2,12 +2,12 @@ import { ChangeDetectionStrategy, Component, DestroyRef, inject, input, output }
 import { TuiButton, TuiDialogService, TuiSurface, TuiTitle } from '@taiga-ui/core';
 import { TuiCardLarge, TuiHeader } from '@taiga-ui/layout';
 import { Schedule } from '@features/admin/interfaces/schedule.interface';
-import { TUI_CONFIRM, TuiAccordion, TuiConfirmData } from '@taiga-ui/kit';
-import { filter, switchMap, tap } from 'rxjs';
+import { TUI_CONFIRM, TuiAccordion } from '@taiga-ui/kit';
+import { filter, switchMap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AlertService } from '@core/services/alert/alert.service';
 import { RideApiService } from '@features/admin/services/ride-api/ride-api.service';
-import { getDeletionConfirmationData } from '@features/admin/utils/getDeletionConfirmationData';
+import { getDeletionConfirmationData } from '@shared/utils/getDeletionConfirmationData';
 import { StationCardComponent } from '../station-card/station-card.component';
 
 @Component({
