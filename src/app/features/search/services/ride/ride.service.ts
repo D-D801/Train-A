@@ -143,41 +143,32 @@ export class RideService {
   }
 
   public getAvailableSeats(occupiedSeats: BookSeats[], carriageList: CarriageList): { [key: number]: number } {
-    const occupiedCountByIndex = occupiedSeats.reduce(
-      (acc, seat) => {
-        const { carriageIndex } = seat;
-        acc[carriageIndex] = (acc[carriageIndex] || 0) + 1;
-        return acc;
-      },
-      {} as { [key: number]: number }
-    );
+    const occupiedCountByIndex = occupiedSeats.reduce((acc, seat) => {
+      const { carriageIndex } = seat;
+      acc[carriageIndex] = (acc[carriageIndex] || 0) + 1;
+      return acc;
+    }, {} as FreeSeat);
 
-    const totalSeatsByIndex = Object.keys(carriageList).reduce(
-      (acc, type) => {
-        carriageList[type].forEach((carriage) => {
-          acc[carriage.index] = this.seatsPerCarriage[type] || 0;
-        });
-        return acc;
-      },
-      {} as { [key: number]: number }
-    );
+    const totalSeatsByIndex = Object.keys(carriageList).reduce((acc, type) => {
+      carriageList[type].forEach((carriage) => {
+        acc[carriage.index] = this.seatsPerCarriage[type] || 0;
+      });
+      return acc;
+    }, {} as FreeSeat);
 
-    const availableSeatsByIndex = Object.keys(totalSeatsByIndex).reduce(
-      (acc, indexStr) => {
-        const index = Number(indexStr);
-        const occupiedSeatsCount = occupiedCountByIndex[index] || 0;
-        const totalSeats = totalSeatsByIndex[index];
+    const availableSeatsByIndex = Object.keys(totalSeatsByIndex).reduce((acc, indexStr) => {
+      const index = Number(indexStr);
+      const occupiedSeatsCount = occupiedCountByIndex[index] || 0;
+      const totalSeats = totalSeatsByIndex[index];
 
-        if (occupiedSeatsCount > 0) {
-          acc[index] = totalSeats - occupiedSeatsCount;
-        } else {
-          acc[index] = totalSeats;
-        }
+      if (occupiedSeatsCount > 0) {
+        acc[index] = totalSeats - occupiedSeatsCount;
+      } else {
+        acc[index] = totalSeats;
+      }
 
-        return acc;
-      },
-      {} as { [key: number]: number }
-    );
+      return acc;
+    }, {} as FreeSeat);
 
     return availableSeatsByIndex;
   }

@@ -192,6 +192,7 @@ export class SearchDetailPageComponent {
           this.loadRide();
           this._isBookSeat.update((value) => !value);
           this.options().isClick = false;
+          this.alert.open({ message: 'Seat booked successfully', label: 'Info:', appearance: 'success' });
         },
         error: ({ error: { message } }) => {
           this.alert.open({ message, label: 'Error', appearance: 'error' });
