@@ -1,4 +1,9 @@
-<dd-order-panel [selectedOrder]="selectedOrder" (bookSeat)="bookSeat($event)"></dd-order-panel>
+<dd-order-panel
+  [selectedOrder]="selectedOrder"
+  [isBookSeat]="isBookSeat()"
+  (bookSeat)="bookSeat($event)"
+  (cancelTrip)="cancelTrip()"
+></dd-order-panel>
 
 <p>Station {{ fromStation }}- Station {{ toStation }}</p>
 
@@ -20,14 +25,15 @@
     <div class="tab-content" [ngClass]="{ active: activeItemIndex === $index }">
       @for (carriage of carriageList[type]; track carriage.index) {
         <div>
-          <h3>Car {{ carriage.index }}:</h3>
+          <h3>Car {{ carriage.index }} ({{ freeSeats[carriage.index] }} seats)</h3>
           <dd-carriage-preview
             [ngClass]="{
               'selected-wrapper': getCarriageClass(carriage.index),
             }"
             class="preview"
             [carriage]="getCarriageByName(carriage.carriage)"
-            [options]="{ isClick: true, isShowTitle: false }"
+            [options]="options()"
+            [bookSeats]="getFilteredSeatsByCarriageIndex(carriage.index)"
             (seatSelected)="handleSeatSelected($event, carriage.index)"
           ></dd-carriage-preview>
         </div>
