@@ -12,6 +12,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { getCurrentDateTime } from '@shared/utils/getCurrentDateTime';
 import { TuiCurrencyPipe } from '@taiga-ui/addon-commerce';
 import { TuiButton, tuiDateFormatProvider, TuiError } from '@taiga-ui/core';
 import { TuiFieldErrorPipe } from '@taiga-ui/kit';
@@ -59,6 +60,8 @@ export class TextSwitchFormComponent implements OnInit {
   protected isPrice = computed(() => (this.typeInputs() === 'price' ? '$' : ''));
 
   protected isEditMode = false;
+
+  protected minDate = getCurrentDateTime();
 
   public ngOnInit(): void {
     const formGroup = this.form();

@@ -65,11 +65,6 @@ export class NewRideFormComponent implements OnInit {
   }
 
   protected onSubmit() {
-    if (this.rideForm.valid) {
-      console.log(this.rideForm.value);
-    } else {
-      console.log('Форма невалидна');
-    }
     this.newRideService.closeNewRideForm();
   }
 }

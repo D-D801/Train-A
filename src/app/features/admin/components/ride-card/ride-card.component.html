@@ -1,16 +1,16 @@
 <tui-accordion>
-  <div tuiCardLarge tuiSurface="elevated">
+  <div tuiCardLarge tuiSurface="elevated" class="overflow-visible">
     @let segments = ride().segments;
     @if (segments.length > 0) {
       <tui-accordion-item [open]="false">
-        <header tuiHeader>
-          <h2 tuiTitle>Ride {{ ride().rideId }}</h2>
+        <div tuiHeader>
+          <h3 tuiTitle>Ride {{ ride().rideId }}</h3>
           <aside tuiAccessories>
             <button tuiIconButton appearance="icon" iconStart="@tui.trash-2" size="m" (click)="deleteRide($event)">
               Delete
             </button>
           </aside>
-        </header>
+        </div>
 
         <ng-template tuiAccordionItemContent>
           @for (segment of segments; track segment; let i = $index) {

@@ -1,7 +1,7 @@
 import { KeyValuePipe, TitleCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, input } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AlertService } from '@core/services/alert/alert.service';
 import { Segment } from '@features/admin/interfaces/segment.interface';
 import { TextSwitchFormComponent } from '@shared/components/text-switch-form/text-switch-form.component';
@@ -47,11 +47,11 @@ import { RideApiService } from '@features/admin/services/ride-api/ride-api.servi
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StationCardComponent {
-  public station = input.required<[number, number]>();
-
   public segments = input.required<{ segments: Segment[]; indexSegment: number }>();
 
   public ids = input.required<{ routeId: number; rideId: number }>();
+
+  public station = input.required<[number, number]>();
 
   public readonly rideApiService = inject(RideApiService);
 
@@ -59,13 +59,13 @@ export class StationCardComponent {
 
   public readonly alert = inject(AlertService);
 
-  private readonly fb = inject(FormBuilder);
+  private readonly fb = inject(NonNullableFormBuilder);
 
   public save = () => this.saveSegment();
 
   protected timeForm = this.fb.group({
-    departure: this.fb.control<[TuiDay, TuiTime] | []>([], [Validators.required]),
-    arrival: this.fb.control<[TuiDay, TuiTime] | []>([], [Validators.required]),
+    departure: this.fb.control<[TuiDay, TuiTime] | []>([]),
+    arrival: this.fb.control<[TuiDay, TuiTime] | []>([]),
   });
 
   protected priceForm = this.fb.group({});
@@ -103,6 +103,7 @@ export class StationCardComponent {
   }
 
   public saveSegment() {
+    if (this.timeForm.invalid && this.priceForm.invalid) return;
     const segments = this.segments();
     if (!segments) return;
 

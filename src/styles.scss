@@ -38,7 +38,11 @@
   display: grid;
   grid-template-columns: 1fr 2fr 2fr;
   gap: 3rem;
+
   margin-top: 2rem;
+  padding: 0 2rem 2rem;
+
+  border-bottom: 1px solid var(--tui-status-info-pale-hover);
 }
 
 [tuiCardLarge].overflow-visible {
@@ -50,11 +54,11 @@
   z-index: 1;
   top: 0;
 
+  display: flex;
+  align-items: center;
+
   padding: 0.5rem 0;
 
   background-color: var(--tui-background-elevation-1);
   border-bottom: 1px solid var(--tui-background-neutral-2);
-
-  display: flex;
-  align-items: center;
 }
