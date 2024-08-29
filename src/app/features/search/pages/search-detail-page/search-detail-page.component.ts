@@ -21,6 +21,7 @@ import {
 import { OrderPanelComponent } from '@features/search/components/order-panel/order-panel.component';
 import { OrdersApiService } from '@features/orders/services/orders-api/orders-api.service';
 import { TuiButton } from '@taiga-ui/core';
+import { OrderRequest } from '@features/search/interfaces/order.request.interface';
 
 @Component({
   selector: 'dd-search-detail-page',
@@ -184,43 +185,38 @@ export class SearchDetailPageComponent {
     return this.selectedCarriageIndex === index;
   }
 
-  protected bookSeat(selectedOrder: SelectedOrder) {
+  public bookSeat(selectedOrder: SelectedOrder) {
     if (!selectedOrder.globalSeatNumber) return;
     const rideId = this.ride()?.rideId;
     const seat = this.selectedOrder.globalSeatNumber;
     const stationStart = this.fromStation;
     const stationEnd = this.toStation;
     if (!rideId || !seat || !stationStart || !stationEnd) return;
-    this.ordersApiService
-      .createOrder({ rideId, seat, stationStart, stationEnd })
-      .pipe(takeUntilDestroyed(this.destroy))
-      .subscribe({
-        next: ({ id }) => {
-          this.orderId.set(id);
-          this.loadRide();
-          this._isBookSeat.update((value) => !value);
-          this.options().isClick = false;
-          this.alert.open({ message: 'Seat booked successfully', label: 'Info:', appearance: 'success' });
-        },
-        error: ({ error: { message } }) => {
-          this.alert.open({ message, label: 'Error', appearance: 'error' });
-        },
-      });
+
+    const orderObservable = this.orderId()
+      ? this.ordersApiService.deleteOrder(this.orderId()).pipe(
+          takeUntilDestroyed(this.destroy),
+          switchMap(() => this.createOrder({ rideId, seat, stationStart, stationEnd }))
+        )
+      : this.createOrder({ rideId, seat, stationStart, stationEnd });
+
+    orderObservable.subscribe({
+      next: ({ id }) => {
+        this.orderId.set(id);
+        this.loadRide();
+        this._isBookSeat.update((value) => !value);
+        this.alert.open({ message: 'Seat booked successfully', label: 'Info:', appearance: 'success' });
+      },
+      error: ({ error: { message } }) => {
+        this.alert.open({ message, label: 'Error', appearance: 'error' });
+      },
+    });
   }
 
-  protected cancelTrip() {
-    this.ordersApiService
-      .deleteOrder(this.orderId())
-      .pipe(takeUntilDestroyed(this.destroy))
-      .subscribe({
-        next: () => {
-          this._isBookSeat.update((value) => !value);
-          this.options().isClick = true;
-        },
-        error: ({ error: { message } }) => {
-          this.alert.open({ message, label: 'Error', appearance: 'error' });
-        },
-      });
+  private createOrder({ rideId, seat, stationStart, stationEnd }: OrderRequest) {
+    return this.ordersApiService
+      .createOrder({ rideId, seat, stationStart, stationEnd })
+      .pipe(takeUntilDestroyed(this.destroy));
   }
 
   public getFilteredSeatsByCarriageIndex(carriageIndex: number) {

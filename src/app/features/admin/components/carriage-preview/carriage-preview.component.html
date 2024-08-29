@@ -13,12 +13,12 @@
               <div
                 class="seat"
                 [ngClass]="{
-                  selected: isSeatSelected(seatNumber) && options().isClick,
+                  selected: isSeatSelected(seatNumber) && !isSeatReserved(seatNumber),
                   reserved: isSeatReserved(seatNumber),
-                  clickable: options().isClick && !isSeatReserved(seatNumber),
+                  clickable: options().isClick,
                 }"
-                (click)="!isSeatReserved(seatNumber) && onSeatClick(seatNumber)"
-                (keydown)="!isSeatReserved(seatNumber) && onSeatClick(seatNumber)"
+                (click)="onSeatClick(seatNumber)"
+                (keydown)="onSeatClick(seatNumber)"
                 tabindex="0"
               >
                 {{ seatNumber }}
@@ -33,10 +33,10 @@
                 [ngClass]="{
                   selected: isSeatSelected(seatNumber) && options().isClick,
                   reserved: isSeatReserved(seatNumber),
-                  clickable: options().isClick && !isSeatReserved(seatNumber),
+                  clickable: options().isClick,
                 }"
-                (click)="!isSeatReserved(seatNumber) && onSeatClick(seatNumber)"
-                (keydown)="!isSeatReserved(seatNumber) && onSeatClick(seatNumber)"
+                (click)="onSeatClick(seatNumber)"
+                (keydown)="onSeatClick(seatNumber)"
                 tabindex="0"
               >
                 {{ seatNumber }}
