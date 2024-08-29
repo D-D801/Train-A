@@ -8,10 +8,10 @@
     </h2>
   </div>
 
-  <button class="create-button" appearance="primary" size="m" tuiButton (click)="rideService.toggleNewRideForm()">
+  <button class="create-button" appearance="primary" size="m" tuiButton (click)="newRideService.toggleNewRideForm()">
     Create new ride
   </button>
-  @if (rideService.isOpenNewRideForm()) {
+  @if (newRideService.isOpenNewRideForm()) {
     <dd-new-ride-form [path]="routeInfo.path" [carriages]="carriages()"></dd-new-ride-form>
   }
 

@@ -6,8 +6,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AlertService } from '@core/services/alert/alert.service';
 import { AsyncPipe, NgFor } from '@angular/common';
 import { Route } from '@features/admin/interfaces/route.interface';
-import { RideApiService } from '@features/admin/services/ride-api/ride-api.service';
-import { RideService } from '@features/admin/services/ride/ride.service';
+import { NewRideService } from '@features/admin/services/new-ride/new-ride.service';
 import { RideCardComponent } from '../../components/ride-card/ride-card.component';
 import { NewRideFormComponent } from '../../components/new-ride-form/new-ride-form.component';
 
@@ -25,7 +24,7 @@ export class SchedulePageComponent {
 
   private readonly routeApiService = inject(RouteApiService);
 
-  protected readonly rideService = inject(RideService);
+  protected readonly newRideService = inject(NewRideService);
 
   private readonly destroy = inject(DestroyRef);
 

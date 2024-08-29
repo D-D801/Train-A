@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  computed,
   DestroyRef,
   inject,
   input,
@@ -11,9 +12,15 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { TuiCurrencyPipe } from '@taiga-ui/addon-commerce';
 import { TuiButton, tuiDateFormatProvider, TuiError } from '@taiga-ui/core';
 import { TuiFieldErrorPipe } from '@taiga-ui/kit';
-import { TuiInputDateTimeModule, TuiInputModule, TuiInputNumberModule } from '@taiga-ui/legacy';
+import {
+  TuiInputDateTimeModule,
+  TuiInputModule,
+  TuiInputNumberModule,
+  TuiTextfieldControllerModule,
+} from '@taiga-ui/legacy';
 import { take } from 'rxjs';
 
 @Component({
@@ -30,6 +37,8 @@ import { take } from 'rxjs';
     TitleCasePipe,
     TuiInputDateTimeModule,
     TuiInputNumberModule,
+    TuiCurrencyPipe,
+    TuiTextfieldControllerModule,
   ],
   templateUrl: './text-switch-form.component.html',
   styleUrl: './text-switch-form.component.scss',
@@ -39,13 +48,15 @@ import { take } from 'rxjs';
 export class TextSwitchFormComponent implements OnInit {
   public form = input.required<FormGroup>();
 
-  public typeInputs = input.required<string>();
+  public typeInputs = input.required<'text' | 'date-time' | 'price'>();
 
   public onSave = input.required<() => void>();
 
   private readonly destroy = inject(DestroyRef);
 
   private readonly cdr = inject(ChangeDetectorRef);
+
+  protected isPrice = computed(() => (this.typeInputs() === 'price' ? '$' : ''));
 
   protected isEditMode = false;
 

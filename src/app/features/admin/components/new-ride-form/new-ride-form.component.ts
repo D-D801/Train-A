@@ -1,7 +1,8 @@
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, input, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RideService } from '@features/admin/services/ride/ride.service';
+import { NewRideService } from '@features/admin/services/new-ride/new-ride.service';
+
 import { TuiDay, TuiTime } from '@taiga-ui/cdk';
 import { TuiButton, TuiError, TuiSurface, TuiTitle } from '@taiga-ui/core';
 import { TuiAccordion, TuiFieldErrorPipe } from '@taiga-ui/kit';
@@ -38,7 +39,7 @@ export class NewRideFormComponent implements OnInit {
 
   public carriages = input.required<string[]>();
 
-  private readonly rideService = inject(RideService);
+  private readonly newRideService = inject(NewRideService);
 
   private readonly fb = inject(FormBuilder);
 
@@ -69,6 +70,6 @@ export class NewRideFormComponent implements OnInit {
     } else {
       console.log('Форма невалидна');
     }
-    this.rideService.closeNewRideForm();
+    this.newRideService.closeNewRideForm();
   }
 }
