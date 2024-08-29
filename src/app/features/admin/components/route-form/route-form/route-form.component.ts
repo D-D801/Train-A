@@ -86,20 +86,23 @@ export class RouteFormComponent {
       .getCarriages()
       .pipe(
         map((data) => data.map((carriage) => carriage.name)),
-        takeUntilDestroyed(this.destroy)
+        takeUntilDestroyed()
       )
       .subscribe((carriages) => {
         this.carriages.set(carriages);
       });
 
-    this.routeApiService.getStations().subscribe((data) => {
-      this.stations.set(data);
-      const availableStations = this.trainRoute()
-        ? updateAvailableStations(this.trainRoute()?.path || [], this.stations())
-        : updateAvailableStations(new Array(MIN_ROUTE_FORM_CONTROL_COUNT).fill(null), this.stations());
+    this.routeApiService
+      .getStations()
+      .pipe(takeUntilDestroyed())
+      .subscribe((data) => {
+        this.stations.set(data);
+        const availableStations = this.trainRoute()
+          ? updateAvailableStations(this.trainRoute()?.path || [], this.stations())
+          : updateAvailableStations(new Array(MIN_ROUTE_FORM_CONTROL_COUNT).fill(null), this.stations());
 
-      this.connectedToStations.set(availableStations);
-    });
+        this.connectedToStations.set(availableStations);
+      });
 
     effect(() => {
       if (this.trainRoute()) {
@@ -118,7 +121,7 @@ export class RouteFormComponent {
       this.cdr.detectChanges();
     });
 
-    this.form.controls.path.valueChanges.subscribe(() => {
+    this.form.controls.path.valueChanges.pipe(takeUntilDestroyed()).subscribe(() => {
       const availableStations = updateAvailableStations(this.getCityIds(), this.stations());
       this.connectedToStations.set(availableStations);
     });
