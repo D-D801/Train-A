@@ -1,9 +1,19 @@
 <tui-push *tuiPush="open()" (close)="close()">
-  <div class="push">
-    <div>Car: {{ selectedOrder().carriageNumber }}, Seat: {{ selectedOrder().seatNumber }}</div>
-    <div>${{ selectedOrder().price }}</div>
-  </div>
+  @if (!isBookSeat()) {
+    <div class="push">
+      <div>Car: {{ selectedOrder().carriageNumber }}, Seat: {{ selectedOrder().seatNumber }}</div>
+      <div>${{ selectedOrder().price }}</div>
+    </div>
+  }
   <div class="action">
-    <button tuiButton appearance="primary" type="button" class="btn" (click)="hendlerBookSeat()">Book seat</button>
+    <button
+      tuiButton
+      appearance="primary"
+      type="button"
+      class="btn"
+      (click)="isBookSeat() ? hendlerCancelTrip() : hendlerBookSeat()"
+    >
+      {{ isBookSeat() ? 'Cancel trip' : 'Book seat' }}
+    </button>
   </div>
 </tui-push>

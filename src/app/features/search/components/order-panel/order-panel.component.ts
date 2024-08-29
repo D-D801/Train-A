@@ -14,7 +14,11 @@ import { TuiPush, TuiPushDirective } from '@taiga-ui/kit';
 export class OrderPanelComponent {
   public selectedOrder = input.required<SelectedOrder>();
 
-  public bookSeat = output<boolean>();
+  public isBookSeat = input.required<boolean>();
+
+  public bookSeat = output<SelectedOrder>();
+
+  public cancelTrip = output();
 
   protected open = signal(false);
 
@@ -34,6 +38,10 @@ export class OrderPanelComponent {
   }
 
   public hendlerBookSeat() {
-    this.bookSeat.emit(true);
+    this.bookSeat.emit(this.selectedOrder());
+  }
+
+  public hendlerCancelTrip() {
+    this.cancelTrip.emit();
   }
 }

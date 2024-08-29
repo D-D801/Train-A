@@ -1,6 +1,7 @@
 import { NgClass, NgFor } from '@angular/common';
 import { ChangeDetectionStrategy, Component, effect, input, output, signal } from '@angular/core';
 import { Carriage } from '@features/admin/interfaces/carriage.interface';
+import { BookSeats } from '@features/search/services/ride/ride.service';
 import { TuiAppearance, TuiSurface, TuiTitle } from '@taiga-ui/core';
 import { TuiCardLarge, TuiHeader } from '@taiga-ui/layout';
 
@@ -20,6 +21,8 @@ export class CarriagePreviewComponent {
 
   public carriage = input.required<Carriage | null>();
 
+  public bookSeats = input<BookSeats[]>();
+
   public seatSelected = output<{ seatNumber: number; carriageType: string }>();
 
   public seatNumbers = signal<Array<{ leftRow: number[]; rightRow: number[] }>>([]);
@@ -31,12 +34,27 @@ export class CarriagePreviewComponent {
   public constructor() {
     effect(
       () => {
+        if (this.bookSeats()) {
+          this.updateReservedSeats();
+        }
         if (this.carriage()) {
           this.updateSeatNumbers();
         }
       },
       { allowSignalWrites: true }
     );
+  }
+
+  private updateReservedSeats() {
+    this.reservedSeats.clear();
+    const bookSeats = this.bookSeats();
+    if (!bookSeats) return;
+
+    const seatsForCurrentCarriage = bookSeats
+      .filter((seat) => seat.carriageType === this.carriage()?.name)
+      .map((seat) => seat.localSeatNumber);
+
+    seatsForCurrentCarriage.forEach((seatNumber) => this.reservedSeats.add(seatNumber));
   }
 
   private updateSeatNumbers(): void {

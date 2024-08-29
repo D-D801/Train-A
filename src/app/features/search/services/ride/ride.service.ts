@@ -26,6 +26,15 @@ export interface SelectedOrder {
   price: number;
 }
 
+export interface BookSeats {
+  carriageType: string;
+  localSeatNumber: number;
+  carriageIndex: number;
+}
+
+export interface FreeSeat {
+  [key: number]: number;
+}
 @Injectable({
   providedIn: 'root',
 })
@@ -101,5 +110,75 @@ export class RideService {
     }
 
     return totalSeatsBeforeCurrentCarriage + Number(seatNumber);
+  }
+
+  public findSeatsInCarriages(
+    globalSeatNumbers: number[],
+    carriages: string[]
+  ): { carriageType: string; localSeatNumber: number; carriageIndex: number }[] {
+    return globalSeatNumbers.map((globalSeatNumber) => {
+      let totalSeatsBeforeCurrentCarriage = 0;
+
+      for (let i = 0; i < carriages.length; i += 1) {
+        const carriageType = carriages[i];
+        const seatsInCarriage = this.seatsPerCarriage[carriageType] || 0;
+
+        if (globalSeatNumber <= totalSeatsBeforeCurrentCarriage + seatsInCarriage) {
+          return {
+            carriageType,
+            localSeatNumber: globalSeatNumber - totalSeatsBeforeCurrentCarriage,
+            carriageIndex: i + 1,
+          };
+        }
+
+        totalSeatsBeforeCurrentCarriage += seatsInCarriage;
+      }
+
+      return {
+        carriageType: 'Unknown',
+        localSeatNumber: 0,
+        carriageIndex: 0,
+      };
+    });
+  }
+
+  public getAvailableSeats(occupiedSeats: BookSeats[], carriageList: CarriageList): { [key: number]: number } {
+    const occupiedCountByIndex = occupiedSeats.reduce(
+      (acc, seat) => {
+        const { carriageIndex } = seat;
+        acc[carriageIndex] = (acc[carriageIndex] || 0) + 1;
+        return acc;
+      },
+      {} as { [key: number]: number }
+    );
+
+    const totalSeatsByIndex = Object.keys(carriageList).reduce(
+      (acc, type) => {
+        carriageList[type].forEach((carriage) => {
+          acc[carriage.index] = this.seatsPerCarriage[type] || 0;
+        });
+        return acc;
+      },
+      {} as { [key: number]: number }
+    );
+
+    const availableSeatsByIndex = Object.keys(totalSeatsByIndex).reduce(
+      (acc, indexStr) => {
+        const index = Number(indexStr);
+        const occupiedSeatsCount = occupiedCountByIndex[index] || 0;
+        const totalSeats = totalSeatsByIndex[index];
+
+        if (occupiedSeatsCount > 0) {
+          acc[index] = totalSeats - occupiedSeatsCount;
+        } else {
+          acc[index] = totalSeats;
+        }
+
+        return acc;
+      },
+      {} as { [key: number]: number }
+    );
+
+    return availableSeatsByIndex;
   }
 }
