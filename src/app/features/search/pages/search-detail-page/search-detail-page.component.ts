@@ -1,4 +1,4 @@
-import { NgClass, NgFor, NgIf } from '@angular/common';
+import { Location, NgClass, NgFor, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal, effect } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -20,6 +20,7 @@ import {
 } from '@features/search/services/ride/ride.service';
 import { OrderPanelComponent } from '@features/search/components/order-panel/order-panel.component';
 import { OrdersApiService } from '@features/orders/services/orders-api/orders-api.service';
+import { TuiButton } from '@taiga-ui/core';
 
 @Component({
   selector: 'dd-search-detail-page',
@@ -34,6 +35,7 @@ import { OrdersApiService } from '@features/orders/services/orders-api/orders-ap
     TuiCurrencyPipe,
     OrderPanelComponent,
     TuiChip,
+    TuiButton,
   ],
   templateUrl: './search-detail-page.component.html',
   styleUrl: './search-detail-page.component.scss',
@@ -43,6 +45,8 @@ export class SearchDetailPageComponent {
   private readonly route = inject(ActivatedRoute);
 
   private readonly router = inject(Router);
+
+  private readonly location = inject(Location);
 
   private readonly searchApiService = inject(SearchApiService);
 
@@ -140,6 +144,10 @@ export class SearchDetailPageComponent {
       });
   }
 
+  public goBack(): void {
+    this.location.back();
+  }
+
   public get carriageTypes() {
     return Object.keys(this.carriageList);
   }
@@ -201,18 +209,18 @@ export class SearchDetailPageComponent {
   }
 
   protected cancelTrip() {
-    // this.ordersApiService
-    //   .deleteOrder(this.orderId())
-    //   .pipe(takeUntilDestroyed(this.destroy))
-    //   .subscribe({
-    //     next: () => {
-    //       this._isBookSeat.update((value) => !value);
-    //       this.options().isClick = true;
-    //     },
-    //     error: ({ error: { message } }) => {
-    //       this.alert.open({ message, label: 'Error', appearance: 'error' });
-    //     },
-    //   });
+    this.ordersApiService
+      .deleteOrder(this.orderId())
+      .pipe(takeUntilDestroyed(this.destroy))
+      .subscribe({
+        next: () => {
+          this._isBookSeat.update((value) => !value);
+          this.options().isClick = true;
+        },
+        error: ({ error: { message } }) => {
+          this.alert.open({ message, label: 'Error', appearance: 'error' });
+        },
+      });
   }
 
   public getFilteredSeatsByCarriageIndex(carriageIndex: number) {

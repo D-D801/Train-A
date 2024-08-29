@@ -5,7 +5,10 @@
   (cancelTrip)="cancelTrip()"
 ></dd-order-panel>
 
-<h2>Station {{ fromStation }} -> Station {{ toStation }}</h2>
+<div tuiHeader class="header">
+  <button tuiButton appearance="primary" size="s" (click)="goBack()">Back</button>
+  <h2>Station {{ fromStation }} -> Station {{ toStation }}</h2>
+</div>
 
 @if (ride()) {
   <h3>{{ setTimes('start') }} - {{ setTimes('end') }}</h3>
