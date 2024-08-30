@@ -109,7 +109,7 @@ export class RouteFormComponent {
         this.form.controls.path.clear();
         this.form.controls.carriages.clear();
         this.trainRoute()?.path.forEach((stationId) =>
-          this.form.controls.path.push(this.fb.control(this.getCityNameById(stationId) ?? null))
+          this.form.controls.path.push(this.fb.control(this.getCityNameById(stationId) ?? null, Validators.required))
         );
         this.trainRoute()?.carriages.forEach((carriage) =>
           this.form.controls.carriages.push(this.fb.control(carriage))
@@ -118,7 +118,6 @@ export class RouteFormComponent {
         this.addInitialControls(ControlsType.path);
         this.addInitialControls(ControlsType.carriages);
       }
-      this.form.markAllAsTouched();
       this.cdr.detectChanges();
     });
 
