@@ -23,6 +23,7 @@
       </button>
     }
   </nav>
+
   @for (type of carriageTypes; track type) {
     <div class="tab-content" [ngClass]="{ active: activeItemIndex === $index }">
       @for (carriage of carriageList[type]; track carriage.index) {
