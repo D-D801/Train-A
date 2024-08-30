@@ -105,7 +105,8 @@ export class SearchDetailPageComponent {
         const fromIndex = ride.path.indexOf(this.fromStation);
         const toIndex = ride.path.indexOf(this.toStation);
         if (fromIndex < 0 || toIndex < 0 || fromIndex > toIndex) {
-          //  this.router.navigate(['404']); //TODO by 404
+          return;
+          this.router.navigate(['/404']); // TODO by 404
         }
         this.carriageList = this.rideService.groupCarriages(ride.carriages);
         this.segments = ride.schedule.segments.slice(fromIndex, toIndex);

@@ -77,6 +77,7 @@ export class RideService {
   }
 
   public setTimes(segments: RoadSection[], time: string): string {
+    if (!segments.length) return '';
     let date = '';
     if (time === 'start') {
       const [, startDate] = segments[0].time;
