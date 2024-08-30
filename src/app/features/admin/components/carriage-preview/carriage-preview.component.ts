@@ -50,11 +50,9 @@ export class CarriagePreviewComponent {
     const bookSeats = this.bookSeats();
     if (!bookSeats) return;
 
-    const seatsForCurrentCarriage = bookSeats
+    bookSeats
       .filter((seat) => seat.carriageType === this.carriage()?.name)
-      .map((seat) => seat.localSeatNumber);
-
-    seatsForCurrentCarriage.forEach((seatNumber) => this.reservedSeats.add(seatNumber));
+      .forEach((seat) => this.reservedSeats.add(seat.localSeatNumber));
   }
 
   private updateSeatNumbers(): void {
@@ -86,11 +84,7 @@ export class CarriagePreviewComponent {
 
   public onSeatClick(seatNumber: number) {
     if (!this.options().isClick) return;
-    if (this.selectedSeat === seatNumber) {
-      this.selectedSeat = null;
-    } else {
-      this.selectedSeat = seatNumber;
-    }
+    this.selectedSeat = this.isSeatSelected(seatNumber) ? null : seatNumber;
     const carriageType = this.carriage()?.name;
     if (!carriageType || !this.selectedSeat) return;
     this.seatSelected.emit({ seatNumber: this.selectedSeat, carriageType });

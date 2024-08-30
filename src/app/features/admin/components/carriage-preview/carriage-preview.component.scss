@@ -1,7 +1,7 @@
 @import '@taiga-ui/core/styles/taiga-ui-local';
 
 :host.selected-wrapper .seat.selected {
-  background-color: rgb(243 168 88);
+  background-color: var(--tui-status-warning);
 }
 
 header {
@@ -80,12 +80,11 @@ section {
 }
 
 .seat.reserved {
-  background-color: rgb(182 178 178);
+  background-color: var(--tui-chart-categorical-04);
 }
 
 .aisle {
   height: 30px;
-  background-color: #f3f4f6;
 }
 
 @media #{$tui-mobile} {

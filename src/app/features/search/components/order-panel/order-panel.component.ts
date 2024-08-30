@@ -43,7 +43,7 @@ export class OrderPanelComponent {
     this.open.set(false);
   }
 
-  public hendlerBookSeat() {
+  public handlerBookSeat() {
     if (this.isLoggedIn()) {
       this.bookSeat.emit(this.selectedOrder());
     } else {
