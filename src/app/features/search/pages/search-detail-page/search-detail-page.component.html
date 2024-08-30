@@ -17,7 +17,7 @@
 <section class="horizontal">
   <nav tuiTabs [(activeItemIndex)]="activeItemIndex">
     <div class="nav-container">
-      @for (type of carriageTypes; track type) {
+      @for (type of getCarriageTypes(); track type) {
         <button tuiTab class="type">
           {{ type }} ({{ totalSeatsForType(type) }})
           <div>{{ '$' | tuiCurrency }}{{ price[type] || 0 }}</div>
@@ -26,13 +26,13 @@
     </div>
   </nav>
 
-  @for (type of carriageTypes; track type) {
+  @for (type of getCarriageTypes(); track type) {
     <div class="tab-content" [ngClass]="{ active: activeItemIndex === $index }">
-      @for (carriage of carriageList[type]; track carriage.index) {
+      @for (carriage of getCarriageListForType(type); track carriage.index) {
         <div>
           <h3>
             Car {{ carriage.index }}
-            <tui-chip appearance="whiteblock">{{ freeSeats[carriage.index].availableSeats }} seats</tui-chip>
+            <tui-chip appearance="whiteblock">{{ getFreeSeatsByCarriage(carriage.index) }} seats</tui-chip>
           </h3>
           <dd-carriage-preview
             [ngClass]="{
@@ -41,7 +41,7 @@
             class="preview"
             [carriage]="getCarriageByName(carriage.carriage)"
             [options]="options()"
-            [bookSeats]="getFilteredSeatsByCarriageIndex(carriage.index)"
+            [bookSeats]="getFilteredSeats(carriage.index)"
             (seatSelected)="handleSeatSelected($event, carriage.index)"
           ></dd-carriage-preview>
         </div>
