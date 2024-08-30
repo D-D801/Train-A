@@ -16,6 +16,7 @@
 
 <section class="horizontal">
   <nav tuiTabs [(activeItemIndex)]="activeItemIndex">
+    <!-- TODO Adaptive tabs -->
     <div class="nav-container">
       @for (type of getCarriageTypes(); track type) {
         <button tuiTab class="type">

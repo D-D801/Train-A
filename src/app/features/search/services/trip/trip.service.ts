@@ -38,7 +38,7 @@ export interface FreeSeat {
 @Injectable({
   providedIn: 'root',
 })
-export class RideService {
+export class TripService {
   private readonly carriageService = inject(CarriageService);
 
   public carriages = this.carriageService.carriages;
