@@ -16,12 +16,14 @@
 
 <section class="horizontal">
   <nav tuiTabs [(activeItemIndex)]="activeItemIndex">
-    @for (type of carriageTypes; track type) {
-      <button tuiTab class="type">
-        {{ type }}
-        <div>{{ '$' | tuiCurrency }}{{ price[type] || 0 }}</div>
-      </button>
-    }
+    <div class="nav-container">
+      @for (type of carriageTypes; track type) {
+        <button tuiTab class="type">
+          {{ type }} ({{ totalSeatsForType(type) }})
+          <div>{{ '$' | tuiCurrency }}{{ price[type] || 0 }}</div>
+        </button>
+      }
+    </div>
   </nav>
 
   @for (type of carriageTypes; track type) {
@@ -30,7 +32,7 @@
         <div>
           <h3>
             Car {{ carriage.index }}
-            <tui-chip appearance="whiteblock">{{ freeSeats[carriage.index] }} seats</tui-chip>
+            <tui-chip appearance="whiteblock">{{ freeSeats[carriage.index].availableSeats }} seats</tui-chip>
           </h3>
           <dd-carriage-preview
             [ngClass]="{

@@ -223,4 +223,8 @@ export class SearchDetailPageComponent {
   public getFilteredSeatsByCarriageIndex(carriageIndex: number) {
     return this.bookSeats.filter((seat) => seat.carriageIndex === carriageIndex);
   }
+
+  public totalSeatsForType(type: string): number {
+    return this.rideService.sumSeatsByType(this.freeSeats, type);
+  }
 }

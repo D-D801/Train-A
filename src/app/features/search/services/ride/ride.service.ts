@@ -33,7 +33,7 @@ export interface BookSeats {
 }
 
 export interface FreeSeat {
-  [key: number]: number;
+  [key: number]: { carriageType: string; availableSeats: number };
 }
 @Injectable({
   providedIn: 'root',
@@ -143,16 +143,21 @@ export class RideService {
     });
   }
 
-  public getAvailableSeats(occupiedSeats: BookSeats[], carriageList: CarriageList): { [key: number]: number } {
-    const occupiedCountByIndex = occupiedSeats.reduce((acc, seat) => {
-      const { carriageIndex } = seat;
-      acc[carriageIndex] = (acc[carriageIndex] || 0) + 1;
-      return acc;
-    }, {} as FreeSeat);
-
+  public getAvailableSeats(
+    occupiedSeats: BookSeats[],
+    carriageList: CarriageList
+  ): { [key: number]: { carriageType: string; availableSeats: number } } {
+    const occupiedCountByIndex = occupiedSeats.reduce(
+      (acc, seat) => {
+        const { carriageIndex } = seat;
+        acc[carriageIndex] = (acc[carriageIndex] || 0) + 1;
+        return acc;
+      },
+      {} as { [key: number]: number }
+    );
     const totalSeatsByIndex = Object.keys(carriageList).reduce((acc, type) => {
       carriageList[type].forEach((carriage) => {
-        acc[carriage.index] = this.seatsPerCarriage[type] || 0;
+        acc[carriage.index] = { carriageType: type, availableSeats: this.seatsPerCarriage[type] || 0 };
       });
       return acc;
     }, {} as FreeSeat);
@@ -160,17 +165,26 @@ export class RideService {
     const availableSeatsByIndex = Object.keys(totalSeatsByIndex).reduce((acc, indexStr) => {
       const index = Number(indexStr);
       const occupiedSeatsCount = occupiedCountByIndex[index] || 0;
-      const totalSeats = totalSeatsByIndex[index];
+      const { carriageType, availableSeats } = totalSeatsByIndex[index];
 
-      if (occupiedSeatsCount > 0) {
-        acc[index] = totalSeats - occupiedSeatsCount;
-      } else {
-        acc[index] = totalSeats;
-      }
+      acc[index] = {
+        carriageType,
+        availableSeats: availableSeats - occupiedSeatsCount,
+      };
 
       return acc;
     }, {} as FreeSeat);
 
     return availableSeatsByIndex;
+  }
+
+  public sumSeatsByType(seats: FreeSeat, type: string): number {
+    return Object.values(seats).reduce((acc, { carriageType, availableSeats }) => {
+      let accNew = acc;
+      if (carriageType === type) {
+        accNew += availableSeats;
+      }
+      return accNew;
+    }, 0);
   }
 }
