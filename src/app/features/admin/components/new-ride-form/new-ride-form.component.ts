@@ -83,14 +83,14 @@ export class NewRideFormComponent implements OnInit {
 
   protected minDate = getCurrentDateTime();
 
-  public ngOnInit(): void {
+  public ngOnInit() {
     const segmentsArray = this.rideForm.get('segments') as FormArray;
 
     for (let i = 0; i < this.path().length - 1; i += 1) {
       const segmentGroup: FormGroup = this.fb.group({
         time: this.fb.array([
-          this.fb.control<[TuiDay, TuiTime] | null>([TuiDay.currentUtc(), new TuiTime(0, 0)], dateTimeValidator()),
-          this.fb.control<[TuiDay, TuiTime] | null>([TuiDay.currentUtc(), new TuiTime(0, 0)], dateTimeValidator()),
+          this.fb.control<[TuiDay, TuiTime] | null>(null, dateTimeValidator()),
+          this.fb.control<[TuiDay, TuiTime] | null>(null, dateTimeValidator()),
         ]),
 
         price: this.fb.group(
@@ -98,7 +98,7 @@ export class NewRideFormComponent implements OnInit {
             (acc, carriage) => {
               return {
                 ...acc,
-                [carriage]: this.fb.control<number | null>(0, [Validators.required, Validators.min(0)]),
+                [carriage]: this.fb.control<number | null>(null, [Validators.required, Validators.min(0)]),
               };
             },
             {} as { [key: string]: FormControl<number | null> }

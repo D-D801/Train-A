@@ -1,7 +1,7 @@
 import { KeyValuePipe, TitleCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, input } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AlertService } from '@core/services/alert/alert.service';
 import { Segment } from '@features/admin/interfaces/segment.interface';
 import { TuiDay, TuiTime } from '@taiga-ui/cdk';
@@ -55,9 +55,11 @@ import { EditableFormComponent } from '@shared/components/editable-form/editable
   ],
 })
 export class StationCardComponent {
-  public segments = input.required<{ segments: Segment[]; indexSegment: number }>();
-
   public ids = input.required<{ routeId: number; rideId: number }>();
+
+  public currentSegmentIndex = input.required<number>();
+
+  public segments = input.required<Segment[]>();
 
   public station = input.required<[number, number]>();
 
@@ -83,7 +85,7 @@ export class StationCardComponent {
       const segments = this.segments();
       if (!segments) return;
 
-      const segment = segments.segments[segments.indexSegment];
+      const segment = segments[this.currentSegmentIndex()];
 
       const { time, price } = segment;
 
@@ -98,15 +100,13 @@ export class StationCardComponent {
         arrival: [TuiDay.fromLocalNativeDate(arrival), arrivalTime],
       });
 
-      const priceControls = Object.keys(price).reduce(
-        (acc, key) => {
-          acc[key] = this.fb.control(price[key], [Validators.required, Validators.min(0)]);
-          return acc;
-        },
-        {} as { [key: string]: FormControl<number | null> }
-      );
-
-      this.priceForm = this.fb.group(priceControls);
+      Object.keys(price).forEach((carriage) => {
+        if (this.priceForm.contains(carriage)) {
+          this.priceForm.get(carriage)?.setValue(price[carriage]);
+          return;
+        }
+        this.priceForm.addControl(carriage, this.fb.control(price[carriage], [Validators.required, Validators.min(0)]));
+      });
     });
   }
 
@@ -122,19 +122,18 @@ export class StationCardComponent {
     if (!(departure && arrival && price)) return;
 
     const departureDate = getISOStringDateTimeFromTuiDataTime(departure);
-
     const arrivalDate = getISOStringDateTimeFromTuiDataTime(arrival);
 
     if (!(departureDate && arrivalDate)) return;
 
-    segments.segments[segments.indexSegment] = {
+    segments[this.currentSegmentIndex()] = {
       time: [departureDate, arrivalDate],
       price,
     };
 
     this.rideApiService
       .updateRide(routeId, rideId, {
-        segments: segments.segments,
+        segments,
       })
       .pipe(takeUntilDestroyed(this.destroy))
       .subscribe({
