@@ -24,8 +24,6 @@ export class OrderPanelComponent {
 
   private readonly alert = inject(AlertService);
 
-  public isLoggedIn = this.authService.isLoggedIn;
-
   protected open = signal(false);
 
   public constructor() {
@@ -44,7 +42,7 @@ export class OrderPanelComponent {
   }
 
   public handlerBookSeat() {
-    if (this.isLoggedIn()) {
+    if (this.authService.isLoggedIn()) {
       this.bookSeat.emit(this.selectedOrder());
     } else {
       this.alert.open({ message: 'No autorization', label: 'Error', appearance: 'error' });

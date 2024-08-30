@@ -22,6 +22,7 @@ import { OrderPanelComponent } from '@features/search/components/order-panel/ord
 import { OrdersApiService } from '@features/orders/services/orders-api/orders-api.service';
 import { TuiButton } from '@taiga-ui/core';
 import { OrderRequest } from '@features/search/interfaces/order.request.interface';
+import { TuiHeader } from '@taiga-ui/layout';
 
 @Component({
   selector: 'dd-search-detail-page',
@@ -37,6 +38,7 @@ import { OrderRequest } from '@features/search/interfaces/order.request.interfac
     OrderPanelComponent,
     TuiChip,
     TuiButton,
+    TuiHeader,
   ],
   templateUrl: './search-detail-page.component.html',
   styleUrl: './search-detail-page.component.scss',
@@ -77,7 +79,7 @@ export class SearchDetailPageComponent {
 
   protected activeItemIndex = 0;
 
-  public carriageList: CarriageList = {};
+  private carriageList: CarriageList = {};
 
   private segments: RoadSection[] = [];
 
@@ -85,11 +87,11 @@ export class SearchDetailPageComponent {
 
   public selectedOrder: SelectedOrder = { seatNumber: 0, carriageNumber: 0, globalSeatNumber: 0, price: 0 };
 
-  public selectedCarriageIndex: number | null = null;
+  private selectedCarriageIndex: number | null = null;
 
-  public bookSeats: BookSeats[] = [];
+  private bookSeats: BookSeats[] = [];
 
-  public freeSeats: FreeSeat = {};
+  private freeSeats: FreeSeat = {};
 
   public constructor() {
     this.loadRide();
