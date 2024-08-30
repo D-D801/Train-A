@@ -5,7 +5,9 @@
 ></dd-order-panel>
 
 <div tuiHeader class="header">
-  <button tuiIconButton appearance="icon" iconStart="@tui.chevron-left" size="m" type="submit">Back</button>
+  <button tuiIconButton appearance="icon" iconStart="@tui.chevron-left" size="m" type="submit" (click)="goBack()">
+    Back
+  </button>
   <div>
     <h2>Station {{ fromStation }} -> Station {{ toStation }}</h2>
     @if (ride()) {
