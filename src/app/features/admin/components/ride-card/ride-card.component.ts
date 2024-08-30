@@ -25,7 +25,7 @@ export class RideCardComponent {
 
   public path = input.required<number[]>();
 
-  public delete = output<number>();
+  public updateRouteInfo = output();
 
   private readonly rideApiService = inject(RideApiService);
 
@@ -40,9 +40,9 @@ export class RideCardComponent {
 
     this.dialogs
       .open<boolean>(TUI_CONFIRM, {
-        label: 'Delete ride',
+        label: `Delete ${this.ride().rideId} ride`,
         size: 'm',
-        data: getDeletionConfirmationData(`Ride ${this.ride().rideId}`),
+        data: getDeletionConfirmationData(`ride`),
       })
       .pipe(
         filter((isConfirmed) => isConfirmed),
@@ -51,7 +51,7 @@ export class RideCardComponent {
       )
       .subscribe({
         next: () => {
-          this.delete.emit(this.ride().rideId);
+          this.updateRouteInfo.emit();
           this.alert.open({
             message: `Ride${this.ride().rideId} successful deleted.`,
             label: 'Delete',

@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, input, OnInit, output } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AlertService } from '@core/services/alert/alert.service';
@@ -65,6 +65,8 @@ export class NewRideFormComponent implements OnInit {
 
   public carriages = input.required<string[]>();
 
+  public updateRouteInfo = output();
+
   private readonly newRideService = inject(NewRideService);
 
   private readonly rideApiService = inject(RideApiService);
@@ -123,6 +125,7 @@ export class NewRideFormComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroy))
       .subscribe({
         next: ({ id }) => {
+          this.updateRouteInfo.emit();
           this.alert.open({ message: `Ride${id} successful created`, label: 'New ride', appearance: 'success' });
           this.newRideService.closeNewRideForm();
         },
