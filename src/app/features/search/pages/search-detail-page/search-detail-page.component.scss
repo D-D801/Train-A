@@ -9,7 +9,16 @@
 }
 
 nav {
-  overflow-x: auto;
+  width: 100%;
+
+  & .nav-container {
+    overflow-x: auto;
+    display: flex;
+  }
+}
+
+.type {
+  display: inline-block;
 }
 
 div.tab-content {
