@@ -1,5 +1,17 @@
-:host {
+:host ::ng-deep {
   width: 30rem;
+
+  .profile .wrapper .inputs {
+    font-size: 1rem;
+  }
+
+  .profile div.wrapper {
+    margin: 1.5rem 0;
+  }
+
+  .profile .wrapper .label {
+    display: block;
+  }
 }
 
 h3 {
