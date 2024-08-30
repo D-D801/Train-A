@@ -1,3 +1,5 @@
+@use './styles/mixins';
+
 @import './app/theme/variables';
 
 ::-webkit-scrollbar {
@@ -61,4 +63,25 @@
 
   background-color: var(--tui-background-elevation-1);
   border-bottom: 1px solid var(--tui-background-neutral-2);
+}
+
+.station-container {
+  display: grid;
+  grid-template-columns: 1fr 2fr 2fr;
+  gap: 3rem;
+
+  margin-top: 2rem;
+  padding: 0 2rem 2rem;
+
+  border-bottom: 1px solid var(--tui-status-info-pale-hover);
+
+  @include mixins.media-tablet {
+    grid-template-columns: 2fr;
+    gap: 1rem;
+  }
+
+  @include mixins.media-middle {
+    grid-template-columns: 2fr;
+    padding: 0 1rem 1rem;
+  }
 }

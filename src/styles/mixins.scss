@@ -1,0 +1,25 @@
+@use './constants';
+
+@mixin media-tablet {
+  @media (max-width: constants.$tablet-width) {
+    @content;
+  }
+}
+
+@mixin media-middle {
+  @media (max-width: constants.$middle-width) {
+    @content;
+  }
+}
+
+@mixin media-mobile {
+  @media (max-width: constants.$mobile-width) {
+    @content;
+  }
+}
+
+@mixin media-mini-mobile {
+  @media (max-width: constants.$mini-mobile-width) {
+    @content;
+  }
+}
