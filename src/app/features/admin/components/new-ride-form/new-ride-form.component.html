@@ -9,36 +9,31 @@
     <div formArrayName="segments">
       @for (segment of path(); track segment; let i = $index) {
         @if (i !== path().length - 1) {
-          <div [formGroupName]="i" class="grid-container">
+          <div [formGroupName]="i" class="station-card-container">
             <div class="stations">
-              <p>{{ path()[i] }}</p>
-              <div></div>
-              <p>{{ path()[i + 1] }}</p>
+              <h4>{{ path()[i] }}</h4>
+              <div class="station-divider"></div>
+              <h4>{{ path()[i + 1] }}</h4>
             </div>
 
             <div class="time">
               <tui-input-date-time
-                id="departure-{{ i }}"
                 class="input"
                 formControlName="departure"
+                [min]="minDate"
                 placeholder="Select departure"
               >
                 Departure:</tui-input-date-time
               >
-              <tui-input-date-time
-                id="arrival-{{ i }}"
-                class="input"
-                formControlName="arrival"
-                placeholder="Select arrival"
-              >
+              <tui-input-date-time class="input" formControlName="arrival" [min]="minDate" placeholder="Select arrival">
                 Arrival:</tui-input-date-time
               >
             </div>
 
-            <div class="prices">
-              <h6>Prices:</h6>
+            <div class="price">
+              <h4>Prices:</h4>
               @for (key of carriages(); track key) {
-                <tui-input-number class="input" [formControlName]="key" placeholder="Enter price">
+                <tui-input-number class="input" [formControlName]="key" [tuiTextfieldPrefix]="'USD' | tuiCurrency">
                   {{ key }}:
                 </tui-input-number>
               }

@@ -1,6 +1,5 @@
-@use './styles/mixins';
-
 @import './app/theme/variables';
+@import '@taiga-ui/core/styles/taiga-ui-local';
 
 ::-webkit-scrollbar {
   width: 6px;
@@ -65,23 +64,25 @@
   border-bottom: 1px solid var(--tui-background-neutral-2);
 }
 
-.station-container {
-  display: grid;
-  grid-template-columns: 1fr 2fr 2fr;
-  gap: 3rem;
+.time .wrapper .inputs {
+  flex-direction: column-reverse;
 
-  margin-top: 2rem;
-  padding: 0 2rem 2rem;
-
-  border-bottom: 1px solid var(--tui-status-info-pale-hover);
-
-  @include mixins.media-tablet {
-    grid-template-columns: 2fr;
-    gap: 1rem;
+  @media #{$tui-tablet} {
+    flex-direction: row-reverse;
+    width: 90%;
   }
 
-  @include mixins.media-middle {
-    grid-template-columns: 2fr;
-    padding: 0 1rem 1rem;
+  @media #{$tui-mobile} {
+    flex-direction: column-reverse;
+  }
+}
+
+.time .wrapper .inputs .input {
+  @media #{$tui-tablet} {
+    width: 100%;
+  }
+
+  @media #{$tui-mobile} {
+    width: auto;
   }
 }
