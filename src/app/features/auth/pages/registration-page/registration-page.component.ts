@@ -71,7 +71,10 @@ export class RegistrationPageComponent implements OnInit {
     this.registrationForm.valueChanges.pipe(takeUntilDestroyed(this.destroy)).subscribe(() => {
       if (!this.isSubmitted()) {
         const { email, password } = this.registrationForm.value;
-        if (!(email && password)) return;
+        if (!(email && password)) {
+          this.isFormValid.set(false);
+          return;
+        }
         this.isFormValid.set(mailRegex.test(email) && password?.trim().length >= PASSWORD_MAX_LENGTH);
       }
       if (this.registrationForm.dirty && this.isSubmitted()) {
