@@ -61,6 +61,7 @@ export class RouteTabComponent {
     if (!currentRoute) return;
     this.currentRoute.set(currentRoute);
     this.isEdit.set(true);
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
   }
 
   public onSave() {
