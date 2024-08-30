@@ -7,20 +7,21 @@
   display: flex;
   gap: 1rem;
   align-items: start;
-  justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
+  justify-content: space-between;
+
   width: 100%;
   height: 100%;
 }
 
 .inputs {
-  width: 70%;
-  height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   gap: 0.4rem;
+  justify-content: space-between;
+
+  width: 70%;
+  height: 100%;
 }
 
 .label {

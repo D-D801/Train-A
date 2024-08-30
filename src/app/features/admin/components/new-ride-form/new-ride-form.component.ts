@@ -2,12 +2,19 @@ import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, input, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NewRideService } from '@features/admin/services/new-ride/new-ride.service';
+import { getCurrentDateTime } from '@shared/utils/getCurrentDateTime';
+import { TuiCurrencyPipe } from '@taiga-ui/addon-commerce';
 
 import { TuiDay, TuiTime } from '@taiga-ui/cdk';
 import { TuiButton, TuiError, TuiSurface, TuiTitle } from '@taiga-ui/core';
 import { TuiAccordion, TuiFieldErrorPipe } from '@taiga-ui/kit';
 import { TuiCardLarge, TuiHeader } from '@taiga-ui/layout';
-import { TuiInputDateTimeModule, TuiInputNumberModule, TuiInputModule } from '@taiga-ui/legacy';
+import {
+  TuiInputDateTimeModule,
+  TuiInputNumberModule,
+  TuiInputModule,
+  TuiTextfieldControllerModule,
+} from '@taiga-ui/legacy';
 
 @Component({
   selector: 'dd-new-ride-form',
@@ -29,6 +36,8 @@ import { TuiInputDateTimeModule, TuiInputNumberModule, TuiInputModule } from '@t
     TuiError,
     AsyncPipe,
     TuiFieldErrorPipe,
+    TuiCurrencyPipe,
+    TuiTextfieldControllerModule,
   ],
   templateUrl: './new-ride-form.component.html',
   styleUrl: './new-ride-form.component.scss',
@@ -46,6 +55,8 @@ export class NewRideFormComponent implements OnInit {
   protected rideForm = this.fb.group({
     segments: this.fb.array([]),
   });
+
+  protected minDate = getCurrentDateTime();
 
   public ngOnInit(): void {
     const segmentsArray = this.rideForm.get('segments') as FormArray;
