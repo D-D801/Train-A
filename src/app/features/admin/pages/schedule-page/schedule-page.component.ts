@@ -19,7 +19,7 @@ import { NewRideFormComponent } from '../../components/new-ride-form/new-ride-fo
 })
 export class SchedulePageComponent {
   // TODO: change to query
-  protected routeId = 3;
+  protected routeId = 4;
 
   private readonly routeApiService = inject(RouteApiService);
 
