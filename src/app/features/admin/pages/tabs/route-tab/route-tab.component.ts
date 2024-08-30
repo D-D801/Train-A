@@ -84,7 +84,7 @@ export class RouteTabComponent {
 
     this.dialogs
       .open<boolean>(TUI_CONFIRM, {
-        label: 'Delete route.',
+        label: `Delete ${route.id} route.`,
         size: 's',
         data,
       })
