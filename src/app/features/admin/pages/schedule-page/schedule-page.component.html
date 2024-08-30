@@ -1,8 +1,16 @@
 @let routeInfo = routeInformation();
 @if (routeInfo) {
   <div class="title">
-    <!-- TODO:add router-link for route page -->
-    <button tuiIconButton appearance="icon" iconStart="@tui.chevron-left" size="m" type="submit">Back</button>
+    <button
+      tuiIconButton
+      appearance="icon"
+      iconStart="@tui.chevron-left"
+      size="m"
+      type="submit"
+      (click)="navigationBack()"
+    >
+      Back
+    </button>
     <h2>Route {{ routeInfo.id }}</h2>
   </div>
   <button class="create-button" appearance="primary" size="m" tuiButton (click)="newRideService.toggleNewRideForm()">

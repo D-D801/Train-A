@@ -11,11 +11,12 @@ import { ProfileApiService } from '@features/auth/services/profile-api/profile-a
 import { LocalStorageService } from '@core/services/local-storage/local-storage.service';
 import { LocalStorageKey } from '@shared/enums/local-storage-key.enum';
 import { tap } from 'rxjs';
-import { TextSwitchFormComponent } from '@shared/components/text-switch-form/text-switch-form.component';
+
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { tuiMarkControlAsTouchedAndValidate } from '@taiga-ui/cdk';
 import { emailValidator } from '@features/auth/validators';
 
+import { EditableFormComponent } from '@shared/components/editable-form/editable-form.component';
 import { ChangePasswordDialogComponent } from '../../components/change-password-dialog/change-password-dialog/change-password-dialog.component';
 
 @Component({
@@ -28,7 +29,7 @@ import { ChangePasswordDialogComponent } from '../../components/change-password-
     ChangePasswordDialogComponent,
     NgIf,
     AsyncPipe,
-    TextSwitchFormComponent,
+    EditableFormComponent,
   ],
   templateUrl: './profile-page.component.html',
   styleUrl: './profile-page.component.scss',

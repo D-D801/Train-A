@@ -6,12 +6,12 @@ import { TuiButton } from '@taiga-ui/core';
 import { TuiFieldErrorPipe } from '@taiga-ui/kit';
 import { ComponentRef } from '@angular/core';
 import { provideHttpClient } from '@angular/common/http';
-import { TextSwitchFormComponent } from './text-switch-form.component';
+import { EditableFormComponent } from './editable-form.component';
 
-describe('TextSwitchFormComponent', () => {
-  let component: TextSwitchFormComponent;
-  let componentRef: ComponentRef<TextSwitchFormComponent>;
-  let fixture: ComponentFixture<TextSwitchFormComponent>;
+describe('EditableFormComponent', () => {
+  let component: EditableFormComponent;
+  let componentRef: ComponentRef<EditableFormComponent>;
+  let fixture: ComponentFixture<EditableFormComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -26,7 +26,7 @@ describe('TextSwitchFormComponent', () => {
       providers: [provideHttpClient()],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(TextSwitchFormComponent);
+    fixture = TestBed.createComponent(EditableFormComponent);
     component = fixture.componentInstance;
 
     componentRef = fixture.componentRef;

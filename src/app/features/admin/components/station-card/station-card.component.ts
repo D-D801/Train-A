@@ -4,7 +4,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AlertService } from '@core/services/alert/alert.service';
 import { Segment } from '@features/admin/interfaces/segment.interface';
-import { TextSwitchFormComponent } from '@shared/components/text-switch-form/text-switch-form.component';
 import { TuiDay, TuiTime } from '@taiga-ui/cdk';
 import { TuiButton, TuiError, TuiIcon, TuiSurface, TuiTitle } from '@taiga-ui/core';
 import { TUI_VALIDATION_ERRORS, TuiAccordion } from '@taiga-ui/kit';
@@ -20,6 +19,7 @@ import { RideApiService } from '@features/admin/services/ride-api/ride-api.servi
 import { dateTimeValidator } from '@shared/validators/date-time.validator';
 import { buildInErrors } from '@shared/constants/build-in-errors';
 import { getISOStringDateTimeFromTuiDataTime } from '@shared/utils/getISOStringDateTimeFromTuiDataTime';
+import { EditableFormComponent } from '@shared/components/editable-form/editable-form.component';
 
 @Component({
   selector: 'dd-station-card',
@@ -33,7 +33,6 @@ import { getISOStringDateTimeFromTuiDataTime } from '@shared/utils/getISOStringD
     TuiError,
     ReactiveFormsModule,
     TuiButton,
-    TextSwitchFormComponent,
     TuiInputModule,
     TuiIcon,
     TuiAccordion,
@@ -43,6 +42,7 @@ import { getISOStringDateTimeFromTuiDataTime } from '@shared/utils/getISOStringD
     TitleCasePipe,
     TuiCurrencyPipe,
     TuiTextfieldControllerModule,
+    EditableFormComponent,
   ],
   templateUrl: './station-card.component.html',
   styleUrl: './station-card.component.scss',
