@@ -15,9 +15,9 @@ import {
   CarriageList,
   FreeSeat,
   Price,
-  RideService,
+  TripService,
   SelectedOrder,
-} from '@features/search/services/ride/ride.service';
+} from '@features/search/services/trip/trip.service';
 import { OrderPanelComponent } from '@features/search/components/order-panel/order-panel.component';
 import { OrdersApiService } from '@features/orders/services/orders-api/orders-api.service';
 import { TuiButton } from '@taiga-ui/core';
@@ -55,7 +55,7 @@ export class SearchDetailPageComponent {
 
   private readonly carriageService = inject(CarriageService);
 
-  private readonly rideService = inject(RideService);
+  private readonly tripService = inject(TripService);
 
   private readonly destroy = inject(DestroyRef);
 
@@ -108,13 +108,13 @@ export class SearchDetailPageComponent {
           return;
           this.router.navigate(['/404']); // TODO by 404
         }
-        this.carriageList = this.rideService.groupCarriages(ride.carriages);
+        this.carriageList = this.tripService.groupCarriages(ride.carriages);
         this.segments = ride.schedule.segments.slice(fromIndex, toIndex);
-        this.price = this.rideService.setPrices(this.segments);
+        this.price = this.tripService.setPrices(this.segments);
 
-        this.bookSeats = this.rideService.getOccupieSeatsInCarriages(this.segments[0].occupiedSeats, ride.carriages);
+        this.bookSeats = this.tripService.getOccupieSeatsInCarriages(this.segments[0].occupiedSeats, ride.carriages);
 
-        this.freeSeats = this.rideService.getAvailableSeats(this.bookSeats, this.carriageList);
+        this.freeSeats = this.tripService.getAvailableSeats(this.bookSeats, this.carriageList);
       }
     });
   }
@@ -171,11 +171,11 @@ export class SearchDetailPageComponent {
   }
 
   public totalSeatsForType(type: string): number {
-    return this.rideService.sumSeatsByType(this.freeSeats, type);
+    return this.tripService.sumSeatsByType(this.freeSeats, type);
   }
 
   public setTimes(time: string) {
-    return this.rideService.setTimes(this.segments, time);
+    return this.tripService.setTimes(this.segments, time);
   }
 
   public getCarriageClass(index: number) {
@@ -193,7 +193,7 @@ export class SearchDetailPageComponent {
     this.selectedCarriageIndex = index;
     const carriages = this._ride()?.carriages;
     if (!carriages) return;
-    this.selectedOrder.globalSeatNumber = this.rideService.calculateGlobalSeatNumber(
+    this.selectedOrder.globalSeatNumber = this.tripService.calculateGlobalSeatNumber(
       carriages,
       index,
       event.seatNumber
