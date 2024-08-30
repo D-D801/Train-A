@@ -10,7 +10,12 @@
   </button>
 
   @if (newRideService.isOpenNewRideForm()) {
-    <dd-new-ride-form [path]="routeInfo.path" [carriages]="carriages()" [routeId]="routeInfo.id"></dd-new-ride-form>
+    <dd-new-ride-form
+      [path]="routeInfo.path"
+      [carriages]="carriages()"
+      [routeId]="routeInfo.id"
+      (updateRouteInfo)="updateRouteInfo()"
+    ></dd-new-ride-form>
   }
 
   @for (rideCard of routeInfo.schedule; track rideCard.rideId) {
@@ -18,7 +23,7 @@
       [ride]="rideCard"
       [routeId]="routeInfo.id"
       [path]="routeInfo.path"
-      (delete)="deleteRide($event)"
+      (updateRouteInfo)="updateRouteInfo()"
     ></dd-ride-card>
   }
 }
