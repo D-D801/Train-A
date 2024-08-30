@@ -1,26 +1,30 @@
-<div tuiPlatform="web" *ngFor="let station of stations()">
-  <div tuiCardLarge tuiSurface="elevated" class="tui-space_vertical-4">
-    <header tuiHeader>
-      <div tuiTitle="m">{{ station.city }}</div>
-      <button
-        appearance="secondary"
-        size="m"
-        tuiButton
-        type="button"
-        (click)="deleteStation(station.id)"
-        class="tui-form__button"
-      >
-        <img alt="" [src]="'@tui.trash' | tuiIcon" />
-      </button>
-    </header>
+@for (station of stations(); track station) {
+  <div tuiPlatform="web">
+    <div tuiCardLarge tuiSurface="elevated" class="tui-space_vertical-4">
+      <header tuiHeader>
+        <div tuiTitle="m">{{ station.city }}</div>
+        <button
+          appearance="secondary"
+          size="m"
+          tuiButton
+          type="button"
+          (click)="deleteStation(station.id)"
+          class="tui-form__button"
+        >
+          <img alt="delete button" [src]="'@tui.trash' | tuiIcon" />
+        </button>
+      </header>
 
-    <section>
-      <div>
-        <div><span class="tui-text_body-l">Latitude: </span>{{ station.latitude }}</div>
-        <div><span class="tui-text_body-l">Longitude: </span>{{ station.longitude }}</div>
-      </div>
-      <span class="tui-text_body-l">Connected to:</span>
-      <span *ngFor="let station of station.connectedTo"> {{ getStations(station.id)?.city }} </span>
-    </section>
+      <section>
+        <div>
+          <div><span class="tui-text_body-l">Latitude: </span>{{ station.latitude }}</div>
+          <div><span class="tui-text_body-l">Longitude: </span>{{ station.longitude }}</div>
+        </div>
+        <span class="tui-text_body-l">Connected to:</span>
+        @for (station of station.connectedTo; track station) {
+          <span> {{ getStations(station.id)?.city }} </span>
+        }
+      </section>
+    </div>
   </div>
-</div>
+}

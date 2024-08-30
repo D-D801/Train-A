@@ -34,12 +34,11 @@ export class ExistingStationsListComponent {
       .pipe(takeUntilDestroyed(this.destroy))
       .subscribe((orders) => {
         hasActiveRide = orders.some((order) => order.status === 'active' && order.path.includes(id));
+        if (hasActiveRide) {
+          this.alert.open({ message: 'Cannot delete station with active rides', label: 'Error', appearance: 'error' });
+        }
       });
-    if (hasActiveRide) {
-      this.alert.open({ message: 'Cannot delete station with active rides', label: 'Error', appearance: 'error' });
-      return;
-    }
-    this.stationsApiService.deleteStation(id);
+    this.stationsApiService.deleteStation(id).pipe(takeUntilDestroyed(this.destroy)).subscribe();
     this.stationsService.deleteStationFromList(id);
   }
 

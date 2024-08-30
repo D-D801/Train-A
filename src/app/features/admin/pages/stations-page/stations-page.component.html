@@ -1,7 +1,9 @@
-<dd-create-station-form></dd-create-station-form>
-<div class="tui-form__header">Existing stations</div>
-<tui-scrollbar class="box tui-space_vertical-4">
-  <div class="content">
-    <dd-existing-stations-list></dd-existing-stations-list>
-  </div>
-</tui-scrollbar>
+<tui-loader [overlay]="true" [showLoader]="loaderStatus()">
+  <dd-create-station-form></dd-create-station-form>
+  <div class="tui-form__header">Existing stations</div>
+  <tui-scrollbar class="box tui-space_vertical-4">
+    <div class="content">
+      <dd-existing-stations-list></dd-existing-stations-list>
+    </div>
+  </tui-scrollbar>
+</tui-loader>
