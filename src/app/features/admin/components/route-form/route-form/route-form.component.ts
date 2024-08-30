@@ -109,7 +109,7 @@ export class RouteFormComponent {
         this.form.controls.path.clear();
         this.form.controls.carriages.clear();
         this.trainRoute()?.path.forEach((stationId) =>
-          this.form.controls.path.push(this.fb.control(this.stations()[stationId - 1]?.city ?? null))
+          this.form.controls.path.push(this.fb.control(this.getCityNameById(stationId) ?? null))
         );
         this.trainRoute()?.carriages.forEach((carriage) =>
           this.form.controls.carriages.push(this.fb.control(carriage))
@@ -118,6 +118,7 @@ export class RouteFormComponent {
         this.addInitialControls(ControlsType.path);
         this.addInitialControls(ControlsType.carriages);
       }
+      this.form.markAllAsTouched();
       this.cdr.detectChanges();
     });
 
@@ -125,6 +126,10 @@ export class RouteFormComponent {
       const availableStations = updateAvailableStations(this.getCityIds(), this.stations());
       this.connectedToStations.set(availableStations);
     });
+  }
+
+  private getCityNameById(cityId: number) {
+    return this.stations().find((station) => station.id === cityId)?.city;
   }
 
   private getCityIds() {
@@ -171,6 +176,7 @@ export class RouteFormComponent {
 
   public onSubmit() {
     if (!this.getCityIds().every((a) => typeof a === 'number')) return;
+
     if (this.trainRoute()) {
       this.routeApiService
         .updateRoute({ ...this.form.value, path: this.getCityIds(), id: this.trainRoute()?.id } as TrainRoute)

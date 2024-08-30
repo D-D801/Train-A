@@ -36,7 +36,7 @@ export class RouteTabComponent {
 
   public readonly routes = signal<TrainRoute[]>([]);
 
-  public readonly currentRouteId = signal<number | null>(null);
+  public readonly currentRoute = signal<TrainRoute | null>(null);
 
   public readonly isEdit = signal(false);
 
@@ -57,9 +57,9 @@ export class RouteTabComponent {
     );
   }
 
-  public onEdit(id: number | undefined) {
-    if (!id) return;
-    this.currentRouteId.set(id - 1);
+  public onEdit(currentRoute: TrainRoute | undefined) {
+    if (!currentRoute) return;
+    this.currentRoute.set(currentRoute);
     this.isEdit.set(true);
   }
 
@@ -69,7 +69,7 @@ export class RouteTabComponent {
   }
 
   public onCreate() {
-    this.currentRouteId.set(null);
+    this.currentRoute.set(null);
     this.isEdit.set(true);
   }
 
@@ -96,6 +96,8 @@ export class RouteTabComponent {
       )
       .subscribe({
         next: () => {
+          this.currentRoute.set(null);
+          this.isEdit.set(false);
           this.alert.open({
             message: `Route ${route.id} successful deleted.`,
             label: 'Delete',
