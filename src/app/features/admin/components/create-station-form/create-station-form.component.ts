@@ -4,18 +4,18 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AlertService } from '@core/services/alert/alert.service';
 import { NewStation } from '@features/admin/interfaces/new-station.interface';
-import { StationListItem } from '@features/admin/interfaces/station-list-item.interface';
+import { Station } from '@features/admin/interfaces/station-list-item.interface';
 import { StationsApiService } from '@features/admin/services/stations-api/stations-api.service';
 import { StationsService } from '@features/admin/services/stations/stations.service';
 import { latitudeValidator } from '@features/admin/validators/latitude.validator';
 import { longitudeValidator } from '@features/admin/validators/longitude.validator';
-import { CityInfo } from '@features/home/interfaces/city-info.interface';
-import { LocationApiService } from '@features/home/services/location-api/location-api.service';
-import { SearchService } from '@features/home/services/search/search.service';
+import { CityInfo } from '@features/search/interfaces/city-info.interface';
+import { LocationApiService } from '@features/search/services/location-api/location-api.service';
+import { SearchService } from '@features/search/services/search/search.service';
 import { TuiLet } from '@taiga-ui/cdk';
 import { TuiButton, TuiDataList } from '@taiga-ui/core';
 import { TuiInputModule } from '@taiga-ui/legacy';
-import { debounceTime } from 'rxjs';
+import { debounceTime, filter, map, switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'dd-create-station-form',
@@ -50,35 +50,41 @@ export class CreateStationFormComponent implements OnInit {
 
   public createStationForm = this.fb.group({
     cityName: this.fb.control('', Validators.required),
-    latitude: this.fb.control('', [Validators.required, latitudeValidator()]),
-    longitude: this.fb.control('', [Validators.required, longitudeValidator()]),
-    connectedStations: this.fb.array([this.createConnectedStationControl()]),
+    latitude: this.fb.control<number | null>(null, [Validators.required, latitudeValidator()]),
+    longitude: this.fb.control<number | null>(null, [Validators.required, longitudeValidator()]),
+    connectedStations: this.fb.array([this.fb.control('', Validators.required)]),
   });
 
   // TODO: place the retrieveStationList method in another location in code
   public ngOnInit() {
-    this.connectedStations.valueChanges.pipe(debounceTime(1000), takeUntilDestroyed(this.destroy)).subscribe(() => {
-      const lastControl = this.connectedStations.at(this.connectedStations.length - 1);
-      if (lastControl.value !== '') {
+    this.connectedStations.valueChanges
+      .pipe(
+        debounceTime(1000),
+        filter(() => this.connectedStations.at(this.connectedStations.length - 1).value !== ''),
+        takeUntilDestroyed(this.destroy)
+      )
+      .subscribe(() => {
+        this.connectedStations.controls[this.connectedStations.length - 1].addValidators(Validators.required);
         this.connectedStations.push(this.createConnectedStationControl());
-      }
-    });
+      });
 
-    this.cityName.valueChanges.pipe(debounceTime(1000), takeUntilDestroyed(this.destroy)).subscribe((city) => {
-      if (!city) return;
-      this.locationService
-        .getLocationCoordinates(city)
-        .pipe(takeUntilDestroyed(this.destroy))
-        .subscribe({
-          next: (receivedCities) => {
-            if (!receivedCities) return;
-            this.searchService.setCities(receivedCities);
-          },
-          error: ({ error: { message } }) => {
-            this.alert.open({ message, label: 'Error:', appearance: 'error' });
-          },
-        });
-    });
+    this.cityName.valueChanges
+      .pipe(
+        debounceTime(1000),
+        filter((city) => city !== null),
+        switchMap((city) => {
+          return this.locationService.getLocationCoordinates(city as string);
+        }),
+        takeUntilDestroyed(this.destroy)
+      )
+      .subscribe({
+        next: (receivedCities) => {
+          this.searchService.setCities(receivedCities);
+        },
+        error: ({ error: { message } }) => {
+          this.alert.open({ message, label: 'Error:', appearance: 'error' });
+        },
+      });
   }
 
   private createConnectedStationControl() {
@@ -86,11 +92,11 @@ export class CreateStationFormComponent implements OnInit {
   }
 
   public onSelectedCity(city: CityInfo) {
-    this.latitude.setValue(city.lat.toString());
-    this.longitude.setValue(city.lon.toString());
+    this.latitude.setValue(city.lat);
+    this.longitude.setValue(city.lon);
   }
 
-  public onSelected(station: StationListItem, index: number) {
+  public onSelected(station: Station, index: number) {
     if (this.relations.includes(index)) return;
     this.connectedStations.controls[index].setValue(station.city);
     this.relations[index] = station.id;
@@ -98,37 +104,29 @@ export class CreateStationFormComponent implements OnInit {
 
   public createStation() {
     if (!this.createStationForm.valid) return;
-    if (this.stationsService.stations().find((station) => station.city === this.cityName.value)) return;
+    if (this.stationsService.stations()?.find((station) => station.city === this.cityName.value)) return;
     if (!this.cityName.value || !this.latitude.value || !this.longitude.value) return;
     const body: NewStation = {
       city: this.cityName.value,
-      latitude: +this.latitude.value,
-      longitude: +this.longitude.value,
+      latitude: this.latitude.value,
+      longitude: this.longitude.value,
       relations: this.relations,
     };
     this.stationsApiService
       .createNewStation(body)
-      .pipe(takeUntilDestroyed(this.destroy))
-      .subscribe({
-        next: ({ id }) => {
+      .pipe(
+        tap(({ id }) => {
           this.createdStationId = id;
-          this.stationsApiService
-            .retrieveStationList()
-            .pipe(takeUntilDestroyed(this.destroy))
-            .subscribe({
-              next: (stations) => {
-                const createdStation = stations.find((station) => station.id === id);
-                if (!createdStation) return;
-                this.stationsService.addStationInList(createdStation);
-              },
-              error: () => {
-                this.alert.open({
-                  message: "Couldn't get an updated station list",
-                  label: 'Error',
-                  appearance: 'error',
-                });
-              },
-            });
+        }),
+        switchMap(() => this.stationsApiService.retrieveStationList()),
+        map((stations) => stations.find((station) => station.id === this.createdStationId)),
+        filter((station) => station !== undefined),
+        takeUntilDestroyed(this.destroy)
+      )
+      .subscribe({
+        next: (createdStation) => {
+          if (!createdStation) return;
+          this.stationsService.addStationInList(createdStation);
         },
         error: ({ error: { message } }) => {
           this.alert.open({ message, label: 'Error', appearance: 'error' });
@@ -136,19 +134,23 @@ export class CreateStationFormComponent implements OnInit {
       });
   }
 
+  public get controls() {
+    return this.createStationForm.controls;
+  }
+
   public get connectedStations() {
-    return this.createStationForm.controls.connectedStations;
+    return this.controls.connectedStations;
   }
 
   public get cityName() {
-    return this.createStationForm.controls.cityName;
+    return this.controls.cityName;
   }
 
   public get latitude() {
-    return this.createStationForm.controls.latitude;
+    return this.controls.latitude;
   }
 
   public get longitude() {
-    return this.createStationForm.controls.longitude;
+    return this.controls.longitude;
   }
 }

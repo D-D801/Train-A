@@ -1,0 +1,20 @@
+@import '@taiga-ui/core/styles/taiga-ui-local';
+
+.container {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  width: 100%;
+
+  @media #{$tui-mobile} {
+    flex-direction: column;
+  }
+}
+
+.input-container {
+  width: 30rem;
+
+  @media #{$tui-tablet} {
+    width: 100%;
+  }
+}

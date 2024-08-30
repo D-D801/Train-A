@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { NewStation } from '@features/admin/interfaces/new-station.interface';
-import { StationListItem } from '@features/admin/interfaces/station-list-item.interface';
+import { Station } from '@features/admin/interfaces/station-list-item.interface';
 
 interface Order {
   id: number;
@@ -31,7 +31,7 @@ export class StationsApiService {
   private readonly httpClient = inject(HttpClient);
 
   public retrieveStationList() {
-    return this.httpClient.get<StationListItem[]>('/api/station');
+    return this.httpClient.get<Station[]>('/api/station');
   }
 
   public createNewStation(body: NewStation) {
@@ -39,7 +39,7 @@ export class StationsApiService {
   }
 
   public deleteStation(id: number) {
-    this.httpClient.delete(`/api/station/${id}`);
+    return this.httpClient.delete(`/api/station/${id}`);
   }
 
   // TODO: move retrieveOrders to the order service when it's created

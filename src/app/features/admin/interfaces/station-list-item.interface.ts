@@ -1,4 +1,4 @@
-export interface StationListItem {
+export interface Station {
   id: number;
   city: string;
   latitude: number;
