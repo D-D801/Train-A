@@ -6,13 +6,14 @@
 
 <div tuiHeader class="header">
   <button tuiIconButton appearance="icon" iconStart="@tui.chevron-left" size="m" type="submit">Back</button>
-  <h2>Station {{ fromStation }} -> Station {{ toStation }}</h2>
+  <div>
+    <h2>Station {{ fromStation }} -> Station {{ toStation }}</h2>
+    @if (ride()) {
+      <h3>{{ setTimes('start') }} - {{ setTimes('end') }}</h3>
+      <p>Ride {{ ride()?.rideId }}</p>
+    }
+  </div>
 </div>
-
-@if (ride()) {
-  <h3>{{ setTimes('start') }} - {{ setTimes('end') }}</h3>
-  <p>Ride {{ ride()?.rideId }}</p>
-}
 
 <section class="horizontal">
   <nav tuiTabs [(activeItemIndex)]="activeItemIndex">

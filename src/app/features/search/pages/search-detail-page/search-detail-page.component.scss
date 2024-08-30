@@ -5,7 +5,11 @@
 
 .header {
   gap: 1rem;
-  align-items: center;
+  align-items: flex-start;
+
+  h2 {
+    margin: 0.7rem 0;
+  }
 }
 
 nav {
