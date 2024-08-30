@@ -65,7 +65,10 @@ export class LoginPageComponent implements OnInit {
     this.form.valueChanges.pipe(takeUntilDestroyed(this.destroy)).subscribe(() => {
       if (!this.isSubmitted()) {
         const { email, password } = this.form.value;
-        if (!(email && password)) return;
+        if (!(email && password)) {
+          this.isFormValid.set(false);
+          return;
+        }
         this.isFormValid.set(mailRegex.test(email) && password.trim().length > 0);
       }
       if (this.form.dirty && this.isSubmitted()) {
