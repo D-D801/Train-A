@@ -77,6 +77,10 @@
   }
 }
 
+.time .wrapper tui-error {
+  display: none;
+}
+
 .time .wrapper .inputs .input {
   @media #{$tui-tablet} {
     width: 100%;
