@@ -1,13 +1,13 @@
 import { KeyValuePipe, TitleCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, input } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormControl, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AlertService } from '@core/services/alert/alert.service';
 import { Segment } from '@features/admin/interfaces/segment.interface';
 import { TextSwitchFormComponent } from '@shared/components/text-switch-form/text-switch-form.component';
 import { TuiDay, TuiTime } from '@taiga-ui/cdk';
 import { TuiButton, TuiError, TuiIcon, TuiSurface, TuiTitle } from '@taiga-ui/core';
-import { TuiAccordion } from '@taiga-ui/kit';
+import { TUI_VALIDATION_ERRORS, TuiAccordion } from '@taiga-ui/kit';
 import { TuiCardLarge, TuiHeader } from '@taiga-ui/layout';
 import {
   TuiInputDateTimeModule,
@@ -16,8 +16,10 @@ import {
   TuiTextfieldControllerModule,
 } from '@taiga-ui/legacy';
 import { TuiCurrencyPipe } from '@taiga-ui/addon-commerce';
-import { tap } from 'rxjs';
 import { RideApiService } from '@features/admin/services/ride-api/ride-api.service';
+import { dateTimeValidator } from '@shared/validators/date-time.validator';
+import { buildInErrors } from '@shared/constants/build-in-errors';
+import { getISOStringDateTimeFromTuiDataTime } from '@shared/utils/getISOStringDateTimeFromTuiDataTime';
 
 @Component({
   selector: 'dd-station-card',
@@ -45,6 +47,12 @@ import { RideApiService } from '@features/admin/services/ride-api/ride-api.servi
   templateUrl: './station-card.component.html',
   styleUrl: './station-card.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    {
+      provide: TUI_VALIDATION_ERRORS,
+      useValue: buildInErrors,
+    },
+  ],
 })
 export class StationCardComponent {
   public segments = input.required<{ segments: Segment[]; indexSegment: number }>();
@@ -59,13 +67,13 @@ export class StationCardComponent {
 
   public readonly alert = inject(AlertService);
 
-  private readonly fb = inject(NonNullableFormBuilder);
+  private readonly fb = inject(FormBuilder);
 
   public save = () => this.saveSegment();
 
   protected timeForm = this.fb.group({
-    departure: this.fb.control<[TuiDay, TuiTime] | []>([]),
-    arrival: this.fb.control<[TuiDay, TuiTime] | []>([]),
+    departure: this.fb.control<[TuiDay, TuiTime] | null>(null, dateTimeValidator()),
+    arrival: this.fb.control<[TuiDay, TuiTime] | null>(null, dateTimeValidator()),
   });
 
   protected priceForm = this.fb.group({});
@@ -113,29 +121,14 @@ export class StationCardComponent {
 
     if (!(departure && arrival && price)) return;
 
-    const [departureDay, departureTime] = departure;
-    const [arrivalDay, arrivalTime] = arrival;
+    const departureDate = getISOStringDateTimeFromTuiDataTime(departure);
 
-    if (!(departureDay && departureTime && arrivalTime && arrivalDay)) return;
+    const arrivalDate = getISOStringDateTimeFromTuiDataTime(arrival);
 
-    const departureDate = new Date(
-      departureDay.year,
-      departureDay.month,
-      departureDay.day,
-      departureTime.hours,
-      departureTime.minutes
-    );
-
-    const arrivalDate = new Date(
-      arrivalDay.year,
-      arrivalDay.month,
-      arrivalDay.day,
-      arrivalTime.hours,
-      arrivalTime.minutes
-    );
+    if (!(departureDate && arrivalDate)) return;
 
     segments.segments[segments.indexSegment] = {
-      time: [departureDate.toISOString(), arrivalDate.toISOString()],
+      time: [departureDate, arrivalDate],
       price,
     };
 
@@ -143,14 +136,11 @@ export class StationCardComponent {
       .updateRide(routeId, rideId, {
         segments: segments.segments,
       })
-      .pipe(
-        tap({
-          error: ({ error: { message } }) => {
-            this.alert.open({ message, label: 'Error', appearance: 'error' });
-          },
-        }),
-        takeUntilDestroyed(this.destroy)
-      )
-      .subscribe();
+      .pipe(takeUntilDestroyed(this.destroy))
+      .subscribe({
+        error: ({ error: { message } }) => {
+          this.alert.open({ message, label: 'Error', appearance: 'error' });
+        },
+      });
   }
 }
