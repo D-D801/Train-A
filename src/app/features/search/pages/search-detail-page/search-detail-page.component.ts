@@ -63,21 +63,17 @@ export class SearchDetailPageComponent {
 
   public carriages = this.carriageService.carriages;
 
-  private readonly _ride = signal<Trip | null>(null);
+  protected readonly ride = signal<Trip | null>(null);
 
-  public readonly ride = this._ride.asReadonly();
-
-  private readonly _isBookSeat = signal(false);
-
-  public readonly isBookSeat = this._isBookSeat.asReadonly();
+  protected readonly isBookSeat = signal(false);
 
   public orderId = signal(0);
 
   public options = signal({ isClick: true, isShowTitle: false });
 
-  public fromStation!: number;
+  public fromStation: number = 0;
 
-  public toStation!: number;
+  public toStation: number = 0;
 
   protected activeItemIndex = 0;
 
@@ -99,23 +95,21 @@ export class SearchDetailPageComponent {
     this.loadRide();
 
     effect(() => {
-      if (this._ride()) {
-        const ride = this._ride();
-        if (!ride) return;
-        const fromIndex = ride.path.indexOf(this.fromStation);
-        const toIndex = ride.path.indexOf(this.toStation);
-        if (fromIndex < 0 || toIndex < 0 || fromIndex > toIndex) {
-          return;
-          this.router.navigate(['/404']); // TODO by 404
-        }
-        this.carriageList = this.tripService.groupCarriages(ride.carriages);
-        this.segments = ride.schedule.segments.slice(fromIndex, toIndex);
-        this.price = this.tripService.setPrices(this.segments);
-
-        this.bookSeats = this.tripService.getOccupieSeatsInCarriages(this.segments[0].occupiedSeats, ride.carriages);
-
-        this.freeSeats = this.tripService.getAvailableSeats(this.bookSeats, this.carriageList);
+      const ride = this.ride();
+      if (!ride) return;
+      const fromIndex = ride.path.indexOf(this.fromStation);
+      const toIndex = ride.path.indexOf(this.toStation);
+      if (fromIndex < 0 || toIndex < 0 || fromIndex > toIndex) {
+        return;
+        this.router.navigate(['/404']); // TODO by 404
       }
+      this.carriageList = this.tripService.groupCarriages(ride.carriages);
+      this.segments = ride.schedule.segments.slice(fromIndex, toIndex);
+      this.price = this.tripService.setPrices(this.segments);
+
+      this.bookSeats = this.tripService.getOccupieSeatsInCarriages(this.segments[0].occupiedSeats, ride.carriages);
+
+      this.freeSeats = this.tripService.getAvailableSeats(this.bookSeats, this.carriageList);
     });
   }
 
@@ -138,7 +132,7 @@ export class SearchDetailPageComponent {
       )
       .subscribe({
         next: (ride: Trip) => {
-          this._ride.set(ride);
+          this.ride.set(ride);
         },
         error: ({ error: { message } }) => {
           this.alert.open({ message, label: 'Error:', appearance: 'error' });
@@ -191,7 +185,7 @@ export class SearchDetailPageComponent {
     };
 
     this.selectedCarriageIndex = index;
-    const carriages = this._ride()?.carriages;
+    const carriages = this.ride()?.carriages;
     if (!carriages) return;
     this.selectedOrder.globalSeatNumber = this.tripService.calculateGlobalSeatNumber(
       carriages,
@@ -219,7 +213,7 @@ export class SearchDetailPageComponent {
       next: ({ id }) => {
         this.orderId.set(id);
         this.loadRide();
-        this._isBookSeat.update((value) => !value);
+        this.isBookSeat.update((value) => !value);
         this.alert.open({ message: 'Seat booked successfully', label: 'Info:', appearance: 'success' });
       },
       error: ({ error: { message } }) => {
