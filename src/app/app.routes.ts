@@ -41,20 +41,24 @@ export const routes: Routes = [
     path: 'admin',
     loadComponent: () =>
       import('@features/admin/pages/admin-page/admin-page.component').then((m) => m.AdminPageComponent),
+    children: [
+      {
+        path: 'carriage',
+        loadComponent: () =>
+          import('@features/admin/pages/carriage-page/carriage-page.component').then((m) => m.CarriagePageComponent),
+      },
+      {
+        path: 'routes',
+        loadComponent: () =>
+          import('@features/admin/pages/routes-page/routes-page.component').then((m) => m.RoutesPageComponent),
+      },
+      {
+        path: 'routes/:id',
+        loadComponent: () =>
+          import('@features/admin/pages/schedule-page/schedule-page.component').then((m) => m.SchedulePageComponent),
+      },
+    ],
     canMatch: [adminGuard],
-  },
-
-  {
-    path: 'admin/carriage',
-    loadComponent: () =>
-      import('@features/admin/pages/carriage-page/carriage-page.component').then((m) => m.CarriagePageComponent),
-  },
-  // TODO: latter it will be another path
-  // TODO: add admin guard
-  {
-    path: 'schedule',
-    loadComponent: () =>
-      import('@features/admin/pages/schedule-page/schedule-page.component').then((m) => m.SchedulePageComponent),
   },
   {
     path: 'admin/stations',

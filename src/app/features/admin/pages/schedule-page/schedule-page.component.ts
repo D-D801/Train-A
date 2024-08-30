@@ -6,8 +6,9 @@ import { AlertService } from '@core/services/alert/alert.service';
 import { AsyncPipe, Location, NgFor } from '@angular/common';
 
 import { NewRideService } from '@features/admin/services/new-ride/new-ride.service';
-import { tap } from 'rxjs';
+import { switchMap, tap } from 'rxjs';
 import { Route } from '@features/admin/interfaces/route.interface';
+import { ActivatedRoute } from '@angular/router';
 import { RideCardComponent } from '../../components/ride-card/ride-card.component';
 import { NewRideFormComponent } from '../../components/new-ride-form/new-ride-form.component';
 
@@ -20,14 +21,13 @@ import { NewRideFormComponent } from '../../components/new-ride-form/new-ride-fo
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SchedulePageComponent {
-  // TODO: change to query
-  protected routeId = 4;
-
   private readonly routeApiService = inject(RouteApiService);
 
-  private readonly location = inject(Location);
-
   protected readonly newRideService = inject(NewRideService);
+
+  private readonly route = inject(ActivatedRoute);
+
+  private readonly location = inject(Location);
 
   private readonly alert = inject(AlertService);
 
@@ -37,7 +37,8 @@ export class SchedulePageComponent {
 
   protected carriages = signal<string[]>([]);
 
-  protected routeInformation$ = this.routeApiService.getRoute(this.routeId).pipe(
+  protected routeInformation$ = this.route.paramMap.pipe(
+    switchMap((params) => this.routeApiService.getRoute(Number(params.get('id')))),
     tap({
       next: (route) => {
         const currentCarriages = new Set<string>(route.carriages);
