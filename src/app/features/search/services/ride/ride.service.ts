@@ -78,39 +78,16 @@ export class RideService {
 
   public setTimes(segments: RoadSection[], time: string): string {
     if (!segments.length) return '';
-    let date = '';
-    if (time === 'start') {
-      const [, startDate] = segments[0].time;
-      date = startDate;
-    } else {
-      const [endDate] = segments[segments.length - 1].time;
-      date = endDate;
-    }
+    const date = time === 'start' ? segments[0].time[1] : segments[segments.length - 1].time[0];
     return dateConverter(date);
   }
 
-  public calculateGlobalSeatNumber(
-    carriages: string[],
-    carriageType: string,
-    index: number,
-    seatNumber: number | null
-  ): number {
-    let totalSeatsBeforeCurrentCarriage = 0;
+  public calculateGlobalSeatNumber(carriages: string[], index: number, seatNumber: number | null): number {
+    const totalSeatsBeforeCurrentCarriage = carriages.slice(0, index - 1).reduce((acc, type) => {
+      return acc + (this.seatsPerCarriage[type] || 0);
+    }, 0);
 
-    for (let i = 0; i < carriages.length; i += 1) {
-      const currentCarriageType = carriages[i];
-
-      if (currentCarriageType === carriageType && i + 1 === index) {
-        break;
-      }
-
-      const seats = this.seatsPerCarriage[currentCarriageType];
-      if (seats) {
-        totalSeatsBeforeCurrentCarriage += seats;
-      }
-    }
-
-    return totalSeatsBeforeCurrentCarriage + Number(seatNumber);
+    return totalSeatsBeforeCurrentCarriage + (seatNumber || 0);
   }
 
   public getOccupieSeatsInCarriages(
@@ -180,11 +157,7 @@ export class RideService {
 
   public sumSeatsByType(seats: FreeSeat, type: string): number {
     return Object.values(seats).reduce((acc, { carriageType, availableSeats }) => {
-      let accNew = acc;
-      if (carriageType === type) {
-        accNew += availableSeats;
-      }
-      return accNew;
+      return carriageType === type ? acc + availableSeats : acc;
     }, 0);
   }
 }

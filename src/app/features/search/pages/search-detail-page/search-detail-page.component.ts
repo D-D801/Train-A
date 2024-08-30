@@ -150,16 +150,36 @@ export class SearchDetailPageComponent {
     this.location.back();
   }
 
-  public get carriageTypes() {
+  public getCarriageTypes() {
     return Object.keys(this.carriageList);
+  }
+
+  public getCarriageListForType(type: string) {
+    return this.carriageList[type] || [];
+  }
+
+  public getFilteredSeats(carriageIndex: number) {
+    return this.bookSeats.filter((seat) => seat.carriageIndex === carriageIndex);
+  }
+
+  public getFreeSeatsByCarriage(index: number) {
+    return this.freeSeats[index]?.availableSeats || 0;
   }
 
   public getCarriageByName(name: string) {
     return this.carriages().find((carriage) => carriage.name === name) ?? null;
   }
 
+  public totalSeatsForType(type: string): number {
+    return this.rideService.sumSeatsByType(this.freeSeats, type);
+  }
+
   public setTimes(time: string) {
     return this.rideService.setTimes(this.segments, time);
+  }
+
+  public getCarriageClass(index: number) {
+    return this.selectedCarriageIndex === index;
   }
 
   public handleSeatSelected(event: { seatNumber: number; carriageType: string }, index: number) {
@@ -171,19 +191,13 @@ export class SearchDetailPageComponent {
     };
 
     this.selectedCarriageIndex = index;
-    const { seatNumber, carriageType } = event;
     const carriages = this._ride()?.carriages;
     if (!carriages) return;
     this.selectedOrder.globalSeatNumber = this.rideService.calculateGlobalSeatNumber(
       carriages,
-      carriageType,
       index,
-      seatNumber
+      event.seatNumber
     );
-  }
-
-  public getCarriageClass(index: number) {
-    return this.selectedCarriageIndex === index;
   }
 
   public bookSeat(selectedOrder: SelectedOrder) {
@@ -218,13 +232,5 @@ export class SearchDetailPageComponent {
     return this.ordersApiService
       .createOrder({ rideId, seat, stationStart, stationEnd })
       .pipe(takeUntilDestroyed(this.destroy));
-  }
-
-  public getFilteredSeatsByCarriageIndex(carriageIndex: number) {
-    return this.bookSeats.filter((seat) => seat.carriageIndex === carriageIndex);
-  }
-
-  public totalSeatsForType(type: string): number {
-    return this.rideService.sumSeatsByType(this.freeSeats, type);
   }
 }
