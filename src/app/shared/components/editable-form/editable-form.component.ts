@@ -25,7 +25,7 @@ import {
 import { take } from 'rxjs';
 
 @Component({
-  selector: 'dd-text-switch-form',
+  selector: 'dd-editable-form',
   standalone: true,
   imports: [
     TuiButton,
@@ -41,12 +41,12 @@ import { take } from 'rxjs';
     TuiCurrencyPipe,
     TuiTextfieldControllerModule,
   ],
-  templateUrl: './text-switch-form.component.html',
-  styleUrl: './text-switch-form.component.scss',
+  templateUrl: './editable-form.component.html',
+  styleUrl: './editable-form.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [tuiDateFormatProvider({ mode: 'DMY' })],
 })
-export class TextSwitchFormComponent implements OnInit {
+export class EditableFormComponent implements OnInit {
   public form = input.required<FormGroup>();
 
   public typeInputs = input.required<'text' | 'date-time' | 'price'>();

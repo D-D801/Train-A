@@ -3,7 +3,7 @@ import { RouteApiService } from '@features/admin/services/route-api/route-api.se
 import { TuiButton } from '@taiga-ui/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AlertService } from '@core/services/alert/alert.service';
-import { AsyncPipe, NgFor } from '@angular/common';
+import { AsyncPipe, Location, NgFor } from '@angular/common';
 
 import { NewRideService } from '@features/admin/services/new-ride/new-ride.service';
 import { tap } from 'rxjs';
@@ -24,6 +24,8 @@ export class SchedulePageComponent {
   protected routeId = 4;
 
   private readonly routeApiService = inject(RouteApiService);
+
+  private readonly location = inject(Location);
 
   protected readonly newRideService = inject(NewRideService);
 
@@ -56,5 +58,9 @@ export class SchedulePageComponent {
 
   protected updateRouteInfo() {
     this.routeInformation$.subscribe();
+  }
+
+  protected navigationBack() {
+    this.location.back();
   }
 }
