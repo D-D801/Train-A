@@ -16,26 +16,28 @@
               <h4>{{ path()[i + 1] }}</h4>
             </div>
 
-            <div class="time">
-              <tui-input-date-time
-                class="input"
-                formControlName="departure"
-                [min]="minDate"
-                placeholder="Select departure"
-              >
-                Departure:</tui-input-date-time
-              >
-              <tui-input-date-time class="input" formControlName="arrival" [min]="minDate" placeholder="Select arrival">
-                Arrival:</tui-input-date-time
-              >
+            <div class="time" formArrayName="time">
+              <div class="input">
+                <tui-input-date-time class="input" [formControlName]="0" [min]="minDate" placeholder="Select departure">
+                  Departure:</tui-input-date-time
+                >
+                <tui-error [formControlName]="0" [error]="[] | tuiFieldError | async" />
+              </div>
+              <div class="input">
+                <tui-input-date-time class="input" [formControlName]="1" [min]="minDate" placeholder="Select arrival">
+                  Arrival:</tui-input-date-time
+                >
+                <tui-error [formControlName]="1" [error]="[] | tuiFieldError | async" />
+              </div>
             </div>
 
-            <div class="price">
+            <div class="price" formGroupName="price">
               <h4>Prices:</h4>
               @for (key of carriages(); track key) {
                 <tui-input-number class="input" [formControlName]="key" [tuiTextfieldPrefix]="'USD' | tuiCurrency">
                   {{ key }}:
                 </tui-input-number>
+                <tui-error [formControlName]="key" [error]="[] | tuiFieldError | async" />
               }
             </div>
           </div>

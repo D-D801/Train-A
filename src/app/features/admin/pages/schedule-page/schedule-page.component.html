@@ -10,7 +10,7 @@
   </button>
 
   @if (newRideService.isOpenNewRideForm()) {
-    <dd-new-ride-form [path]="routeInfo.path" [carriages]="carriages()"></dd-new-ride-form>
+    <dd-new-ride-form [path]="routeInfo.path" [carriages]="carriages()" [routeId]="routeInfo.id"></dd-new-ride-form>
   }
 
   @for (rideCard of routeInfo.schedule; track rideCard.rideId) {

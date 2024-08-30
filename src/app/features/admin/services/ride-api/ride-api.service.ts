@@ -8,7 +8,7 @@ import { Segment } from '@features/admin/interfaces/segment.interface';
 export class RideApiService {
   private readonly httpClient = inject(HttpClient);
 
-  public createNewRide(routeId: number, body: Segment) {
+  public createNewRide(routeId: number, body: { segments: Segment[] }) {
     return this.httpClient.post<{ id: number }>(`/api/route/${routeId}/ride`, body);
   }
 
