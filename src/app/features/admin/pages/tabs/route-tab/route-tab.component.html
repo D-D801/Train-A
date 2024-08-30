@@ -1,6 +1,7 @@
+@let route = currentRoute();
 @if (isEdit()) {
-  @if (currentRoute()) {
-    <dd-route-form [trainRoute]="currentRoute() || undefined" (save)="onSave()"></dd-route-form>
+  @if (route) {
+    <dd-route-form [trainRoute]="route" (save)="onSave()"></dd-route-form>
   } @else {
     <dd-route-form (save)="onSave()"></dd-route-form>
   }
