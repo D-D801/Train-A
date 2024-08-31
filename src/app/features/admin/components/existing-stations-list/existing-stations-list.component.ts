@@ -8,7 +8,7 @@ import { StationsService } from '@features/admin/services/stations/stations.serv
 import { TuiPlatform } from '@taiga-ui/cdk';
 import { TuiButton, TuiIcon, TuiIconPipe, TuiSurface, TuiTitle } from '@taiga-ui/core';
 import { TuiCardLarge } from '@taiga-ui/layout';
-import { tap } from 'rxjs';
+import { filter, switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'dd-existing-stations-list',
@@ -32,16 +32,19 @@ export class ExistingStationsListComponent {
   public deleteStation(id: number) {
     this.stationsApiService
       .retrieveOrders()
-      .pipe(takeUntilDestroyed(this.destroy))
-      .subscribe((orders) => {
-        const hasActiveRide = orders.some((order) => order.status === 'active' && order.path.includes(id));
-        if (hasActiveRide) {
-          this.alert.open({ message: 'Cannot delete station with active rides', label: 'Error', appearance: 'error' });
-        }
-      });
-    this.stationsApiService
-      .deleteStation(id)
       .pipe(
+        filter((orders) => {
+          const hasActiveRide = orders.some((order) => order.status === 'active' && order.path.includes(id));
+          if (hasActiveRide) {
+            this.alert.open({
+              message: 'Cannot delete station with active rides',
+              label: 'Error',
+              appearance: 'error',
+            });
+          }
+          return !hasActiveRide;
+        }),
+        switchMap(() => this.stationsApiService.deleteStation(id)),
         tap(() => {
           this.stationsService.deleteStationFromList(id);
         }),

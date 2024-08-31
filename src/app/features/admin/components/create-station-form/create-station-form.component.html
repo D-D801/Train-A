@@ -1,12 +1,12 @@
-<div class="tui-form__header">Create station</div>
 <form class="tui-form__multi-fields" [formGroup]="createStationForm" (ngSubmit)="createStation()">
+  <div class="tui-form__header">Create station</div>
   <div class="container">
     <div class="input-container">
-      <tui-input *tuiLet="cities() as cities" [formControl]="cityName" class="tui-form__row input-container">
+      <tui-input *tuiLet="cities() as cities" [formControl]="controls.cityName" class="tui-form__row input-container">
         City Name
         <input placeholder="Type city name" tuiTextfieldLegacy />
-        <ng-container *ngIf="cities?.length">
-          <tui-data-list *tuiDataList="">
+        <ng-container *ngIf="cities.length">
+          <tui-data-list *tuiDataList>
             @for (city of cities; track city) {
               <button tuiOption [value]="city.name" (click)="onSelectedCity(city)">
                 {{ city.name }}, {{ city.country }}
@@ -15,18 +15,12 @@
           </tui-data-list>
         </ng-container>
       </tui-input>
-      <ng-container
-        [ngTemplateOutlet]="input"
-        [ngTemplateOutletContext]="{ label: 'Latitude', control: 'latitude' }"
-      ></ng-container>
-      <ng-container
-        [ngTemplateOutlet]="input"
-        [ngTemplateOutletContext]="{ label: 'Longitude', control: 'longitude' }"
-      ></ng-container>
+      <tui-error formControlName="cityName" [error]="[] | tuiFieldError | async" />
+      <ng-container [ngTemplateOutlet]="input" [ngTemplateOutletContext]="{ control: 'latitude' }"></ng-container>
+      <ng-container [ngTemplateOutlet]="input" [ngTemplateOutletContext]="{ control: 'longitude' }"></ng-container>
     </div>
     <div class="input-container">
-      <div class="tui-text_h6 tui-space_bottom-3">Connected stations</div>
-      @for (tag of connectedStations.controls; track tag; let controlIndex = $index) {
+      @for (tag of controls.connectedStations.controls; track tag; let controlIndex = $index) {
         <div formArrayName="connectedStations" class="tui-form__multi-fields">
           <tui-input
             *tuiLet="stations() as stations"
@@ -62,9 +56,9 @@
   </button>
 </form>
 
-<ng-template #input let-label="label" let-control="control">
+<ng-template #input let-control="control">
   <tui-input [formControl]="$any(createStationForm.controls)[control]" class="tui-form__col tui-space_vertical-4">
-    {{ label }}
-    <input tuiTextfieldLegacy [placeholder]="label" />
+    {{ control | titlecase }}
+    <input tuiTextfieldLegacy [placeholder]="control | titlecase" />
   </tui-input>
 </ng-template>
