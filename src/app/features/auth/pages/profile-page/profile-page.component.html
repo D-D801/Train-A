@@ -2,9 +2,9 @@
   <h2>Profile</h2>
   <h3 class="tui-space_bottom-6">{{ userInfo.role }}</h3>
 
-  <dd-editable-form [form]="nameForm" [onSave]="saveName" [typeInputs]="'text'"></dd-editable-form>
+  <dd-editable-form [form]="nameForm" (save)="saveName()" [typeInputs]="'text'"></dd-editable-form>
 
-  <dd-editable-form [form]="emailForm" [onSave]="saveEmail" [typeInputs]="'text'"></dd-editable-form>
+  <dd-editable-form [form]="emailForm" (save)="saveEmail()" [typeInputs]="'text'"></dd-editable-form>
 
   <div class="buttons">
     <button size="m" tuiButton type="button" class="tui-space_top-4" (click)="showDialog()">Change Password</button>

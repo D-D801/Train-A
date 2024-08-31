@@ -8,6 +8,7 @@ import {
   inject,
   input,
   OnInit,
+  output,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
@@ -52,7 +53,7 @@ export class EditableFormComponent implements OnInit {
 
   public typeInputs = input.required<'text' | 'date-time' | 'price'>();
 
-  public onSave = input.required<() => void>();
+  public save = output();
 
   private readonly destroy = inject(DestroyRef);
 
@@ -80,10 +81,10 @@ export class EditableFormComponent implements OnInit {
     this.isEditMode = true;
   }
 
-  protected save() {
+  protected saveForm() {
     if (this.form().valid) {
-      this.onSave()();
       this.isEditMode = false;
+      this.save.emit();
     }
   }
 }

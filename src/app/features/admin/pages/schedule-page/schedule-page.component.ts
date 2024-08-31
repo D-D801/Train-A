@@ -19,6 +19,7 @@ import { NewRideFormComponent } from '../../components/new-ride-form/new-ride-fo
   templateUrl: './schedule-page.component.html',
   styleUrl: './schedule-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [NewRideService],
 })
 export class SchedulePageComponent implements OnInit {
   private readonly routeApiService = inject(RouteApiService);

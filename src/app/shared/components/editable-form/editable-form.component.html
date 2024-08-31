@@ -1,5 +1,5 @@
 @if (isEditMode) {
-  <form class="wrapper" [formGroup]="form()" (ngSubmit)="save()">
+  <form class="wrapper" [formGroup]="form()" (ngSubmit)="saveForm()">
     <div class="inputs">
       @for (controlName of form().controls | keyvalue; track $index) {
         @switch (typeInputs()) {
