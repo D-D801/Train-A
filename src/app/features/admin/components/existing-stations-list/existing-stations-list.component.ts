@@ -47,7 +47,11 @@ export class ExistingStationsListComponent {
         }),
         takeUntilDestroyed(this.destroy)
       )
-      .subscribe();
+      .subscribe({
+        error: ({ error: { message } }) => {
+          this.alert.open({ message, label: 'Error', appearance: 'error' });
+        },
+      });
   }
 
   public getStations(connectedStations: ConnectedStation[]) {
