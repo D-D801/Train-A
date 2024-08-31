@@ -71,8 +71,6 @@ export class StationCardComponent {
 
   private readonly fb = inject(FormBuilder);
 
-  public save = () => this.saveSegment();
-
   protected timeForm = this.fb.group({
     departure: this.fb.control<[TuiDay, TuiTime] | null>(null, dateTimeValidator()),
     arrival: this.fb.control<[TuiDay, TuiTime] | null>(null, dateTimeValidator()),

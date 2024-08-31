@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ComponentRef } from '@angular/core';
 import { provideHttpClient } from '@angular/common/http';
+import { NewRideService } from '@features/admin/services/new-ride/new-ride.service';
 import { NewRideFormComponent } from './new-ride-form.component';
 
 describe('NewRideFormComponent', () => {
@@ -12,7 +13,7 @@ describe('NewRideFormComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [NewRideFormComponent],
-      providers: [provideHttpClient()],
+      providers: [provideHttpClient(), NewRideService],
     }).compileComponents();
 
     fixture = TestBed.createComponent(NewRideFormComponent);

@@ -1,8 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class NewRideService {
   private readonly _isOpenNewRideForm = signal(false);
 

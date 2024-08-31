@@ -1,6 +1,6 @@
 import { TuiDay, TuiTime } from '@taiga-ui/cdk';
 
-export function getISOStringDateTimeFromTuiDataTime(date: [TuiDay | null, TuiTime | null]) {
+export function getISOStringDateTimeFromTuiDataTime(date: [TuiDay, TuiTime]) {
   const [day, time] = date;
 
   if (!(day && time)) return null;

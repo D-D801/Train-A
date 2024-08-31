@@ -111,9 +111,12 @@ export class NewRideFormComponent implements OnInit {
   }
 
   protected onSubmit() {
-    const newSegments = this.rideForm.value;
+    const newSegments = this.rideForm.value.segments;
 
-    const segments = newSegments.segments?.map((segment) => {
+    if (!newSegments) return;
+    if (newSegments.some((segment) => segment == null)) return;
+
+    const segments = newSegments.map((segment) => {
       return {
         ...segment,
         time: segment?.time.map((time) => getISOStringDateTimeFromTuiDataTime(time)),
@@ -125,9 +128,9 @@ export class NewRideFormComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroy))
       .subscribe({
         next: ({ id }) => {
-          this.updateRouteInfo.emit(this.routeId());
           this.alert.open({ message: `Ride ${id} successful created`, label: 'New ride', appearance: 'success' });
           this.newRideService.closeNewRideForm();
+          this.updateRouteInfo.emit(this.routeId());
         },
         error: ({ error: { message } }) => {
           this.alert.open({ message, label: 'Error', appearance: 'error' });
