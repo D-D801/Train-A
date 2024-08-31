@@ -1,5 +1,5 @@
 export interface TrainRoute {
-  id?: number;
+  id: number;
   carriages: string[];
   path: number[];
 }
