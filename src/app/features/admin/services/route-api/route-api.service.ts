@@ -14,7 +14,7 @@ export class RouteApiService {
     return this.http.get<TrainRoute[]>('/api/route');
   }
 
-  public createRoute(route: TrainRoute) {
+  public createRoute(route: Omit<TrainRoute, 'id'>) {
     return this.http.post<{ id: number }>('/api/route', route);
   }
 
@@ -26,11 +26,12 @@ export class RouteApiService {
     return this.http.delete(`/api/route/${route.id}`);
   }
 
+  // TODO: delete request carriages and station in favor of other services in the future
   public getCarriages() {
     return this.http.get<Carriage[]>('/api/carriage');
   }
 
-  // todo: delete request carriages and station in favor of other services in the future
+  // TODO: delete request carriages and station in favor of other services in the future
   public getStations() {
     return this.http.get<Station[]>('/api/station');
   }

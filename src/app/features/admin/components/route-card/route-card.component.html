@@ -1,14 +1,14 @@
-<header tuiHeader>
-  <h2 tuiTitle>Route {{ trainRoute().id }}</h2>
+<ng-container *ngIf="trainRoute() as route">
+  <header tuiHeader>
+    <h2 tuiTitle>Route {{ route.id }}</h2>
 
-  <aside tuiAccessories>
-    <tui-icon class="accessories" icon="@tui.pen" (click)="edit.emit(trainRoute().id)" />
-    <tui-icon class="accessories" icon="@tui.bus" />
-    <tui-icon class="accessories" icon="@tui.trash" (click)="delete.emit(trainRoute())" />
-  </aside>
-</header>
+    <aside tuiAccessories>
+      <tui-icon class="accessories" icon="@tui.pen" (click)="edit.emit(route.id)" />
+      <tui-icon class="accessories" icon="@tui.bus" />
+      <tui-icon class="accessories" icon="@tui.trash" (click)="delete.emit(route)" />
+    </aside>
+  </header>
 
-<section class="card-description"><span class="subtitle">Path:</span> {{ trainRoute().path.join(', ') }}</section>
-<section class="card-description">
-  <span class="subtitle">Carriages:</span> {{ trainRoute().carriages.join(', ') }}
-</section>
+  <section class="card-description"><span class="subtitle">Path:</span> {{ route.path.join(', ') }}</section>
+  <section class="card-description"><span class="subtitle">Carriages:</span> {{ route.carriages.join(', ') }}</section>
+</ng-container>

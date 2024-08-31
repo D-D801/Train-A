@@ -103,8 +103,8 @@ export class CarriagePageComponent {
     this.carriageApiService
       .updateCarriage(carriageData)
       .pipe(
-        takeUntilDestroyed(this.destroy),
-        switchMap(() => this.loadCarriages())
+        switchMap(() => this.loadCarriages()),
+        takeUntilDestroyed(this.destroy)
       )
       .subscribe({
         next: (carriages) => {

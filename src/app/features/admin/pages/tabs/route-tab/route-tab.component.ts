@@ -57,8 +57,7 @@ export class RouteTabComponent {
     );
   }
 
-  public onEdit(currentRoute: TrainRoute | undefined) {
-    if (!currentRoute) return;
+  public onEdit(currentRoute: TrainRoute) {
     this.currentRoute.set(currentRoute);
     this.isEdit.set(true);
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
@@ -74,8 +73,7 @@ export class RouteTabComponent {
     this.isEdit.set(true);
   }
 
-  public onDelete(route: TrainRoute | undefined) {
-    if (!route) return;
+  public onDelete(route: TrainRoute) {
     const data: TuiConfirmData = {
       content: 'Do you really want to delete this route ?',
       yes: 'Delete',

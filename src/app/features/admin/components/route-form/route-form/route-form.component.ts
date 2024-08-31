@@ -11,7 +11,7 @@ import {
   signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AlertService } from '@core/services/alert/alert.service';
 import { RouteCardComponent } from '@features/admin/components/route-card/route-card.component';
 import { Station } from '@features/admin/interfaces/station.interface';
@@ -77,8 +77,8 @@ export class RouteFormComponent {
   protected readonly ControlsType = ControlsType;
 
   public form = this.fb.group({
-    path: this.fb.array([]),
-    carriages: this.fb.array([]),
+    path: this.fb.array<FormControl<string>>([]),
+    carriages: this.fb.array<FormControl<string>>([]),
   });
 
   public constructor() {
@@ -109,7 +109,7 @@ export class RouteFormComponent {
         this.form.controls.path.clear();
         this.form.controls.carriages.clear();
         this.trainRoute()?.path.forEach((stationId) =>
-          this.form.controls.path.push(this.fb.control(this.getCityNameById(stationId) ?? null, Validators.required))
+          this.form.controls.path.push(this.fb.control(this.getCityNameById(stationId) ?? '', Validators.required))
         );
         this.trainRoute()?.carriages.forEach((carriage) =>
           this.form.controls.carriages.push(this.fb.control(carriage))
@@ -139,9 +139,9 @@ export class RouteFormComponent {
 
   public addControl(controlsType: ControlsType) {
     if (controlsType === ControlsType.path) {
-      this.form.controls.path.push(this.fb.control(null, [Validators.required]));
+      this.form.controls.path.push(this.fb.control('', [Validators.required]));
     } else {
-      this.form.controls.carriages.push(this.fb.control(null, [Validators.required]));
+      this.form.controls.carriages.push(this.fb.control('', [Validators.required]));
     }
   }
 
@@ -166,19 +166,24 @@ export class RouteFormComponent {
   private addInitialControls(controlsType: ControlsType) {
     for (let i = 0; i < MIN_ROUTE_FORM_CONTROL_COUNT; i += 1) {
       if (controlsType === ControlsType.path) {
-        this.form.controls.path.push(this.fb.control(null, [Validators.required]));
+        this.form.controls.path.push(this.fb.control('', [Validators.required]));
       } else {
-        this.form.controls.carriages.push(this.fb.control(null, [Validators.required]));
+        this.form.controls.carriages.push(this.fb.control('', [Validators.required]));
       }
     }
   }
 
   public onSubmit() {
-    if (!this.getCityIds().every((a) => typeof a === 'number')) return;
+    const { carriages } = this.form.value;
+    const cityIds = this.getCityIds();
+    const route = this.trainRoute();
 
-    if (this.trainRoute()) {
+    if (!carriages) return;
+    if (cityIds.some((cityId) => cityId == null)) return;
+
+    if (route) {
       this.routeApiService
-        .updateRoute({ ...this.form.value, path: this.getCityIds(), id: this.trainRoute()?.id } as TrainRoute)
+        .updateRoute({ carriages, path: cityIds as number[], id: route.id })
         .pipe(takeUntilDestroyed(this.destroy))
         .subscribe({
           next: (data) => {
@@ -195,7 +200,7 @@ export class RouteFormComponent {
         });
     } else {
       this.routeApiService
-        .createRoute({ ...this.form.value, path: this.getCityIds() } as TrainRoute)
+        .createRoute({ carriages, path: cityIds as number[] })
         .pipe(takeUntilDestroyed(this.destroy))
         .subscribe({
           next: (data) => {
