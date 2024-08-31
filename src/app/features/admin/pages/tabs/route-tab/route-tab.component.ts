@@ -32,7 +32,7 @@ export class RouteTabComponent implements OnInit {
 
   private readonly destroy = inject(DestroyRef);
 
-  private readonly routeService = inject(RouteApiService);
+  private readonly routeApiService = inject(RouteApiService);
 
   public readonly routes = signal<TrainRoute[]>([]);
 
@@ -48,7 +48,7 @@ export class RouteTabComponent implements OnInit {
     this.action$$
       .pipe(
         switchMap(() =>
-          this.routeService.getRoutes().pipe(
+          this.routeApiService.getRoutes().pipe(
             tap((trainRoutes) => {
               this.routes.set(trainRoutes);
               this.isLoading.set(false);
@@ -57,7 +57,11 @@ export class RouteTabComponent implements OnInit {
         ),
         takeUntilDestroyed(this.destroy)
       )
-      .subscribe();
+      .subscribe({
+        error: ({ error: { message } }) => {
+          this.alert.open({ message, label: 'Error', appearance: 'error' });
+        },
+      });
     this.action$$.next('');
   }
 
@@ -93,7 +97,7 @@ export class RouteTabComponent implements OnInit {
       })
       .pipe(
         filter((response) => response),
-        switchMap(() => this.routeService.deleteRoute(route)),
+        switchMap(() => this.routeApiService.deleteRoute(route)),
         takeUntilDestroyed(this.destroy)
       )
       .subscribe({

@@ -1,11 +1,12 @@
 <div tuiCardLarge tuiSurface="elevated" class="overflow-visible">
   <form class="form" [formGroup]="form" (ngSubmit)="onSubmit()">
     <div tuiHeader="m" class="form-header">
-      <h3 tuiTitle>Route {{ trainRoute() ? trainRoute()?.id : '' }}</h3>
+      @let route = trainRoute();
+      <h3 tuiTitle>Route {{ route ? route.id : '' }}</h3>
 
       <div tuiAccessories>
         <button size="m" tuiButton type="submit" [disabled]="form.invalid">
-          {{ trainRoute() ? 'Update' : 'Save' }}
+          {{ route ? 'Update' : 'Save' }}
         </button>
       </div>
     </div>
@@ -36,7 +37,7 @@
             tuiButton
             type="button"
             (click)="removeControl(ControlsType.path)"
-            [disabled]="form.controls.path.length <= 3"
+            [disabled]="form.controls.path.length <= MIN_ROUTE_FORM_CONTROL_COUNT"
           >
             <tui-icon icon="@tui.minus" />
           </button>
