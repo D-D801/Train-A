@@ -53,7 +53,7 @@ export class RideCardComponent {
         next: () => {
           this.updateRouteInfo.emit(this.routeId());
           this.alert.open({
-            message: `Ride${this.ride().rideId} successful deleted.`,
+            message: `Ride ${this.ride().rideId} successful deleted.`,
             label: 'Delete',
             appearance: 'success',
           });

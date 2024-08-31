@@ -25,7 +25,7 @@
       @for (type of getCarriageTypes(); track type) {
         <button tuiTab class="type">
           {{ type }} ({{ totalSeatsForType(type) }})
-          <div>{{ '$' | tuiCurrency }}{{ price[type] || 0 }}</div>
+          <div>{{ currency | tuiCurrency }}{{ price[type] || 0 }}</div>
         </button>
       }
     </div>

@@ -1,6 +1,6 @@
 import { TuiDay, TuiTime } from '@taiga-ui/cdk';
 
-export function getCurrentDateTime(): [TuiDay | null, TuiTime | null] {
+export function getCurrentDateTime(): [TuiDay, TuiTime] {
   const date = new Date();
 
   const tuiDay = new TuiDay(date.getFullYear(), date.getMonth(), date.getDate());
