@@ -1,4 +1,4 @@
-@for (station of stations(); track station) {
+@for (station of stations(); track station.id) {
   <div tuiPlatform="web">
     <div tuiCardLarge tuiSurface="elevated" class="tui-space_vertical-4">
       <header tuiHeader>
@@ -21,8 +21,8 @@
           <div><span class="tui-text_body-l">Longitude: </span>{{ station.longitude }}</div>
         </div>
         <span class="tui-text_body-l">Connected to:</span>
-        @for (station of station.connectedTo; track station) {
-          <span> {{ getStations(station.id)?.city }} </span>
+        @for (connectedStation of getStations(station.connectedTo); track connectedStation.id) {
+          <span> {{ connectedStation.city }} </span>
         }
       </section>
     </div>
