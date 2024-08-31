@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AlertService } from '@core/services/alert/alert.service';
 import { RouteCardComponent } from '@features/admin/components/route-card/route-card.component';
@@ -8,7 +8,7 @@ import { RouteApiService } from '@features/admin/services/route-api/route-api.se
 import { TuiButton, TuiDialogService, TuiLoader, tuiLoaderOptionsProvider, TuiSurface } from '@taiga-ui/core';
 import { TUI_CONFIRM, TuiConfirmData } from '@taiga-ui/kit';
 import { TuiCardLarge } from '@taiga-ui/layout';
-import { filter, switchMap, tap } from 'rxjs';
+import { filter, Subject, switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'dd-route-tab',
@@ -25,7 +25,7 @@ import { filter, switchMap, tap } from 'rxjs';
   styleUrl: './route-tab.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RouteTabComponent {
+export class RouteTabComponent implements OnInit {
   private readonly dialogs = inject(TuiDialogService);
 
   private readonly alert = inject(AlertService);
@@ -42,19 +42,23 @@ export class RouteTabComponent {
 
   public readonly isLoading = signal(false);
 
-  public constructor() {
-    this.updateRoutes().subscribe();
-  }
+  private readonly action$$ = new Subject();
 
-  public updateRoutes() {
-    this.isLoading.set(true);
-    return this.routeService.getRoutes().pipe(
-      tap((trainRoutes) => {
-        this.routes.set(trainRoutes);
-        this.isLoading.set(false);
-      }),
-      takeUntilDestroyed(this.destroy)
-    );
+  public ngOnInit() {
+    this.action$$
+      .pipe(
+        switchMap(() =>
+          this.routeService.getRoutes().pipe(
+            tap((trainRoutes) => {
+              this.routes.set(trainRoutes);
+              this.isLoading.set(false);
+            })
+          )
+        ),
+        takeUntilDestroyed(this.destroy)
+      )
+      .subscribe();
+    this.action$$.next('');
   }
 
   public onEdit(currentRoute: TrainRoute) {
@@ -65,7 +69,7 @@ export class RouteTabComponent {
 
   public onSave() {
     this.isEdit.set(false);
-    this.updateRoutes().subscribe();
+    this.action$$.next('');
   }
 
   public onCreate() {
@@ -90,11 +94,11 @@ export class RouteTabComponent {
       .pipe(
         filter((response) => response),
         switchMap(() => this.routeService.deleteRoute(route)),
-        switchMap(() => this.updateRoutes()),
         takeUntilDestroyed(this.destroy)
       )
       .subscribe({
         next: () => {
+          this.action$$.next('');
           this.currentRoute.set(null);
           this.isEdit.set(false);
           this.alert.open({
