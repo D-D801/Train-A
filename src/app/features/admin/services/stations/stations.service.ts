@@ -21,8 +21,8 @@ export class StationsService {
     this._stations.update((stations) => (stations ? stations.filter((station) => station.id !== id) : null));
   }
 
-  public getStation(id: number) {
+  public getStations(connectedStationsIds: number[]) {
     const stations = this.stations();
-    return stations ? stations.find((station: Station) => station.id === id) : undefined;
+    return stations ? stations.filter((station: Station) => connectedStationsIds.includes(station.id)) : [];
   }
 }
