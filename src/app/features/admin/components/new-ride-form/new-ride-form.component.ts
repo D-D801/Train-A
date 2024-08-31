@@ -126,7 +126,7 @@ export class NewRideFormComponent implements OnInit {
       .subscribe({
         next: ({ id }) => {
           this.updateRouteInfo.emit(this.routeId());
-          this.alert.open({ message: `Ride${id} successful created`, label: 'New ride', appearance: 'success' });
+          this.alert.open({ message: `Ride ${id} successful created`, label: 'New ride', appearance: 'success' });
           this.newRideService.closeNewRideForm();
         },
         error: ({ error: { message } }) => {

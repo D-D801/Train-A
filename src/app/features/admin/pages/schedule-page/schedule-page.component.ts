@@ -37,7 +37,7 @@ export class SchedulePageComponent implements OnInit {
 
   protected carriages = signal<string[]>([]);
 
-  private readonly routeUpdateSubject = new Subject<number>();
+  private readonly routeUpdateSubject$$ = new Subject<number>();
 
   protected routeInformation$ = merge(
     this.route.paramMap.pipe(
@@ -49,7 +49,7 @@ export class SchedulePageComponent implements OnInit {
         this.routeInformation.set(route);
       })
     ),
-    this.routeUpdateSubject.pipe(
+    this.routeUpdateSubject$$.pipe(
       switchMap((routeId) => this.routeApiService.getRoute(routeId)),
       tap((route) => {
         this.routeInformation.set(route);
@@ -69,7 +69,7 @@ export class SchedulePageComponent implements OnInit {
   }
 
   protected updateRouteInfo(routeId: number) {
-    this.routeUpdateSubject.next(routeId);
+    this.routeUpdateSubject$$.next(routeId);
   }
 
   protected navigationBack() {

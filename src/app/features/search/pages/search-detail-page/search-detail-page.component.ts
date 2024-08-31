@@ -23,6 +23,7 @@ import { OrdersApiService } from '@features/orders/services/orders-api/orders-ap
 import { TuiButton } from '@taiga-ui/core';
 import { OrderRequest } from '@features/search/interfaces/order.request.interface';
 import { TuiHeader } from '@taiga-ui/layout';
+import { CURRENCY } from '@shared/constants/currency';
 
 @Component({
   selector: 'dd-search-detail-page',
@@ -92,6 +93,8 @@ export class SearchDetailPageComponent {
   private bookSeats: BookSeats[] = [];
 
   private freeSeats: FreeSeat = {};
+
+  protected currency = CURRENCY;
 
   public constructor() {
     this.loadRide();

@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, effect, inject, input, output, sign
 import { AlertService } from '@core/services/alert/alert.service';
 import { AuthService } from '@features/auth/services/auth/auth.service';
 import { SelectedOrder } from '@features/search/services/trip/trip.service';
+import { CURRENCY } from '@shared/constants/currency';
 import { TuiButton } from '@taiga-ui/core';
 import { TuiPush, TuiPushDirective } from '@taiga-ui/kit';
 
@@ -25,6 +26,8 @@ export class OrderPanelComponent {
   private readonly alert = inject(AlertService);
 
   protected open = signal(false);
+
+  protected currency = CURRENCY;
 
   public constructor() {
     effect(

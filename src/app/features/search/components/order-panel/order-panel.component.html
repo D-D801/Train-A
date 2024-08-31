@@ -1,7 +1,7 @@
 <tui-push *tuiPush="open()" (close)="close()">
   <div class="push">
     <div>Car: {{ selectedOrder().carriageNumber }}, Seat: {{ selectedOrder().seatNumber }}</div>
-    <div>${{ selectedOrder().price }}</div>
+    <div>{{ currency }} {{ selectedOrder().price }}</div>
   </div>
 
   <div class="action">

@@ -18,7 +18,7 @@
             <tui-input-number
               class="input"
               [formControlName]="controlName.key"
-              [tuiTextfieldPrefix]="'USD' | tuiCurrency"
+              [tuiTextfieldPrefix]="currency | tuiCurrency"
             >
               {{ controlName.key | titlecase }}
             </tui-input-number>
