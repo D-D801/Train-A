@@ -81,6 +81,8 @@ export class RouteFormComponent {
     carriages: this.fb.array<FormControl<string>>([]),
   });
 
+  protected readonly MIN_ROUTE_FORM_CONTROL_COUNT = MIN_ROUTE_FORM_CONTROL_COUNT;
+
   public constructor() {
     this.routeApiService
       .getCarriages()
@@ -105,15 +107,14 @@ export class RouteFormComponent {
       });
 
     effect(() => {
-      if (this.trainRoute()) {
+      const route = this.trainRoute();
+      if (route) {
         this.form.controls.path.clear();
         this.form.controls.carriages.clear();
-        this.trainRoute()?.path.forEach((stationId) =>
+        route.path.forEach((stationId) =>
           this.form.controls.path.push(this.fb.control(this.getCityNameById(stationId) ?? '', Validators.required))
         );
-        this.trainRoute()?.carriages.forEach((carriage) =>
-          this.form.controls.carriages.push(this.fb.control(carriage))
-        );
+        route.carriages.forEach((carriage) => this.form.controls.carriages.push(this.fb.control(carriage)));
       } else {
         this.addInitialControls(ControlsType.path);
         this.addInitialControls(ControlsType.carriages);
