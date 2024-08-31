@@ -65,7 +65,7 @@ export class NewRideFormComponent implements OnInit {
 
   public carriages = input.required<string[]>();
 
-  public updateRouteInfo = output();
+  public updateRouteInfo = output<number>();
 
   private readonly newRideService = inject(NewRideService);
 
@@ -125,7 +125,7 @@ export class NewRideFormComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroy))
       .subscribe({
         next: ({ id }) => {
-          this.updateRouteInfo.emit();
+          this.updateRouteInfo.emit(this.routeId());
           this.alert.open({ message: `Ride${id} successful created`, label: 'New ride', appearance: 'success' });
           this.newRideService.closeNewRideForm();
         },

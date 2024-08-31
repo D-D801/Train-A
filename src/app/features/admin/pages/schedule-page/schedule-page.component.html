@@ -22,7 +22,7 @@
       [path]="routeInfo.path"
       [carriages]="carriages()"
       [routeId]="routeInfo.id"
-      (updateRouteInfo)="updateRouteInfo()"
+      (updateRouteInfo)="updateRouteInfo($event)"
     ></dd-new-ride-form>
   }
 
@@ -31,7 +31,7 @@
       [ride]="rideCard"
       [routeId]="routeInfo.id"
       [path]="routeInfo.path"
-      (updateRouteInfo)="updateRouteInfo()"
+      (updateRouteInfo)="updateRouteInfo($event)"
     ></dd-ride-card>
   }
 }

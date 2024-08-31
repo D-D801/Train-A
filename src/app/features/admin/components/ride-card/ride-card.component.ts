@@ -25,7 +25,7 @@ export class RideCardComponent {
 
   public path = input.required<number[]>();
 
-  public updateRouteInfo = output();
+  public updateRouteInfo = output<number>();
 
   private readonly rideApiService = inject(RideApiService);
 
@@ -51,7 +51,7 @@ export class RideCardComponent {
       )
       .subscribe({
         next: () => {
-          this.updateRouteInfo.emit();
+          this.updateRouteInfo.emit(this.routeId());
           this.alert.open({
             message: `Ride${this.ride().rideId} successful deleted.`,
             label: 'Delete',
