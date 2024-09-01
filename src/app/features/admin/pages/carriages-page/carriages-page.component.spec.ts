@@ -6,7 +6,7 @@ import { AlertService } from '@core/services/alert/alert.service';
 import { of, throwError } from 'rxjs';
 import { Carriage } from '@features/admin/interfaces/carriage.interface';
 import { mockCarriage } from '@shared/constants/mock-data/mock-carriages.data';
-import { CarriagePageComponent } from './carriage-page.component';
+import { CarriagesPageComponent } from './carriages-page.component';
 
 const mockCarriageApiService = {
   getCarriages: jest.fn(() => of([] as Carriage[])),
@@ -19,12 +19,12 @@ const mockAlertService = {
 };
 
 describe('CarriagePageComponent', () => {
-  let component: CarriagePageComponent;
-  let fixture: ComponentFixture<CarriagePageComponent>;
+  let component: CarriagesPageComponent;
+  let fixture: ComponentFixture<CarriagesPageComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CarriagePageComponent],
+      imports: [CarriagesPageComponent],
       providers: [
         provideHttpClient(),
         { provide: CarriageApiService, useValue: mockCarriageApiService },
@@ -32,7 +32,7 @@ describe('CarriagePageComponent', () => {
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(CarriagePageComponent);
+    fixture = TestBed.createComponent(CarriagesPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
