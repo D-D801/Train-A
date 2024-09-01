@@ -1,6 +1,41 @@
-:host header {
+@import '@taiga-ui/core/styles/taiga-ui-local';
+
+:host {
+  display: block;
+  margin-bottom: 2rem;
+}
+
+.wrapper {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 1rem;
+  padding: 2rem 2rem 0;
+
+  @media #{$tui-mobile} {
+    padding: 0.8rem 0.8rem 0;
+  }
+}
+
+.content {
+  padding: 2rem 2rem 4rem;
+}
+
+.title {
+  min-width: 13rem;
+  margin: 0;
+}
+
+.tabs {
+  justify-content: flex-end;
+  width: calc(100% - 13rem);
+  box-shadow: none;
+}
+
+.icon {
+  margin-left: 0.25rem;
+  transition: transform 0.2s;
+
+  &._rotated {
+    transform: rotate(180deg);
+  }
 }

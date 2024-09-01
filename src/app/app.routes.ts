@@ -18,6 +18,11 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'orders',
+    loadComponent: () =>
+      import('@features/orders/pages/orders-page/orders-page.component').then((m) => m.OrdersPageComponent),
+  },
+  {
     path: 'registration',
     loadComponent: () =>
       import('@features/auth/pages/registration-page/registration-page.component').then(
@@ -43,6 +48,13 @@ export const routes: Routes = [
       import('@features/admin/pages/admin-page/admin-page.component').then((m) => m.AdminPageComponent),
     children: [
       {
+        path: 'stations',
+        loadComponent: () =>
+          import('@features/admin/pages/stations-page/stations-page.component').then((m) => m.StationsPageComponent),
+        resolve: { stationsData: stationsResolver },
+      },
+
+      {
         path: 'carriages',
         loadComponent: () =>
           import('@features/admin/pages/carriage-page/carriage-page.component').then((m) => m.CarriagePageComponent),
@@ -50,7 +62,7 @@ export const routes: Routes = [
       {
         path: 'routes',
         loadComponent: () =>
-          import('@features/admin/pages/tabs/route-tab/route-tab.component').then((m) => m.RouteTabComponent),
+          import('@features/admin/pages/routes-page/routes-page.component').then((m) => m.RoutesPageComponent),
       },
       {
         path: 'routes/:id',
@@ -59,12 +71,5 @@ export const routes: Routes = [
       },
     ],
     canMatch: [adminGuard],
-  },
-  {
-    path: 'admin/stations',
-    loadComponent: () =>
-      import('@features/admin/pages/stations-page/stations-page.component').then((m) => m.StationsPageComponent),
-    canMatch: [adminGuard],
-    resolve: { stationsData: stationsResolver },
   },
 ];

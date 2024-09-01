@@ -1,4 +1,35 @@
-<header tuiHeader="m">
+<header tuiHeader="m" class="wrapper">
   <dd-logo></dd-logo>
-  <dd-header-menu></dd-header-menu>
+  <tui-tabs-with-more
+    underline="var(--tui-background-accent-1)"
+    class="tabs"
+    [activeItemIndex]="activeItemIndex"
+    [moreContent]="more"
+  >
+    @for (tab of tabs; track tab) {
+      @if (isString(tab)) {
+        <button *tuiItem tuiTab (click)="onClick(tab)">
+          {{ tab | titlecase }}
+        </button>
+      } @else {
+        <button *tuiItem tuiChevron tuiTab [tuiDropdown]="dropdown" [(tuiDropdownOpen)]="open">Admin</button>
+      }
+    }
+  </tui-tabs-with-more>
+
+  <button appearance="primary" size="s" tuiButton [routerLink]="['/admin']">Sign Up</button>
 </header>
+
+<ng-template #dropdown let-close>
+  <tui-data-list>
+    @for (adminPage of adminPages; track adminPage) {
+      <button tuiOption (click)="onClick(adminPage); close()">
+        {{ adminPage | titlecase }}
+      </button>
+    }
+  </tui-data-list>
+</ng-template>
+
+<ng-template #more>
+  <tui-icon icon="@tui.ellipsis" />
+</ng-template>

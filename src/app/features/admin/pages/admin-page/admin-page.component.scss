@@ -2,7 +2,7 @@
 
 :host {
   display: flex;
-  width: 60rem;
+  width: 100%;
 
   @media #{$tui-tablet} {
     flex-direction: column;
