@@ -1,0 +1,16 @@
+<div class="route-header">
+  <span class="line-item">Time</span>
+  <span class="line-item">Station</span>
+  <span class="line-item">Stop</span>
+</div>
+
+@for (station of stationsInfo; track station.city) {
+  <div class="line">
+    <div class="line-item time-box">
+      <span>{{ station.departureTime }}</span>
+      <span>{{ station.arrivalTime }}</span>
+    </div>
+    <span class="line-item lift-up city">{{ station.city }}</span>
+    <span class="line-item lift-up">{{ station.stopDuration }}</span>
+  </div>
+}
