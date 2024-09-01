@@ -8,10 +8,10 @@ export function calculateStopDuration(arrival: string, departure: string): strin
   const days = Math.floor(diffMs / 1000 / 60 / 60 / 24);
 
   if (days > 0) {
-    return `${days}:${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+    return `${days}d ${String(hours).padStart(2, '0')}h ${String(minutes).padStart(2, '0')}m`;
   }
   if (hours > 0) {
-    return `${hours}:${String(minutes).padStart(2, '0')}`;
+    return `${hours}h ${String(minutes).padStart(2, '0')}m`;
   }
   return `${minutes} min`;
 }

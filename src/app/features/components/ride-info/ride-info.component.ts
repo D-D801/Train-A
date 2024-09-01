@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, effect, inject }
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ModalRideInfo, Segment } from '@features/components/interfaces/route-info.interface';
 import { calculateStopDuration } from '@features/utils/calculate-train-stop-duration';
-import { dateConverter } from '@shared/utils/date-converter';
+import { formatTime } from '@shared/utils/format-date';
 import { TuiDialogContext } from '@taiga-ui/core';
 import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
 // TODO: import Station and etc. interfaces if availiable
@@ -83,8 +83,8 @@ export class RideInfoComponent {
       index > 0 && index < pathLength ? segments[index - 1].time[1] : segments[index].time[0];
 
     return {
-      departureTime: dateConverter(departureTime),
-      arrivalTime: dateConverter(arrivalTime),
+      departureTime: formatTime(departureTime),
+      arrivalTime: formatTime(arrivalTime),
       city: this.getCityNameById(cityId),
       stopDuration: index !== 0 ? calculateStopDuration(arrivalTimeToStation, departureTime) : 'First station',
     };
