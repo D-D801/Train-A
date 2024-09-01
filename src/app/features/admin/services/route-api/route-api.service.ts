@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Carriage } from '@features/admin/interfaces/carriage.interface';
-import { Segment } from '@features/admin/interfaces/segment.interface';
 import { Station } from '@features/admin/interfaces/station-list-item.interface';
 import { TrainRoute } from '@features/admin/interfaces/train-route.interface';
 
@@ -16,7 +15,7 @@ export class RouteApiService {
   }
 
   public getRoute(id: number) {
-    return this.httpClient.get<TrainRoute[]>(`/api/route/${id}`);
+    return this.httpClient.get<TrainRoute>(`/api/route/${id}`);
   }
 
   public createRoute(route: Omit<TrainRoute, 'id'>) {
@@ -39,17 +38,5 @@ export class RouteApiService {
   // TODO: delete request carriages and station in favor of other services in the future
   public getStations() {
     return this.httpClient.get<Station[]>('/api/station');
-  }
-
-  public createNewRide(routeId: number, body: Segment) {
-    return this.httpClient.post<{ id: number }>(`/api/route/${routeId}/ride`, body);
-  }
-
-  public updateRide(routeId: number, rideId: number, body: { segments: Partial<Segment>[] }) {
-    return this.httpClient.put(`/api/route/${routeId}/ride/${rideId}`, body);
-  }
-
-  public deleteRide(routeId: number, rideId: number) {
-    return this.httpClient.delete(`/api/route/${routeId}/ride/${rideId}`);
   }
 }

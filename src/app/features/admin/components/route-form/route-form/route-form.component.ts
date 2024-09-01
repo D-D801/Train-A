@@ -18,12 +18,12 @@ import { Station } from '@features/admin/interfaces/station.interface';
 import { TrainRoute } from '@features/admin/interfaces/train-route.interface';
 import { RouteApiService } from '@features/admin/services/route-api/route-api.service';
 import { MIN_ROUTE_FORM_CONTROL_COUNT } from '@features/admin/constants/min-route-control-count';
-import { updateAvailableStations } from '@features/admin/utils/update-available-stations';
 import { TuiButton, TuiDataList, TuiIcon, TuiLoader, TuiSurface, TuiTitle } from '@taiga-ui/core';
 import { TuiAvatar } from '@taiga-ui/kit';
 import { TuiCardLarge, TuiHeader } from '@taiga-ui/layout';
 import { TuiSelectModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { map } from 'rxjs';
+import { updateAvailableStations } from '@shared/utils/update-available-stations';
 
 enum ControlsType {
   path = 'path',

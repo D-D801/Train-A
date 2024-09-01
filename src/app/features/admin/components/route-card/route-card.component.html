@@ -4,7 +4,7 @@
 
     <aside tuiAccessories>
       <tui-icon class="accessories" icon="@tui.pen" (click)="edit.emit(route.id)" />
-      <tui-icon class="accessories" icon="@tui.bus" />
+      <tui-icon class="accessories" icon="@tui.bus" [routerLink]="['/admin/routes', route.id]" />
       <tui-icon class="accessories" icon="@tui.trash" (click)="delete.emit(route)" />
     </aside>
   </header>

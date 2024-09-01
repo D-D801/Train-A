@@ -50,7 +50,7 @@ export const routes: Routes = [
       {
         path: 'routes',
         loadComponent: () =>
-          import('@features/admin/pages/routes-page/routes-page.component').then((m) => m.RoutesPageComponent),
+          import('@features/admin/pages/tabs/route-tab/route-tab.component').then((m) => m.RouteTabComponent),
       },
       {
         path: 'routes/:id',

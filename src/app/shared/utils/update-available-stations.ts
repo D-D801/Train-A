@@ -44,6 +44,6 @@ export function updateAvailableStations(formControlsPathValue: (number | null)[]
   );
 
   return connectedToStations.map((connectedStations) =>
-    connectedStations.map((connectedStation) => stations[connectedStation.id - 1].city)
+    connectedStations.map((connectedStation) => stations[connectedStation.id - 1]?.city)
   );
 }
