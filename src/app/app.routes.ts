@@ -43,7 +43,7 @@ export const routes: Routes = [
       import('@features/admin/pages/admin-page/admin-page.component').then((m) => m.AdminPageComponent),
     children: [
       {
-        path: 'carriage',
+        path: 'carriages',
         loadComponent: () =>
           import('@features/admin/pages/carriage-page/carriage-page.component').then((m) => m.CarriagePageComponent),
       },
