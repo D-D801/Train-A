@@ -1,16 +1,20 @@
 <div class="route-header">
-  <span class="line-item">Time</span>
-  <span class="line-item">Station</span>
-  <span class="line-item">Stop</span>
+  <div class="line-item">Time</div>
+  <div class="marker-box"></div>
+  <div class="line-item">Station</div>
+  <div class="line-item">Stop</div>
 </div>
 
-@for (station of stationsInfo; track station.city) {
+@for (station of stationsInfo; track station.city; let i = $index) {
   <div class="line">
     <div class="line-item time-box">
       <span>{{ station.departureTime }}</span>
       <span>{{ station.arrivalTime }}</span>
     </div>
-    <span class="line-item lift-up city">{{ station.city }}</span>
-    <span class="line-item lift-up">{{ station.stopDuration }}</span>
+    <div class="marker-box">
+      <div class="marker-line" [class.first-marker]="i === 0" [class.last-marker]="i === stationsInfo.length - 2"></div>
+    </div>
+    <div class="line-item" [class.lift-up]="i > 0">{{ station.city }}</div>
+    <div class="line-item" [class.lift-up]="i > 0">{{ station.stopDuration }}</div>
   </div>
 }

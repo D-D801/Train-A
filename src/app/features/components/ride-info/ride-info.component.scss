@@ -1,14 +1,23 @@
 @import '@taiga-ui/core/styles/taiga-ui-local';
 
+$height-line: 5rem;
+$shift-up: -0.8rem;
+
 :host {
   display: flex;
   flex-direction: column;
+  padding-bottom: 1rem;
 }
 
 .route-header {
   display: flex;
   justify-content: space-between;
   margin-bottom: 2rem;
+
+  .line-item:first-child {
+    display: flex;
+    justify-content: flex-end;
+  }
 }
 
 .time-box {
@@ -17,38 +26,57 @@
   align-items: end;
   justify-content: space-between;
 
-  padding-right: 1rem;
+  height: $height-line;
 }
 
 .line {
   display: flex;
-  height: 5rem;
 }
 
 .line-item {
-  position: relative;
   flex: 1;
 }
 
 .line:last-child {
   height: 0;
+  margin-top: $shift-up;
 }
 
-.city {
-  padding-left: 1rem;
-  border-left: 2px solid var(--tui-info);
-}
-
-.city::before {
+.marker-line::before {
   content: '';
 
   position: absolute;
-  top: 0;
-  left: -6px;
+  top: -5px;
+  left: -5px;
 
   width: 10px;
   height: 10px;
 
   background: var(--tui-info);
   border-radius: 50%;
+}
+
+.marker-box {
+  display: flex;
+  justify-content: center;
+  width: 5rem;
+}
+
+.marker-line {
+  position: relative;
+  border: 1px solid var(--tui-info);
+}
+
+.first-marker {
+  align-self: end;
+  height: calc($height-line - 1rem);
+}
+
+.last-marker {
+  align-self: start;
+  height: calc($height-line - 1rem);
+}
+
+.lift-up {
+  margin-top: $shift-up;
 }
