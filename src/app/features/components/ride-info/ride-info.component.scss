@@ -1,0 +1,54 @@
+@import '@taiga-ui/core/styles/taiga-ui-local';
+
+:host {
+  display: flex;
+  flex-direction: column;
+}
+
+.route-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+
+.time-box {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  justify-content: space-between;
+
+  padding-right: 1rem;
+}
+
+.line {
+  display: flex;
+  height: 5rem;
+}
+
+.line-item {
+  position: relative;
+  flex: 1;
+}
+
+.line:last-child {
+  height: 0;
+}
+
+.city {
+  padding-left: 1rem;
+  border-left: 2px solid var(--tui-info);
+}
+
+.city::before {
+  content: '';
+
+  position: absolute;
+  top: 0;
+  left: -6px;
+
+  width: 10px;
+  height: 10px;
+
+  background: var(--tui-info);
+  border-radius: 50%;
+}
