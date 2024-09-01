@@ -13,11 +13,11 @@ import { TuiButton } from '@taiga-ui/core';
   selector: 'dd-carriage-page',
   standalone: true,
   imports: [CarriagePreviewComponent, CarriageFormComponent, CarriageCardComponent, TuiButton],
-  templateUrl: './carriage-page.component.html',
-  styleUrl: './carriage-page.component.scss',
+  templateUrl: './carriages-page.component.html',
+  styleUrl: './carriages-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CarriagePageComponent {
+export class CarriagesPageComponent {
   private readonly carriageApiService = inject(CarriageApiService);
 
   private readonly carriagesService = inject(CarriagesService);
