@@ -1,9 +1,15 @@
 import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, input, OnInit, output } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormArray,
+  FormControl,
+  FormGroup,
+  NonNullableFormBuilder,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { AlertService } from '@core/services/alert/alert.service';
-import { Segment } from '@features/admin/interfaces/segment.interface';
 import { NewRideService } from '@features/admin/services/new-ride/new-ride.service';
 import { RideApiService } from '@features/admin/services/ride-api/ride-api.service';
 import { buildInErrors } from '@shared/constants/build-in-errors';
@@ -75,7 +81,7 @@ export class NewRideFormComponent implements OnInit {
 
   public readonly alert = inject(AlertService);
 
-  private readonly fb = inject(FormBuilder);
+  private readonly fb = inject(NonNullableFormBuilder);
 
   protected rideForm = this.fb.group({
     segments: this.fb.array<TuiSegment[]>([]),
@@ -114,14 +120,16 @@ export class NewRideFormComponent implements OnInit {
     const newSegments = this.rideForm.value.segments;
 
     if (!newSegments) return;
-    if (newSegments.some((segment) => segment == null)) return;
 
     const segments = newSegments.map((segment) => {
       return {
         ...segment,
-        time: segment?.time.map((time) => getISOStringDateTimeFromTuiDataTime(time)),
+        time: [
+          getISOStringDateTimeFromTuiDataTime(segment?.time[0]),
+          getISOStringDateTimeFromTuiDataTime(segment?.time[1]),
+        ] as [string, string],
       };
-    }) as Segment[];
+    });
 
     this.rideApiService
       .createNewRide(this.routeId(), { segments })

@@ -1,6 +1,5 @@
 import { KeyValuePipe, TitleCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, input } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AlertService } from '@core/services/alert/alert.service';
 import { Segment } from '@features/admin/interfaces/segment.interface';
@@ -133,7 +132,6 @@ export class StationCardComponent {
       .updateRide(routeId, rideId, {
         segments,
       })
-      .pipe(takeUntilDestroyed(this.destroy))
       .subscribe({
         error: ({ error: { message } }) => {
           this.alert.open({ message, label: 'Error', appearance: 'error' });
