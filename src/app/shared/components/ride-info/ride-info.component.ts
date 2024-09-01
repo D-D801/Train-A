@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, effect, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { ModalRideInfo, Segment } from '@features/components/interfaces/route-info.interface';
-import { calculateStopDuration } from '@features/utils/calculate-train-stop-duration';
+import { ModalRideInfo, Segment } from '@shared/interfaces/route-info.interface';
+import { calculateStopDuration } from '@shared/utils/calculate-train-stop-duration';
 import { formatTime } from '@shared/utils/format-date';
 import { TuiDialogContext } from '@taiga-ui/core';
 import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';

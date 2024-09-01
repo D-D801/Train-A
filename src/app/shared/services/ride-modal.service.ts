@@ -1,6 +1,6 @@
 import { inject, Injectable, INJECTOR } from '@angular/core';
-import { ModalRideInfo, WithData } from '@features/components/interfaces/route-info.interface';
-import { RideInfoComponent } from '@features/components/ride-info/ride-info.component';
+import { ModalRideInfo, WithData } from '@shared/interfaces/route-info.interface';
+import { RideInfoComponent } from '@shared/components/ride-info/ride-info.component';
 import { TuiDialogService } from '@taiga-ui/core';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 
