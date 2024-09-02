@@ -21,7 +21,7 @@ interface Route {
   id: number;
   path: number[];
   carriages: string[];
-  schedule: Ride[] | Ride;
+  schedule: Ride[];
 }
 
 interface Ride {

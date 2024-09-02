@@ -56,7 +56,7 @@ export const routes: Routes = [
       {
         path: 'carriages',
         loadComponent: () =>
-          import('@features/admin/pages/carriages-page/carriage-page.component').then((m) => m.CarriagePageComponent),
+          import('@features/admin/pages/carriages-page/carriages-page.component').then((m) => m.CarriagesPageComponent),
       },
       {
         path: 'routes',
