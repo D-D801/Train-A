@@ -13,14 +13,14 @@ export class RideModalService {
   private readonly injector = inject(INJECTOR);
 
   public showRideInfo(data: ModalRideInfo) {
-    const testOption = {
+    const modalOption = {
       data,
       dismissible: true,
-      label: `Ride ${data.rideId}`,
+      label: `Route ${data.ride.routeId}`,
     };
     return this.dialogs.open<WithData<ModalRideInfo>>(
       new PolymorpheusComponent(RideInfoComponent, this.injector),
-      testOption
+      modalOption
     );
   }
 }
