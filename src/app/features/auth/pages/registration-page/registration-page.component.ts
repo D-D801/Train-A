@@ -12,7 +12,7 @@ import { TUI_VALIDATION_ERRORS, TuiFieldErrorPipe } from '@taiga-ui/kit';
 import { matchPasswordsValidator, passwordValidator } from '@features/auth/validators/password.validator';
 import { Router, RouterLink } from '@angular/router';
 import { emailValidator } from '@features/auth/validators/email.validator';
-import { AuthService } from '@features/auth/services/auth/auth.service';
+import { AuthService } from '@core/services/auth/auth.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize } from 'rxjs';
 

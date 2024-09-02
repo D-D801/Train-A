@@ -1,19 +1,17 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { LocalStorageService } from '@core/services/local-storage/local-storage.service';
 import { switchMap, tap } from 'rxjs';
-import { Router } from '@angular/router';
-import { AlertService } from '@core/services/alert/alert.service';
 import { LocalStorageKey } from '@shared/enums/local-storage-key.enum';
 import { UserRequest } from '@features/auth/interfaces/user-request.interface';
-import { AuthApiService } from '../auth-api/auth-api.service';
+import { ProfileApiService } from '@features/auth/services/profile-api/profile-api.service';
+import { Role } from '@shared/enums/role.enum';
+import { AuthApiService } from '../../../features/auth/services/auth-api/auth-api.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private readonly router = inject(Router);
-
-  private readonly alerts = inject(AlertService);
+  private readonly profileApiService = inject(ProfileApiService);
 
   private readonly authApiService = inject(AuthApiService);
 
@@ -23,17 +21,18 @@ export class AuthService {
 
   public isLoggedIn = this._isLoggedIn.asReadonly();
 
-  // TODO: change role
-  private readonly _isAdminIn = signal(true);
+  private readonly _role = signal<keyof typeof Role | null>(null);
 
-  public isAdminIn = this._isAdminIn.asReadonly();
+  public role = this._role.asReadonly();
 
   public signin(body: UserRequest) {
     return this.authApiService.signin(body).pipe(
       tap((response) => {
         this._isLoggedIn.set(true);
         this.localStorage.setItem(LocalStorageKey.UserToken, response.token);
-      })
+      }),
+      switchMap(() => this.profileApiService.getUserInformation()),
+      tap((res) => this._role.set(res.role))
     );
   }
 
@@ -45,9 +44,13 @@ export class AuthService {
     return this.authApiService.logout().pipe(
       tap(() => {
         this._isLoggedIn.set(false);
-        this._isAdminIn.set(false);
+        this._role.set(null);
       })
     );
+  }
+
+  public setRole(role: keyof typeof Role) {
+    this._role.set(role);
   }
 
   private getAuthStatus() {
