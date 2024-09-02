@@ -12,8 +12,10 @@
     <h2>Station {{ fromStation }} -> Station {{ toStation }}</h2>
     @if (ride()) {
       <h3>{{ setTimes('start') }} - {{ setTimes('end') }}</h3>
-      <p>Ride {{ ride()?.rideId }}</p>
-      <!-- TODO Modal window -->
+      <div class="header-buttons">
+        <p>Ride {{ ride()?.rideId }}</p>
+        <button appearance="primary" size="xs" tuiButton (click)="showModal()">Route</button>
+      </div>
     }
   </div>
 </div>

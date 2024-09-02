@@ -7,6 +7,7 @@ import { CarriageService } from '@core/services/carriage/carriage.service';
 import { CarriagePreviewComponent } from '@features/admin/components/carriage-preview/carriage-preview.component';
 import { RoadSection, Trip } from '@features/search/interfaces/search-route-response.interface';
 import { SearchApiService } from '@features/search/services/search-api/search-api.service';
+import { RideModalService } from '@shared/services/ride-modal.service';
 import { TuiChip, TuiTab, TuiTabs } from '@taiga-ui/kit';
 import { map, switchMap } from 'rxjs';
 import { TuiCurrencyPipe } from '@taiga-ui/addon-commerce';
@@ -63,6 +64,8 @@ export class SearchDetailPageComponent {
   private readonly destroy = inject(DestroyRef);
 
   private readonly alert = inject(AlertService);
+
+  private readonly rideModalService = inject(RideModalService);
 
   public carriages = this.carriageService.carriages;
 
@@ -231,5 +234,14 @@ export class SearchDetailPageComponent {
     return this.ordersApiService
       .createOrder({ rideId, seat, stationStart, stationEnd })
       .pipe(takeUntilDestroyed(this.destroy));
+  }
+
+  protected showModal() {
+    const ride = this.ride();
+    if (!ride) return;
+    this.rideModalService
+      .showRideInfo({ from: this.fromStation, to: this.toStation, ride })
+      .pipe(takeUntilDestroyed(this.destroy))
+      .subscribe();
   }
 }

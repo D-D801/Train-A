@@ -39,6 +39,7 @@ export interface RoadSection {
 
 export interface Trip {
   rideId: number;
+  routeId: number;
   path: number[];
   carriages: string[];
   schedule: Ride;

@@ -3,7 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, effect, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Station } from '@features/admin/interfaces/station.interface';
-import { ModalRideInfo, Segment } from '@shared/interfaces/route-info.interface';
+import { RoadSection } from '@features/search/interfaces/search-route-response.interface';
+import { ModalRideInfo } from '@shared/interfaces/route-info.interface';
 import { calculateStopDuration } from '@shared/utils/calculate-train-stop-duration';
 import { formatTime } from '@shared/utils/format-date';
 import { TuiDialogContext, TuiIcon } from '@taiga-ui/core';
@@ -20,7 +21,7 @@ interface StationInfo {
   cityId: number;
   index: number;
   pathLength: number;
-  segments: Segment[];
+  segments: RoadSection[];
 }
 
 @Component({
