@@ -1,0 +1,31 @@
+@let result = searchResult();
+@if (result) {
+  @for (route of result.routes; track route.id) {
+    @for (ride of route.schedule; track ride.rideId) {
+      <div tuiPlatform="web">
+        <div tuiCardLarge tuiSurface="elevated">
+          <header tuiHeader>
+            <h2 tuiTitle>{{ ride.rideId }}</h2>
+          </header>
+          @let arrival = ride.segments.at(-1)?.time?.[1] ?? '';
+          <section>
+            <div>{{ ride.segments[0].time[0] | date }}</div>
+            <div>{{ result.from.city }}</div>
+            <div>{{ getTravelTime(arrival, ride.segments[0].time[0]) }}</div>
+            <hr />
+            <div>{{ result.to.city }}</div>
+            <div>{{ arrival | date }}</div>
+            @for (segment of ride.segments; track segment.time[0]) {
+              @for (carriage of getUniqueCarriages(route.carriages); track carriage) {
+                <div>
+                  <span>{{ carriage }}: {{ segment.price[carriage] }}</span>
+                </div>
+              }
+            }
+            <button appearance="secondary" size="m" tuiButton type="button">Label</button>
+          </section>
+        </div>
+      </div>
+    }
+  }
+}

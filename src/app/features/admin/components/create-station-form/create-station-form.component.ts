@@ -107,7 +107,7 @@ export class CreateStationFormComponent implements OnInit {
     this.controls.cityName.valueChanges
       .pipe(
         debounceTime(1000),
-        filter((city) => !city),
+        filter((city) => !!city),
         switchMap((city) => {
           return this.locationService.getLocationCoordinates(city as string);
         }),

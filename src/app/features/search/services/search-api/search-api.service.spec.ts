@@ -25,7 +25,7 @@ describe('SearchService', () => {
       fromLongitude: 2.3514,
       toLatitude: 40.4167,
       toLongitude: 3.7033,
-      time: 1723669200000,
+      time: '1723669200000',
     };
     const searchRouteResponse: SearchRouteResponse = {
       from: {
