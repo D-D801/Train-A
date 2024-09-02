@@ -24,7 +24,7 @@ interface Route {
   schedule: Ride[];
 }
 
-interface Ride {
+export interface Ride {
   rideId: number;
   segments: RoadSection[];
 }

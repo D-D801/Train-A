@@ -108,7 +108,7 @@ export class TripService {
       }
 
       return {
-        carriageType: 'Unknown',
+        carriageType: '',
         localSeatNumber: 0,
         carriageIndex: 0,
       };

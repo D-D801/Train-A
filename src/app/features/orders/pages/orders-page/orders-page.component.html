@@ -1,6 +1,3 @@
 @for (order of orders(); track order.id) {
-  <div class="order-item">
-    {{ order.id }}
-    <!-- <dd-order-card [order]="order"></dd-order-card> -->
-  </div>
+  <dd-order-card [order]="order" [users]="users()" (cancelOrder)="cancelOrder($event)"></dd-order-card>
 }
