@@ -3,7 +3,7 @@ export interface SearchRouteParams {
   fromLongitude: number;
   toLatitude: number;
   toLongitude: number;
-  time: number;
+  time: string;
 }
 
 export interface RouteParams {

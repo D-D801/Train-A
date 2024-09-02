@@ -168,10 +168,11 @@ export class SearchFormComponent implements OnInit {
   // TODO: For result list: If no rides are available, a message indicating that no rides are available must be displayed.
   public search() {
     if (this.searchForm.invalid) return;
-    let date = 0;
+    let date = '';
+    console.error(this.date.value);
     if (this.date.value) {
       const [{ day, month, year }, { hours, minutes }] = this.date.value;
-      date = new Date(day, month, year, hours, minutes).valueOf();
+      date = new Date(year, month, day, hours, minutes).toISOString();
     }
     this.searchApiService
       .search({
@@ -183,6 +184,10 @@ export class SearchFormComponent implements OnInit {
       })
       .pipe(takeUntilDestroyed(this.destroy))
       .subscribe({
+        next: (response) => {
+          console.error(response);
+          this.searchService.setSearchResult(response);
+        },
         error: ({ error: { message } }) => {
           this.alert.open({ message, label: 'Error:', appearance: 'error' });
         },
