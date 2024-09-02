@@ -4,7 +4,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 import { of } from 'rxjs';
 import { mockUser } from '@shared/constants/mock-data/mock-user-data';
-import { AuthService } from '@features/auth/services/auth/auth.service';
+import { AuthService } from '@core/services/auth/auth.service';
 import { Component } from '@angular/core';
 import { RegistrationPageComponent } from './registration-page.component';
 

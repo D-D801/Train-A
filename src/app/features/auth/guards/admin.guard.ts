@@ -1,7 +1,8 @@
 import { inject } from '@angular/core';
 import { CanMatchFn, Router } from '@angular/router';
 import { AlertService } from '@core/services/alert/alert.service';
-import { AuthService } from '../services/auth/auth.service';
+import { AuthService } from '@core/services/auth/auth.service';
+import { Role } from '@shared/enums/role.enum';
 
 export const adminGuard: CanMatchFn = () => {
   const authService: AuthService = inject(AuthService);
@@ -10,7 +11,7 @@ export const adminGuard: CanMatchFn = () => {
 
   const message = 'You do not have admin rights';
 
-  if (authService.isAdminIn()) {
+  if (authService.role() === Role.manager) {
     return true;
   }
   alert.open({ message, label: 'Error', appearance: 'error' });

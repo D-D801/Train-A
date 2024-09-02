@@ -4,7 +4,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AlertService } from '@core/services/alert/alert.service';
-import { AuthService } from '@features/auth/services/auth/auth.service';
+import { AuthService } from '@core/services/auth/auth.service';
 import { emailValidator, requiredValidator } from '@features/auth/validators';
 import { buildInErrors } from '@shared/constants/build-in-errors';
 import { mailRegex } from '@shared/constants/mail-regex';

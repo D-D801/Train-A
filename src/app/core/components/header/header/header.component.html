@@ -6,7 +6,7 @@
     [activeItemIndex]="activeItemIndex"
     [moreContent]="more"
   >
-    @for (tab of tabs; track tab) {
+    @for (tab of headerPages(); track tab) {
       @if (isString(tab)) {
         <button *tuiItem tuiTab (click)="onClick(tab)">
           {{ tab | titlecase }}
@@ -17,7 +17,11 @@
     }
   </tui-tabs-with-more>
 
-  <button appearance="primary" size="s" tuiButton [routerLink]="['/admin']">Sign Up</button>
+  @if (isLoggedIn()) {
+    <button appearance="primary" size="m" tuiButton (click)="logout()">Logout</button>
+  } @else {
+    <button appearance="primary" size="s" tuiButton [routerLink]="['/registration']">Sign Up</button>
+  }
 </header>
 
 <ng-template #dropdown let-close>

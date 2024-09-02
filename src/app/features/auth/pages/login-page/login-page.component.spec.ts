@@ -4,7 +4,7 @@ import { provideRouter, Router } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { AlertService } from '@core/services/alert/alert.service';
 import { of, throwError } from 'rxjs';
-import { AuthService } from '@features/auth/services/auth/auth.service';
+import { AuthService } from '@core/services/auth/auth.service';
 import { mockLoginUser } from '@shared/constants/mock-data/mock-user-data';
 import { Component } from '@angular/core';
 import { LoginPageComponent } from './login-page.component';

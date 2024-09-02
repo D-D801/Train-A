@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, effect, inject, input, output, signal } from '@angular/core';
 import { AlertService } from '@core/services/alert/alert.service';
-import { AuthService } from '@features/auth/services/auth/auth.service';
+import { AuthService } from '@core/services/auth/auth.service';
 import { SelectedOrder } from '@features/search/services/trip/trip.service';
 import { CURRENCY } from '@shared/constants/currency';
 import { TuiButton } from '@taiga-ui/core';

@@ -1,30 +1,5 @@
-@import '@taiga-ui/core/styles/taiga-ui-local';
-
 :host {
   display: flex;
+  justify-content: center;
   width: 100%;
-
-  @media #{$tui-tablet} {
-    flex-direction: column;
-    width: 100%;
-
-    nav {
-      width: 100%;
-
-      button {
-        text-align: center;
-      }
-    }
-  }
-}
-
-.content {
-  display: flex;
-  margin: 0 auto;
-}
-
-.left {
-  width: 10rem;
-  min-width: 10rem;
-  margin-right: 2rem;
 }
