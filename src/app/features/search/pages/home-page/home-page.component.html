@@ -1,4 +1,10 @@
 <dd-search-form></dd-search-form>
 @if (result() !== null) {
-  <dd-search-result-list></dd-search-result-list>
+  @if (hasResults()) {
+    <dd-search-result-list></dd-search-result-list>
+  } @else {
+    <tui-block-status>
+      <h4>No rides available</h4>
+    </tui-block-status>
+  }
 }
