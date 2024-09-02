@@ -1,3 +1,4 @@
+import { NgClass } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, effect, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -37,7 +38,7 @@ interface StationInfo {
 @Component({
   selector: 'dd-ride-info',
   standalone: true,
-  imports: [],
+  imports: [NgClass],
   templateUrl: './ride-info.component.html',
   styleUrl: './ride-info.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -49,6 +50,10 @@ export class RideInfoComponent {
 
   private readonly stations = toSignal(this.http.get<Station[]>('/api/station'));
 
+  public from = this.context.data.from;
+
+  public to = this.context.data.to;
+
   protected stationsInfo: RideInfo[] = [];
 
   public constructor(private readonly cdr: ChangeDetectorRef) {
@@ -57,9 +62,14 @@ export class RideInfoComponent {
       const allStations = this.stations();
       if (allStations) {
         const {
-          path,
-          schedule: { segments },
+          ride: {
+            path,
+            schedule: { segments },
+          },
         } = this.context.data;
+
+        this.from = path.indexOf(this.context.data.from);
+        this.to = path.indexOf(this.context.data.to);
 
         this.stationsInfo = path.map((cityId, index, array) =>
           this.getStationInfo({ cityId, index, pathLength: array.length, segments })

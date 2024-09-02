@@ -12,7 +12,16 @@
       <span>{{ station.arrivalTime }}</span>
     </div>
     <div class="marker-box">
-      <div class="marker-line" [class.first-marker]="i === 0" [class.last-marker]="i === stationsInfo.length - 2"></div>
+      <div
+        [class.first-line-size]="i === 0"
+        [class.last-line-size]="i === stationsInfo.length - 2"
+        [ngClass]="{
+          'current-marker': i >= from && i <= to,
+          marker: i < from || i > to,
+          'current-line-color': i >= from && i < to,
+          'line-color': i < from || i >= to,
+        }"
+      ></div>
     </div>
     <div class="line-item" [class.lift-up]="i > 0">{{ station.city }}</div>
     <div class="line-item" [class.lift-up]="i > 0">{{ station.stopDuration }}</div>

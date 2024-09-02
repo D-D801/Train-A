@@ -42,7 +42,42 @@ $shift-up: -0.8rem;
   margin-top: $shift-up;
 }
 
-.marker-line::before {
+.marker-box {
+  display: flex;
+  justify-content: center;
+  width: 5rem;
+}
+
+.first-line-size {
+  align-self: end;
+  height: calc($height-line - 1rem);
+}
+
+.last-line-size {
+  align-self: start;
+  height: calc($height-line - 1rem);
+}
+
+.lift-up {
+  margin-top: $shift-up;
+}
+
+.current-line-color,
+.line-color {
+  position: relative;
+  border: 1px solid;
+}
+
+.line-color {
+  border-color: var(--tui-status-neutral);
+}
+
+.current-line-color {
+  border-color: var(--tui-info);
+}
+
+.current-marker::before,
+.marker::before {
   content: '';
 
   position: absolute;
@@ -52,31 +87,13 @@ $shift-up: -0.8rem;
   width: 10px;
   height: 10px;
 
-  background: var(--tui-info);
   border-radius: 50%;
 }
 
-.marker-box {
-  display: flex;
-  justify-content: center;
-  width: 5rem;
+.current-marker::before {
+  background-color: var(--tui-info);
 }
 
-.marker-line {
-  position: relative;
-  border: 1px solid var(--tui-info);
-}
-
-.first-marker {
-  align-self: end;
-  height: calc($height-line - 1rem);
-}
-
-.last-marker {
-  align-self: start;
-  height: calc($height-line - 1rem);
-}
-
-.lift-up {
-  margin-top: $shift-up;
+.marker::before {
+  background-color: var(--tui-status-neutral);
 }
