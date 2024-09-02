@@ -2,24 +2,12 @@ import { NgClass } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, effect, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { Station } from '@features/admin/interfaces/station.interface';
 import { ModalRideInfo, Segment } from '@shared/interfaces/route-info.interface';
 import { calculateStopDuration } from '@shared/utils/calculate-train-stop-duration';
 import { formatTime } from '@shared/utils/format-date';
 import { TuiDialogContext } from '@taiga-ui/core';
 import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
-// TODO: import Station and etc. interfaces if availiable
-interface Station {
-  id: number;
-  city: string;
-  latitude: number;
-  longitude: number;
-  connectedTo: ConnectedStation[];
-}
-
-interface ConnectedStation {
-  id: number;
-  distance?: number;
-}
 
 interface RideInfo {
   departureTime: string;
