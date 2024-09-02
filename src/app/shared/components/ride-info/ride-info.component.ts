@@ -6,7 +6,7 @@ import { Station } from '@features/admin/interfaces/station.interface';
 import { ModalRideInfo, Segment } from '@shared/interfaces/route-info.interface';
 import { calculateStopDuration } from '@shared/utils/calculate-train-stop-duration';
 import { formatTime } from '@shared/utils/format-date';
-import { TuiDialogContext } from '@taiga-ui/core';
+import { TuiDialogContext, TuiIcon } from '@taiga-ui/core';
 import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
 
 interface RideInfo {
@@ -26,7 +26,7 @@ interface StationInfo {
 @Component({
   selector: 'dd-ride-info',
   standalone: true,
-  imports: [NgClass],
+  imports: [NgClass, TuiIcon],
   templateUrl: './ride-info.component.html',
   styleUrl: './ride-info.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
