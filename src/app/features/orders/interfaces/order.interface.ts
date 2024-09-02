@@ -1,4 +1,4 @@
-import { Schedule } from '@features/admin/interfaces/schedule.interface';
+import { Ride } from '@features/search/interfaces/search-route-response.interface';
 
 export interface Order {
   id: number;
@@ -9,5 +9,7 @@ export interface Order {
   status: 'active' | 'completed' | 'rejected' | 'canceled';
   path: number[];
   carriages: string[];
-  schedule: Schedule;
+  schedule: Ride;
+  stationEnd: number;
+  stationStart: number;
 }

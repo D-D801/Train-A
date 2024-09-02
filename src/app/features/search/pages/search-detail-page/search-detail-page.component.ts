@@ -149,6 +149,10 @@ export class SearchDetailPageComponent {
       });
   }
 
+  protected onClick(activeItemIndex: number): void {
+    this.activeItemIndex = activeItemIndex;
+  }
+
   public goBack(): void {
     this.location.back();
   }

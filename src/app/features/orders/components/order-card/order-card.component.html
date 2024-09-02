@@ -1,0 +1,35 @@
+@if (order()) {
+  <div tuiCardLarge="normal" tuiSurface="elevated" class="card">
+    @if (isAdmin) {
+      <div>{{ getUserName(order().userId) }}</div>
+    }
+    <div class="time-section">
+      <div class="time-info">
+        <span class="time-point">{{ order().id }}</span>
+        <span class="line"></span>
+        <span class="duration">{{ order().id }}</span>
+        <span class="line"></span>
+        <span class="time-point">{{ order().id }}</span>
+      </div>
+      <div class="station-info">
+        <span>{{ getStationById(order().stationStart) }}</span>
+        <span>{{ getStationById(order().stationEnd) }}</span>
+      </div>
+    </div>
+    <div class="details-section">
+      @if (bookSeat) {
+        <div class="carriage-info">
+          <strong>{{ bookSeat.carriageType }}</strong> , <strong>№: </strong>
+          {{ bookSeat.carriageIndex }}
+        </div>
+        <div class="seat-price-info">
+          <strong>Seat: </strong> {{ bookSeat.localSeatNumber }}, <strong>Price: </strong> {{ currency | tuiCurrency
+          }}{{ price[bookSeat.carriageType] }}
+        </div>
+      }
+    </div>
+    @if (order().status === 'active') {
+      <button appearance="accent" size="s" tuiButton (click)="onCancel(order().id)">Cancel</button>
+    }
+  </div>
+}

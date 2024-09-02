@@ -1,0 +1,83 @@
+:host {
+  padding: 16px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 20rem;
+}
+
+.time-section {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
+}
+
+.time-info {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.time-point {
+  position: relative;
+  padding: 0 8px;
+}
+
+.time-point:first-child::after,
+.time-point:last-child::before {
+  content: '';
+
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+
+  width: 8px;
+  height: 8px;
+
+  background-color: #000;
+  border-radius: 50%;
+}
+
+.time-point:first-child::after {
+  right: -12px;
+}
+
+.time-point:last-child::before {
+  left: -12px;
+}
+
+.line {
+  flex-grow: 1;
+  height: 2px;
+  margin: 0 4px;
+  background-color: #ccc;
+}
+
+.duration {
+  font-size: 12px;
+  color: gray;
+  text-align: center;
+}
+
+.station-info {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  font-size: 14px;
+}
+
+.details-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.carriage-info,
+.seat-price-info {
+  display: flex;
+}
