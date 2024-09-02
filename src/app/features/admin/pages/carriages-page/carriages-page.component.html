@@ -11,7 +11,5 @@
 }
 
 @for (carriage of allCarriages(); track carriage.code) {
-  <div class="carriage-item">
-    <dd-carriage-card [carriage]="carriage" (editCarriage)="onEdit($event)"></dd-carriage-card>
-  </div>
+  <dd-carriage-card [carriage]="carriage" (editCarriage)="onEdit($event)"></dd-carriage-card>
 }

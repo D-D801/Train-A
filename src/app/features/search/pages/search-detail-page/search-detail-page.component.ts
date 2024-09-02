@@ -7,23 +7,23 @@ import { CarriagePreviewComponent } from '@features/admin/components/carriage-pr
 import { RoadSection, Trip } from '@features/search/interfaces/search-route-response.interface';
 import { SearchApiService } from '@features/search/services/search-api/search-api.service';
 import { RideModalService } from '@shared/services/ride-modal.service';
-import { TuiChip, TuiTab, TuiTabs } from '@taiga-ui/kit';
+import { TuiChip, TuiTab, TuiTabs, TuiTabsWithMore } from '@taiga-ui/kit';
 import { map, switchMap } from 'rxjs';
 import { TuiCurrencyPipe } from '@taiga-ui/addon-commerce';
 import {
   BookSeats,
   CarriageList,
   FreeSeat,
-  Price,
   TripService,
   SelectedOrder,
 } from '@features/search/services/trip/trip.service';
 import { OrderPanelComponent } from '@features/search/components/order-panel/order-panel.component';
 import { OrdersApiService } from '@features/orders/services/orders-api/orders-api.service';
-import { TuiButton } from '@taiga-ui/core';
-import { OrderRequest } from '@features/search/interfaces/order.request.interface';
+import { TuiButton, TuiIcon } from '@taiga-ui/core';
 import { TuiHeader } from '@taiga-ui/layout';
 import { CURRENCY } from '@shared/constants/currency';
+import { Price } from '@features/admin/interfaces/segment.interface';
+import { OrderRequest } from '@features/orders/interfaces/order.request.interface';
 import { StationsService } from '@core/services/stations/stations.service';
 
 @Component({
@@ -41,6 +41,8 @@ import { StationsService } from '@core/services/stations/stations.service';
     TuiChip,
     TuiButton,
     TuiHeader,
+    TuiIcon,
+    TuiTabsWithMore,
     KeyValuePipe,
   ],
   templateUrl: './search-detail-page.component.html',

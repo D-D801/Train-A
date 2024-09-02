@@ -24,19 +24,21 @@
 </div>
 
 <section class="horizontal">
-  <nav tuiTabs [(activeItemIndex)]="activeItemIndex">
-    <div class="nav-container">
-      @for (type of carriageList | keyvalue; track type.key) {
-        <button tuiTab class="type">
-          {{ type.value[0].carriage }} ({{ totalSeatsForType(type.key) }})
-          <div>{{ currency | tuiCurrency }}{{ price[type.key] || 0 }}</div>
-        </button>
-      }
-    </div>
-  </nav>
+  <tui-tabs-with-more class="tabs" [activeItemIndex]="activeItemIndex" [moreContent]="more">
+    @for (type of carriageList | keyvalue; let i = $index; track type) {
+      <button *tuiItem tuiTab class="type">
+        {{ type.value[0].carriage }} ({{ totalSeatsForType(type.key) }})
+        <div>{{ currency | tuiCurrency }}{{ price[type.key] || 0 }}</div>
+      </button>
+    }
+  </tui-tabs-with-more>
 
-  @for (type of carriageList | keyvalue; track type.key) {
-    <div class="tab-content" [ngClass]="{ active: activeItemIndex === $index }">
+  <ng-template #more>
+    <tui-icon icon="@tui.ellipsis"></tui-icon>
+  </ng-template>
+
+  @for (type of carriageList | keyvalue; let i = $index; track type) {
+    <div class="tab-content" *ngIf="activeItemIndex === i">
       @for (carriage of getCarriageListForType(type.key); track carriage.index) {
         <div>
           <h3>
