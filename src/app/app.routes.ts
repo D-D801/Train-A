@@ -21,6 +21,7 @@ export const routes: Routes = [
     path: 'orders',
     loadComponent: () =>
       import('@features/orders/pages/orders-page/orders-page.component').then((m) => m.OrdersPageComponent),
+    canMatch: [authGuard],
   },
   {
     path: 'registration',

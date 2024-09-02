@@ -21,7 +21,7 @@ export class AuthService {
 
   public isLoggedIn = this._isLoggedIn.asReadonly();
 
-  private readonly _role = signal<keyof typeof Role | null>(null);
+  private readonly _role = signal(this.getAuthRole());
 
   public role = this._role.asReadonly();
 
@@ -32,7 +32,10 @@ export class AuthService {
         this.localStorage.setItem(LocalStorageKey.UserToken, response.token);
       }),
       switchMap(() => this.profileApiService.getUserInformation()),
-      tap((res) => this._role.set(res.role))
+      tap(({ role }) => {
+        this.localStorage.setItem(LocalStorageKey.UserRole, role);
+        this._role.set(role);
+      })
     );
   }
 
@@ -45,6 +48,8 @@ export class AuthService {
       tap(() => {
         this._isLoggedIn.set(false);
         this._role.set(null);
+        this.localStorage.removeItem(LocalStorageKey.UserToken);
+        this.localStorage.removeItem(LocalStorageKey.UserRole);
       })
     );
   }
@@ -55,5 +60,9 @@ export class AuthService {
 
   private getAuthStatus() {
     return !!this.localStorage.getItem(LocalStorageKey.UserToken);
+  }
+
+  private getAuthRole() {
+    return this.localStorage.getItem(LocalStorageKey.UserRole);
   }
 }

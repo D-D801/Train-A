@@ -4,13 +4,10 @@ import { TuiChevron, TuiTabs, TuiTabsWithMore } from '@taiga-ui/kit';
 import { TitleCasePipe } from '@angular/common';
 import { TuiDropdown, TuiDataList, TuiIcon, TuiButton } from '@taiga-ui/core';
 import { NavigationEnd, Router, RouterLink } from '@angular/router';
-import { filter, map, take, tap } from 'rxjs';
+import { filter, map, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from '@core/services/auth/auth.service';
-import { ProfileApiService } from '@features/auth/services/profile-api/profile-api.service';
 import { AlertService } from '@core/services/alert/alert.service';
-import { LocalStorageService } from '@core/services/local-storage/local-storage.service';
-import { LocalStorageKey } from '@shared/enums/local-storage-key.enum';
 import { tuiIsString } from '@taiga-ui/cdk';
 import { Role } from '@shared/enums/role.enum';
 import { LogoComponent } from '../logo/logo.component';
@@ -40,10 +37,6 @@ function isString(tab: unknown): tab is string {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent implements OnInit {
-  private readonly profileApiService = inject(ProfileApiService);
-
-  private readonly localStorage = inject(LocalStorageService);
-
   private readonly authService = inject(AuthService);
 
   private readonly destroy = inject(DestroyRef);
@@ -77,25 +70,6 @@ export class HeaderComponent implements OnInit {
   protected open = false;
 
   public ngOnInit() {
-    if (this.isLoggedIn()) {
-      this.profileApiService
-        .getUserInformation()
-        .pipe(
-          take(1),
-          tap({
-            next: (userInfo) => {
-              this.authService.setRole(userInfo.role);
-            },
-            error: ({ error: { message } }) => {
-              this.alert.open({ message, label: 'Error', appearance: 'error' });
-              this.router.navigate(['/home']);
-            },
-          }),
-          takeUntilDestroyed(this.destroy)
-        )
-        .subscribe();
-    }
-
     this.router.events
       .pipe(
         filter((event) => event instanceof NavigationEnd),
@@ -149,7 +123,6 @@ export class HeaderComponent implements OnInit {
       .subscribe({
         next: () => {
           this.router.navigate(['/home']);
-          this.localStorage.removeItem(LocalStorageKey.UserToken);
         },
         error: ({ error: { message } }) => {
           this.alert.open({ message, label: 'Error', appearance: 'error' });
