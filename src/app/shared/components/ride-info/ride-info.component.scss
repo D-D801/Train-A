@@ -2,6 +2,7 @@
 
 $height-line: 5rem;
 $shift-up: -0.8rem;
+$icon-size: 24px;
 
 :host {
   display: flex;
@@ -43,6 +44,7 @@ $shift-up: -0.8rem;
 }
 
 .marker-box {
+  position: relative;
   display: flex;
   justify-content: center;
   width: 5rem;
@@ -62,38 +64,27 @@ $shift-up: -0.8rem;
   margin-top: $shift-up;
 }
 
-.current-line-color,
-.line-color {
+.connecting-line {
   position: relative;
   border: 1px solid;
 }
 
-.line-color {
+.station-color {
+  color: var(--tui-status-neutral);
   border-color: var(--tui-status-neutral);
 }
 
-.current-line-color {
+.current-station-color {
+  color: var(--tui-info);
   border-color: var(--tui-info);
 }
 
-.current-marker::before,
-.marker::before {
-  content: '';
-
+.map-pin {
   position: absolute;
-  top: -5px;
-  left: -5px;
+  top: -1.25rem;
+  left: calc(50% - ($icon-size / 2));
 
-  width: 10px;
-  height: 10px;
+  padding: 2px 0 3px;
 
-  border-radius: 50%;
-}
-
-.current-marker::before {
-  background-color: var(--tui-info);
-}
-
-.marker::before {
-  background-color: var(--tui-status-neutral);
+  background-color: var(--tui-background-base);
 }
