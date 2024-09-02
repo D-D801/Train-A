@@ -6,7 +6,7 @@ import { LocalStorageService } from '@core/services/local-storage/local-storage.
 import { TuiAlertService } from '@taiga-ui/core';
 import { mockTokenResponse, mockUser } from '@shared/constants/mock-data/mock-user-data';
 import { LocalStorageKey } from '@shared/enums/local-storage-key.enum';
-import { AuthApiService } from '../../../features/auth/services/auth-api/auth-api.service';
+import { AuthApiService } from '@features/auth/services/auth-api/auth-api.service';
 import { AuthService } from './auth.service';
 
 describe('AuthServiceService', () => {

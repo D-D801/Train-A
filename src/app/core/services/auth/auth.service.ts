@@ -4,8 +4,7 @@ import { switchMap, tap } from 'rxjs';
 import { LocalStorageKey } from '@shared/enums/local-storage-key.enum';
 import { UserRequest } from '@features/auth/interfaces/user-request.interface';
 import { ProfileApiService } from '@features/auth/services/profile-api/profile-api.service';
-import { Role } from '@shared/enums/role.enum';
-import { AuthApiService } from '../../../features/auth/services/auth-api/auth-api.service';
+import { AuthApiService } from '@features/auth/services/auth-api/auth-api.service';
 
 @Injectable({
   providedIn: 'root',
@@ -52,10 +51,6 @@ export class AuthService {
         this.localStorage.removeItem(LocalStorageKey.UserRole);
       })
     );
-  }
-
-  public setRole(role: keyof typeof Role) {
-    this._role.set(role);
   }
 
   private getAuthStatus() {
