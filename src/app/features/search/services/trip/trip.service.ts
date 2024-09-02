@@ -1,22 +1,19 @@
 /* eslint-disable class-methods-use-this */
 import { computed, inject, Injectable } from '@angular/core';
 import { CarriagesService } from '@core/services/carriages/carriages.service';
+import { Price } from '@features/admin/interfaces/segment.interface';
 import { RoadSection } from '@features/search/interfaces/search-route-response.interface';
 import { dateConverter } from '@shared/utils/date-converter';
 
 export interface CarriageList {
-  [key: string]: {
+  [carriage: string]: {
     index: number;
     carriage: string;
   }[];
 }
 
-export interface Price {
-  [key: string]: number;
-}
-
 export interface SeatsPerCarriage {
-  [key: string]: number;
+  [carriage: string]: number;
 }
 
 export interface SelectedOrder {
@@ -33,7 +30,10 @@ export interface BookSeats {
 }
 
 export interface FreeSeat {
-  [key: number]: { carriageType: string; availableSeats: number };
+  [index: number]: {
+    carriageType: string;
+    availableSeats: number;
+  };
 }
 @Injectable({
   providedIn: 'root',
