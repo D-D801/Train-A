@@ -1,1 +1,6 @@
-<p>orders-page works!</p>
+@for (order of orders(); track order.id) {
+  <div class="order-item">
+    {{ order.id }}
+    <!-- <dd-order-card [order]="order"></dd-order-card> -->
+  </div>
+}

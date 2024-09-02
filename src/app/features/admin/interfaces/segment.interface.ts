@@ -3,6 +3,6 @@ export interface Segment {
   price: Price;
 }
 
-interface Price {
+export interface Price {
   [carriage: string]: number;
 }
