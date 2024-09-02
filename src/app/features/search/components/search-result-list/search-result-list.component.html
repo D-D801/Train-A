@@ -3,26 +3,40 @@
   @for (route of result.routes; track route.id) {
     @for (ride of route.schedule; track ride.rideId) {
       <div tuiPlatform="web">
-        <div tuiCardLarge tuiSurface="elevated">
+        <div
+          tuiCardLarge
+          tuiSurface="elevated"
+          [routerLink]="['/trip', ride.rideId]"
+          [queryParams]="{ from: result.from.stationId, to: result.to.stationId }"
+        >
           <header tuiHeader>
-            <h2 tuiTitle>{{ ride.rideId }}</h2>
+            <h2 tuiTitle>Ride {{ ride.rideId }}</h2>
           </header>
           @let arrival = ride.segments.at(-1)?.time?.[1] ?? '';
-          <section>
-            <div>{{ ride.segments[0].time[0] | date }}</div>
-            <div>{{ result.from.city }}</div>
-            <div>{{ getTravelTime(arrival, ride.segments[0].time[0]) }}</div>
-            <hr />
-            <div>{{ result.to.city }}</div>
-            <div>{{ arrival | date }}</div>
-            @for (segment of ride.segments; track segment.time[0]) {
+          <section class="info-container">
+            <div class="info">
+              <div>
+                <div>{{ ride.segments[0].time[0] | date: 'HH:MM' }}</div>
+                <div>{{ ride.segments[0].time[0] | date }}</div>
+                <div>{{ result.from.city }}</div>
+              </div>
+              <div>{{ getTravelTime(arrival, ride.segments[0].time[0]) }}</div>
+              <hr />
+              <div>
+                <div>{{ arrival | date: 'HH:MM' }}</div>
+                <div>{{ result.to.city }}</div>
+                <div>{{ arrival | date }}</div>
+              </div>
+            </div>
+            <div>
+              @let departureIndex = getStationIndexInPath(result.from.stationId, route.path);
+              @let arrivalIndex = getStationIndexInPath(result.to.stationId, route.path);
               @for (carriage of getUniqueCarriages(route.carriages); track carriage) {
                 <div>
-                  <span>{{ carriage }}: {{ segment.price[carriage] }}</span>
+                  <span>{{ carriage }}: ${{ getPrice(ride.segments, carriage, departureIndex, arrivalIndex) }}</span>
                 </div>
               }
-            }
-            <button appearance="secondary" size="m" tuiButton type="button">Label</button>
+            </div>
           </section>
         </div>
       </div>

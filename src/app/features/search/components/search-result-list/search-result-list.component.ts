@@ -1,6 +1,12 @@
+/* eslint-disable class-methods-use-this */
 import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { RoadSection } from '@features/search/interfaces/search-route-response.interface';
 import { SearchService } from '@features/search/services/search/search.service';
+import { TuiPlatform } from '@taiga-ui/cdk';
+import { TuiButton, TuiSurface, TuiTitle } from '@taiga-ui/core';
+import { TuiCardLarge, TuiHeader } from '@taiga-ui/layout';
 
 export function calculateStopDuration(arrival: string, departure: string): string {
   const arrivalDate = new Date(arrival);
@@ -23,7 +29,7 @@ export function calculateStopDuration(arrival: string, departure: string): strin
 @Component({
   selector: 'dd-search-result-list',
   standalone: true,
-  imports: [DatePipe],
+  imports: [DatePipe, RouterLink, TuiCardLarge, TuiTitle, TuiHeader, TuiCardLarge, TuiSurface, TuiPlatform, TuiButton],
   templateUrl: './search-result-list.component.html',
   styleUrl: './search-result-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -33,13 +39,22 @@ export class SearchResultListComponent {
 
   public searchResult = this.searchService.searchResult;
 
-  // eslint-disable-next-line class-methods-use-this
   public getTravelTime(arrival: string, departure: string) {
     return calculateStopDuration(arrival, departure);
   }
 
-  // eslint-disable-next-line class-methods-use-this
   public getUniqueCarriages = (carriages: string[]) => {
     return [...new Set(carriages)];
   };
+
+  public getPrice(segments: RoadSection[], carriage: string, departureIndex: number, arrivalIndex: number) {
+    return segments
+      .slice(departureIndex, arrivalIndex + 1)
+      .map((segment) => segment.price[carriage])
+      .reduce((totalPrice, segmentPrice) => totalPrice + segmentPrice, 0);
+  }
+
+  public getStationIndexInPath(stationId: number, path: number[]) {
+    return path.indexOf(stationId);
+  }
 }
