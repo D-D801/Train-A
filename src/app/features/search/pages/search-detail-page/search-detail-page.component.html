@@ -9,7 +9,10 @@
     Back
   </button>
   <div>
-    <h2>Station {{ fromStation }} -> Station {{ toStation }}</h2>
+    <h2>
+      {{ stationsService.getStationNameById(fromStation) }} ->
+      {{ stationsService.getStationNameById(toStation) }}
+    </h2>
     @if (ride()) {
       <h3>{{ setTimes('start') }} - {{ setTimes('end') }}</h3>
       <div class="header-buttons">

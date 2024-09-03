@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { stationsResolver } from '@features/admin/resolvers/stations-resolver';
 import { adminGuard } from '@features/auth/guards/admin.guard';
 import { authGuard } from '@features/auth/guards/auth.guard';
 
@@ -52,7 +51,6 @@ export const routes: Routes = [
         path: 'stations',
         loadComponent: () =>
           import('@features/admin/pages/stations-page/stations-page.component').then((m) => m.StationsPageComponent),
-        resolve: { stationsData: stationsResolver },
       },
 
       {

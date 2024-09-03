@@ -2,6 +2,7 @@ import { NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CarriagesService } from '@core/services/carriages/carriages.service';
+import { StationsService } from '@core/services/stations/stations.service';
 import { TrainRoute } from '@features/admin/interfaces/train-route.interface';
 import { TuiIcon, TuiTitle } from '@taiga-ui/core';
 import { TuiHeader } from '@taiga-ui/layout';
@@ -22,4 +23,6 @@ export class RouteCardComponent {
   public delete = output<TrainRoute>();
 
   protected readonly carriagesService = inject(CarriagesService);
+
+  protected readonly stationsService = inject(StationsService);
 }

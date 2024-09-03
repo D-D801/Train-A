@@ -15,7 +15,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AlertService } from '@core/services/alert/alert.service';
 import { RouteCardComponent } from '@features/admin/components/route-card/route-card.component';
-import { Station } from '@features/admin/interfaces/station.interface';
 import { TrainRoute } from '@features/admin/interfaces/train-route.interface';
 import { RouteApiService } from '@features/admin/services/route-api/route-api.service';
 import { MIN_ROUTE_FORM_CONTROL_COUNT } from '@features/admin/constants/min-route-control-count';
@@ -25,6 +24,7 @@ import { TuiCardLarge, TuiHeader } from '@taiga-ui/layout';
 import { TuiSelectModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { updateAvailableStations } from '@shared/utils/update-available-stations';
 import { CarriagesService } from '@core/services/carriages/carriages.service';
+import { StationsService } from '@core/services/stations/stations.service';
 
 enum ControlsType {
   path = 'path',
@@ -61,6 +61,8 @@ export class RouteFormComponent {
 
   protected readonly carriagesService = inject(CarriagesService);
 
+  protected readonly stationsService = inject(StationsService);
+
   private readonly alert = inject(AlertService);
 
   private readonly routeApiService = inject(RouteApiService);
@@ -71,9 +73,9 @@ export class RouteFormComponent {
 
   private readonly cdr = inject(ChangeDetectorRef);
 
-  protected readonly connectedToStations = signal<string[][]>([]);
+  protected readonly stations = this.stationsService.stations;
 
-  protected readonly stations = signal<Station[]>([]);
+  protected readonly connectedToStations = signal<string[][]>([]);
 
   private readonly carriages = this.carriagesService.carriages;
 
@@ -89,18 +91,6 @@ export class RouteFormComponent {
   protected readonly MIN_ROUTE_FORM_CONTROL_COUNT = MIN_ROUTE_FORM_CONTROL_COUNT;
 
   public constructor() {
-    this.routeApiService
-      .getStations()
-      .pipe(takeUntilDestroyed())
-      .subscribe((data) => {
-        this.stations.set(data);
-        const availableStations = this.trainRoute()
-          ? updateAvailableStations(this.trainRoute()?.path || [], this.stations())
-          : updateAvailableStations(new Array(MIN_ROUTE_FORM_CONTROL_COUNT).fill(null), this.stations());
-
-        this.connectedToStations.set(availableStations);
-      });
-
     effect(() => {
       const route = this.trainRoute();
       if (route) {

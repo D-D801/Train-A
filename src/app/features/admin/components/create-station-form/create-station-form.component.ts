@@ -6,7 +6,6 @@ import { AlertService } from '@core/services/alert/alert.service';
 import { NewStation } from '@features/admin/interfaces/new-station.interface';
 import { Station } from '@features/admin/interfaces/station-list-item.interface';
 import { StationsApiService } from '@features/admin/services/stations-api/stations-api.service';
-import { StationsService } from '@features/admin/services/stations/stations.service';
 import { latitudeValidator } from '@features/admin/validators/latitude.validator';
 import { longitudeValidator } from '@features/admin/validators/longitude.validator';
 import { CityInfo } from '@features/search/interfaces/city-info.interface';
@@ -17,6 +16,7 @@ import { TuiLet } from '@taiga-ui/cdk';
 import { TuiButton, TuiDataList, TuiError } from '@taiga-ui/core';
 import { TuiInputModule } from '@taiga-ui/legacy';
 import { debounceTime, filter, map, switchMap, tap } from 'rxjs';
+import { StationsService } from '@core/services/stations/stations.service';
 
 @Component({
   selector: 'dd-create-station-form',
@@ -150,7 +150,7 @@ export class CreateStationFormComponent implements OnInit {
         tap(({ id }) => {
           this.createdStationId = id;
         }),
-        switchMap(() => this.stationsApiService.retrieveStationList()),
+        switchMap(() => this.stationsApiService.getStations()),
         map((stations) => stations.find((station) => station.id === this.createdStationId)),
         filter((station) => !station),
         takeUntilDestroyed(this.destroy)

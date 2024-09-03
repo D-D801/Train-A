@@ -10,6 +10,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { AlertService } from '@core/services/alert/alert.service';
+import { StationsService } from '@core/services/stations/stations.service';
 import { NewRideService } from '@features/admin/services/new-ride/new-ride.service';
 import { RideApiService } from '@features/admin/services/ride-api/ride-api.service';
 import { buildInErrors } from '@shared/constants/build-in-errors';
@@ -72,6 +73,8 @@ export class NewRideFormComponent implements OnInit {
   public carriages = input.required<string[]>();
 
   public updateRouteInfo = output<number>();
+
+  protected readonly stationsService = inject(StationsService);
 
   private readonly newRideService = inject(NewRideService);
 

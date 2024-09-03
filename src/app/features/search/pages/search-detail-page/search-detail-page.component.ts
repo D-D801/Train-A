@@ -24,6 +24,7 @@ import { TuiButton } from '@taiga-ui/core';
 import { OrderRequest } from '@features/search/interfaces/order.request.interface';
 import { TuiHeader } from '@taiga-ui/layout';
 import { CURRENCY } from '@shared/constants/currency';
+import { StationsService } from '@core/services/stations/stations.service';
 
 @Component({
   selector: 'dd-search-detail-page',
@@ -47,6 +48,8 @@ import { CURRENCY } from '@shared/constants/currency';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchDetailPageComponent {
+  protected readonly stationsService = inject(StationsService);
+
   private readonly route = inject(ActivatedRoute);
 
   private readonly router = inject(Router);
