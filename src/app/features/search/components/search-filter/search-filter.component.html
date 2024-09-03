@@ -1,0 +1,35 @@
+@if (filteredDates(); as dates) {
+  <div tuiCarouselButtons class="wrapper">
+    <button
+      iconStart="@tui.chevron-left"
+      tuiIconButton
+      type="button"
+      (click)="carousel.prev()"
+      [disabled]="index === 0"
+    >
+      Previous
+    </button>
+    <tui-carousel
+      #carousel
+      class="carousel disable-padding"
+      [itemsCount]="itemsCount"
+      [(index)]="index"
+      [draggable]="true"
+    >
+      @for (date of dates; track date; let i = $index) {
+        <button *tuiItem class="item" [ngClass]="{ active: i === activeIndex }" (click)="onItemClick(i)">
+          {{ dateConverter2(date.departureDate) }}
+        </button>
+      }
+    </tui-carousel>
+    <button
+      iconStart="@tui.chevron-right"
+      tuiIconButton
+      type="button"
+      (click)="carousel.next()"
+      [disabled]="index === dates.length - itemsCount"
+    >
+      Next
+    </button>
+  </div>
+}
