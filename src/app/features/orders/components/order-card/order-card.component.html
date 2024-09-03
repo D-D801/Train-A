@@ -1,6 +1,6 @@
 @if (order()) {
   <div tuiCardLarge="normal" tuiSurface="elevated" class="card">
-    @if (isAdmin) {
+    @if (isAdmin()) {
       <div>{{ getUserName(order().userId) }}</div>
     }
     <div class="time-section">
@@ -20,7 +20,7 @@
       @if (bookSeat) {
         <div class="carriage-info">
           <strong>Carriage № </strong>
-          {{ bookSeat.carriageIndex }} ({{ bookSeat.carriageType }})
+          {{ bookSeat.carriageIndex }} ({{ bookSeat.carriageName }})
         </div>
         <div class="seat-price-info">
           <span><strong>Seat: </strong> {{ bookSeat.localSeatNumber }}</span>
@@ -29,7 +29,7 @@
       }
     </div>
     @if (order().status === 'active') {
-      <button appearance="accent" size="s" tuiButton (click)="onCancel(order().id)">Cancel</button>
+      <button appearance="accent" size="s" tuiButton (click)="onCancel($event)">Cancel order</button>
     }
   </div>
 }
