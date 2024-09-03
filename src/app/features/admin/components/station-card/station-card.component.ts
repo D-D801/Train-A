@@ -20,6 +20,7 @@ import { buildInErrors } from '@shared/constants/build-in-errors';
 import { getISOStringDateTimeFromTuiDataTime } from '@shared/utils/getISOStringDateTimeFromTuiDataTime';
 import { EditableFormComponent } from '@shared/components/editable-form/editable-form.component';
 import { CarriagesService } from '@core/services/carriages/carriages.service';
+import { StationsService } from '@core/services/stations/stations.service';
 
 @Component({
   selector: 'dd-station-card',
@@ -64,6 +65,8 @@ export class StationCardComponent {
   public station = input.required<[number, number]>();
 
   protected readonly carriagesService = inject(CarriagesService);
+
+  protected readonly stationsService = inject(StationsService);
 
   public readonly rideApiService = inject(RideApiService);
 

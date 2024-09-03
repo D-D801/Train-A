@@ -11,11 +11,9 @@
         @if (i !== path().length - 1) {
           <div [formGroupName]="i" class="station-card-container">
             <div class="stations">
-              <!-- TODO: replace with the name of the station -->
-              <h4>{{ path()[i] }}</h4>
+              <h4>{{ stationsService.getStationNameById(path()[i]) }}</h4>
               <div class="station-divider"></div>
-              <!-- TODO: replace with the name of the station -->
-              <h4>{{ path()[i + 1] }}</h4>
+              <h4>{{ stationsService.getStationNameById(path()[i + 1]) }}</h4>
             </div>
 
             <div class="time" formArrayName="time">

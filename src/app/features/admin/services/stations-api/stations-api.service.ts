@@ -30,7 +30,7 @@ interface RoadSection {
 export class StationsApiService {
   private readonly httpClient = inject(HttpClient);
 
-  public retrieveStationList() {
+  public getStations() {
     return this.httpClient.get<Station[]>('/api/station');
   }
 

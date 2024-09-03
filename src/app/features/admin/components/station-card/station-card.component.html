@@ -1,10 +1,8 @@
 <div class="station-card-container">
   <div class="stations">
-    <!-- TODO: replace with the name of the station -->
-    <h4>{{ station()[0] }}</h4>
+    <h4>{{ stationsService.getStationNameById(station()[0]) }}</h4>
     <div class="station-divider"></div>
-    <!-- TODO: replace with the name of the station -->
-    <h4>{{ station()[1] }}</h4>
+    <h4>{{ stationsService.getStationNameById(station()[1]) }}</h4>
   </div>
 
   <div class="time">

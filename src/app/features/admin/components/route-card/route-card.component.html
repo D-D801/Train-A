@@ -9,7 +9,9 @@
     </aside>
   </header>
 
-  <section class="card-description"><span class="subtitle">Path:</span> {{ route.path.join(', ') }}</section>
+  <section class="card-description">
+    <span class="subtitle">Path:</span> {{ stationsService.getStationNamesByIds(route.path).join(', ') }}
+  </section>
   <section class="card-description">
     <span class="subtitle">Carriages:</span> {{ carriagesService.getCarriageNamesByCodes(route.carriages).join(', ') }}
   </section>

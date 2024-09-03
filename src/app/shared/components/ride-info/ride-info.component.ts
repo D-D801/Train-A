@@ -1,8 +1,6 @@
 import { NgClass } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, effect, inject } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { Station } from '@features/admin/interfaces/station.interface';
+import { StationsService } from '@core/services/stations/stations.service';
 import { RoadSection } from '@features/search/interfaces/search-route-response.interface';
 import { ModalRideInfo } from '@shared/interfaces/route-info.interface';
 import { calculateStopDuration } from '@shared/utils/calculate-train-stop-duration';
@@ -35,9 +33,9 @@ interface StationInfo {
 export class RideInfoComponent {
   private readonly context = inject<TuiDialogContext<number, ModalRideInfo>>(POLYMORPHEUS_CONTEXT);
 
-  private readonly http = inject(HttpClient);
+  private readonly stationsService = inject(StationsService);
 
-  private readonly stations = toSignal(this.http.get<Station[]>('/api/station'));
+  private readonly stations = this.stationsService.stations;
 
   public from = this.context.data.from;
 
@@ -47,8 +45,8 @@ export class RideInfoComponent {
 
   public constructor(private readonly cdr: ChangeDetectorRef) {
     effect(() => {
-      // TODO: refactor this in future - get stations from service
       const allStations = this.stations();
+
       if (allStations) {
         const {
           ride: {
@@ -72,7 +70,7 @@ export class RideInfoComponent {
     if (!segments[index])
       return {
         departureTime: '',
-        city: this.getCityNameById(cityId),
+        city: this.stationsService.getStationNameById(cityId),
         stopDuration: 'Last station',
         arrivalTime: '',
       };
@@ -84,14 +82,8 @@ export class RideInfoComponent {
     return {
       departureTime: formatTime(departureTime),
       arrivalTime: formatTime(arrivalTime),
-      city: this.getCityNameById(cityId),
+      city: this.stationsService.getStationNameById(cityId),
       stopDuration: index !== 0 ? calculateStopDuration(arrivalTimeToStation, departureTime) : 'First station',
     };
-  }
-
-  private getCityNameById(cityId: number) {
-    const allStations = this.stations();
-    if (!allStations) return '';
-    return allStations.find((station) => station.id === cityId)?.city || '';
   }
 }
