@@ -1,45 +1,70 @@
-@let result = searchResult();
-@if (result) {
-  @for (route of result.routes; track route.id) {
-    @for (ride of route.schedule; track ride.rideId) {
-      <div tuiPlatform="web">
-        <div
-          tuiCardLarge
-          tuiSurface="elevated"
-          [routerLink]="['/trip', ride.rideId]"
-          [queryParams]="{ from: result.from.stationId, to: result.to.stationId }"
-        >
-          <header tuiHeader>
-            <h2 tuiTitle>Ride {{ ride.rideId }}</h2>
-          </header>
-          @let arrival = ride.segments.at(-1)?.time?.[1] ?? '';
-          <section class="info-container">
-            <div class="info">
-              <div>
-                <div>{{ ride.segments[0].time[0] | date: 'HH:MM' }}</div>
-                <div>{{ ride.segments[0].time[0] | date }}</div>
-                <div>{{ result.from.city }}</div>
-              </div>
-              <div>{{ getTravelTime(arrival, ride.segments[0].time[0]) }}</div>
-              <hr />
-              <div>
-                <div>{{ arrival | date: 'HH:MM' }}</div>
-                <div>{{ result.to.city }}</div>
-                <div>{{ arrival | date }}</div>
-              </div>
+@if (rides && rides.length > 0) {
+  @for (trip of rides; track trip.rideId) {
+    <div tuiPlatform="web">
+      <div
+        tuiCardLarge
+        tuiSurface="elevated"
+        [routerLink]="['/trip', trip.rideId]"
+        [queryParams]="{ from: searchResult.from.stationId, to: searchResult.to.stationId }"
+      >
+        <header tuiHeader>
+          <h2 tuiTitle>Ride {{ trip.rideId }}</h2>
+        </header>
+        @let departureIndex = getStationIndexInPath(searchResult.from.stationId, trip.path);
+        @let arrivalIndex = getStationIndexInPath(searchResult.to.stationId, trip.path) - 1;
+        <section class="info-container">
+          <div class="info">
+            <div>
+              <div>{{ convertTime(trip.schedule.segments[departureIndex].time[0]) }}</div>
+              <div>{{ searchResult.from.city }}</div>
             </div>
             <div>
-              @let departureIndex = getStationIndexInPath(result.from.stationId, route.path);
-              @let arrivalIndex = getStationIndexInPath(result.to.stationId, route.path);
-              @for (carriage of getUniqueCarriages(route.carriages); track carriage) {
+              {{
+                getTravelTime(
+                  trip.schedule.segments[arrivalIndex].time[1],
+                  trip.schedule.segments[departureIndex].time[0]
+                )
+              }}
+            </div>
+            <hr />
+            <div>
+              <div>{{ convertTime(trip.schedule.segments[arrivalIndex].time[1]) }}</div>
+              <div>{{ searchResult.to.city }}</div>
+            </div>
+            <div>
+              <div>{{ getStation(trip.path[0]).city }} - {{ getStation(trip.path[trip.path.length - 1]).city }}</div>
+              <button
+                appearance="primary"
+                size="xs"
+                tuiButton
+                (click)="showModal(searchResult.from.stationId, searchResult.to.stationId, trip, $event)"
+              >
+                Route
+              </button>
+            </div>
+          </div>
+          <div>
+            @let segments = trip.schedule.segments.slice(departureIndex, arrivalIndex + 1);
+            @let freeSeats = getFreeSeats(segments, trip.carriages);
+            @let uniqueCarriageTypes = getUniqueCarriages(trip.carriages);
+            @let carriageTypes = getCarriageTypes(uniqueCarriageTypes);
+            @for (type of carriageTypes; track type) {
+              @for (carriage of getCarriageListForType(uniqueCarriageTypes, type); track carriage.index) {
                 <div>
-                  <span>{{ carriage }}: ${{ getPrice(ride.segments, carriage, departureIndex, arrivalIndex) }}</span>
+                  <span
+                    >{{ type }}: ${{ getPrice(segments)[type] }}, {{ freeSeats[carriage.index].availableSeats }} free
+                    seats</span
+                  >
                 </div>
               }
-            </div>
-          </section>
-        </div>
+            }
+          </div>
+        </section>
       </div>
-    }
+    </div>
   }
+} @else {
+  <tui-block-status>
+    <h4>No rides available</h4>
+  </tui-block-status>
 }
