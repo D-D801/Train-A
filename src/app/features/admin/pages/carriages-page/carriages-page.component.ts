@@ -48,6 +48,7 @@ export class CarriagesPageComponent {
   public onEdit(carriage: Carriage) {
     this.selectedCarriage = carriage;
     this.showForm.set(true);
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
   }
 
   public onSubmit(carriageData: Carriage) {

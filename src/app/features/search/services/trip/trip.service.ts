@@ -24,6 +24,7 @@ export interface SelectedOrder {
 
 export interface BookSeats {
   carriageType: string;
+  carriageName: string;
   localSeatNumber: number;
   carriageIndex: number;
 }
@@ -83,10 +84,7 @@ export class TripService {
     return totalSeatsBeforeCurrentCarriage + (seatNumber || 0);
   }
 
-  public getOccupieSeatsInCarriages(
-    globalSeatNumbers: number[],
-    carriages: string[]
-  ): { carriageType: string; localSeatNumber: number; carriageIndex: number }[] {
+  public getOccupieSeatsInCarriages(globalSeatNumbers: number[], carriages: string[]) {
     return globalSeatNumbers.map((globalSeatNumber) => {
       let totalSeatsBeforeCurrentCarriage = 0;
 
@@ -98,6 +96,7 @@ export class TripService {
         if (globalSeatNumber <= totalSeatsBeforeCurrentCarriage + seatsInCarriage) {
           return {
             carriageType,
+            carriageName,
             localSeatNumber: globalSeatNumber - totalSeatsBeforeCurrentCarriage,
             carriageIndex: i + 1,
           };
@@ -108,6 +107,7 @@ export class TripService {
 
       return {
         carriageType: '',
+        carriageName: '',
         localSeatNumber: 0,
         carriageIndex: 0,
       };

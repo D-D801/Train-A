@@ -3,12 +3,12 @@ import { TuiTab, TuiTabs } from '@taiga-ui/kit';
 import { TuiScrollbar } from '@taiga-ui/core';
 import { NgClass } from '@angular/common';
 import { RouterLink, RouterOutlet } from '@angular/router';
-import { CarriagePageComponent } from '../carriage-page/carriage-page.component';
+import { CarriagesPageComponent } from '../carriages-page/carriages-page.component';
 
 @Component({
   selector: 'dd-admin-page',
   standalone: true,
-  imports: [TuiTabs, TuiTab, CarriagePageComponent, TuiScrollbar, NgClass, RouterOutlet, RouterLink],
+  imports: [TuiTabs, TuiTab, CarriagesPageComponent, TuiScrollbar, NgClass, RouterOutlet, RouterLink],
   templateUrl: './admin-page.component.html',
   styleUrl: './admin-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

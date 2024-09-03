@@ -1,18 +1,25 @@
 import { HttpClient } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, effect, inject, input, output } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, input, output } from '@angular/core';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { Price } from '@features/admin/interfaces/segment.interface';
 import { Station } from '@features/admin/interfaces/station-list-item.interface';
 import { Order } from '@features/orders/interfaces/order.interface';
 import { User } from '@features/orders/interfaces/user.interface';
 import { RoadSection } from '@features/search/interfaces/search-route-response.interface';
 import { BookSeats, TripService } from '@features/search/services/trip/trip.service';
-import { TuiButton, TuiSurface, TuiTitle } from '@taiga-ui/core';
+import { TuiButton, TuiDialogService, TuiSurface, TuiTitle } from '@taiga-ui/core';
 import { TuiCardLarge, TuiHeader } from '@taiga-ui/layout';
 import { TuiCurrencyPipe } from '@taiga-ui/addon-commerce';
 import { CURRENCY } from '@shared/constants/currency';
 import { DatePipe } from '@angular/common';
 import { calculateStopDuration } from '@shared/utils/calculate-train-stop-duration';
+import { TUI_CONFIRM } from '@taiga-ui/kit';
+import { getDeletionConfirmationData } from '@shared/utils/getDeletionConfirmationData';
+import { filter, switchMap } from 'rxjs';
+import { OrdersApiService } from '@features/orders/services/orders-api/orders-api.service';
+import { AlertService } from '@core/services/alert/alert.service';
+import { AuthService } from '@core/services/auth/auth.service';
+import { Role } from '@shared/enums/role.enum';
 
 @Component({
   selector: 'dd-order-card',
@@ -29,13 +36,23 @@ export class OrderCardComponent {
 
   public cancelOrder = output<number>();
 
+  private readonly authService = inject(AuthService);
+
   private readonly httpClient = inject(HttpClient);
 
   private readonly tripService = inject(TripService);
 
+  private readonly dialogs = inject(TuiDialogService);
+
+  private readonly ordersApiService = inject(OrdersApiService);
+
+  public readonly alert = inject(AlertService);
+
+  public readonly destroy = inject(DestroyRef);
+
   private readonly stations = toSignal(this.httpClient.get<Station[]>('/api/station'));
 
-  protected readonly isAdmin = true;
+  private readonly role = this.authService.role;
 
   private segments: RoadSection[] = [];
 
@@ -58,12 +75,14 @@ export class OrderCardComponent {
     });
   }
 
-  public onCancel(orderId: number) {
-    this.cancelOrder.emit(orderId);
+  public isAdmin() {
+    return this.role() === Role.manager;
   }
 
   public getUserName(userid: number) {
-    return this.users().find((item) => item.id === userid)?.name;
+    const userName = this.users().find((item) => item.id === userid)?.name;
+    if (!userName) return '';
+    return userName;
   }
 
   public getStationById(id: number) {
@@ -78,5 +97,35 @@ export class OrderCardComponent {
   public duration() {
     if (!this.segments.length) return '';
     return calculateStopDuration(this.segments[this.segments.length - 1].time[1], this.segments[0].time[0]);
+  }
+
+  public onCancel(event: MouseEvent) {
+    event.stopPropagation();
+    const userName =
+      this.order().userId && this.role() === Role.manager ? `( ${this.getUserName(this.order().userId)} )` : '';
+    this.dialogs
+      .open<boolean>(TUI_CONFIRM, {
+        label: `Cancel ${this.order().id} order ${userName}`,
+        size: 'm',
+        data: getDeletionConfirmationData(`order`),
+      })
+      .pipe(
+        filter((isConfirmed) => isConfirmed),
+        switchMap(() => this.ordersApiService.deleteOrder(this.order().id)),
+        takeUntilDestroyed(this.destroy)
+      )
+      .subscribe({
+        next: () => {
+          this.cancelOrder.emit(this.order().id);
+          this.alert.open({
+            message: `Order ${this.order().rideId} successful canceled.`,
+            label: 'Cancel order',
+            appearance: 'success',
+          });
+        },
+        error: ({ error: { message } }) => {
+          this.alert.open({ message, label: 'Error', appearance: 'error' });
+        },
+      });
   }
 }
