@@ -17,6 +17,21 @@ export interface SearchRouteResponse {
   routes: Route[];
 }
 
+export interface SearchFromStation {
+  stationId: number;
+  city: string;
+  geolocation: CityCoordinates;
+}
+
+export interface SearchToStation {
+  stationId: number;
+  city: string;
+  geolocation: {
+    latitude: number;
+    longitude: number;
+  };
+}
+
 interface Route {
   id: number;
   path: number[];

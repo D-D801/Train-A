@@ -31,3 +31,6 @@
     </ng-container>
   </tui-input>
 </ng-template>
+@if (filterDates().length) {
+  <dd-search-filter [filteredDates]="filterDates()" (currentIndex)="onFilterSelect($event)"></dd-search-filter>
+}
