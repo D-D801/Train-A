@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
 import { provideHttpClient } from '@angular/common/http';
-import { CarriageService } from '@core/services/carriage/carriage.service';
+import { CarriagesService } from '@core/services/carriages/carriages.service';
 import { TripService } from './trip.service';
 
 describe('RideService', () => {
@@ -12,7 +12,7 @@ describe('RideService', () => {
       providers: [
         provideHttpClient(),
         {
-          provide: CarriageService,
+          provide: CarriagesService,
           useValue: {},
         },
       ],

@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
-import { StationsService } from '@features/admin/services/stations/stations.service';
+import { StationsService } from '@core/services/stations/stations.service';
 import { RoadSection, Trip } from '@features/search/interfaces/search-route-response.interface';
 import { SearchApiService } from '@features/search/services/search-api/search-api.service';
 import { TripService } from '@features/search/services/trip/trip.service';
