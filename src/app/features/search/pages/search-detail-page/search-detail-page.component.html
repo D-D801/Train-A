@@ -14,7 +14,7 @@
       {{ stationsService.getStationNameById(toStation) }}
     </h2>
     @if (ride()) {
-      <h3>{{ setTimes('start') }} - {{ setTimes('end') }}</h3>
+      <h3>{{ setTimes('start') | date: 'MMMM dd, hh:mm' }} - {{ setTimes('end') | date: 'MMMM dd, hh:mm' }}</h3>
       <div class="header-buttons">
         <p>Ride {{ ride()?.rideId }}</p>
         <button appearance="primary" size="xs" tuiButton (click)="showModal()">Route</button>

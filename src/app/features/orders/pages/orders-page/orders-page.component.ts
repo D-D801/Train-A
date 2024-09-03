@@ -45,6 +45,12 @@ export class OrdersPageComponent {
 
     ordersObservable.pipe(takeUntilDestroyed(this.destroy)).subscribe({
       next: (orders) => {
+        orders.sort((a, b) => {
+          const timeA = new Date(a.schedule.segments[0].time[0]).getTime();
+          const timeB = new Date(b.schedule.segments[0].time[0]).getTime();
+          return timeA - timeB;
+        });
+
         this.orders.set(orders);
       },
       error: ({ error: { message } }) => {

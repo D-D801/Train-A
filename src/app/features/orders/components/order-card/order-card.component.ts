@@ -11,11 +11,13 @@ import { TuiButton, TuiSurface, TuiTitle } from '@taiga-ui/core';
 import { TuiCardLarge, TuiHeader } from '@taiga-ui/layout';
 import { TuiCurrencyPipe } from '@taiga-ui/addon-commerce';
 import { CURRENCY } from '@shared/constants/currency';
+import { DatePipe } from '@angular/common';
+import { calculateStopDuration } from '@shared/utils/calculate-train-stop-duration';
 
 @Component({
   selector: 'dd-order-card',
   standalone: true,
-  imports: [TuiCardLarge, TuiSurface, TuiTitle, TuiHeader, TuiButton, TuiCurrencyPipe],
+  imports: [TuiCardLarge, TuiSurface, TuiTitle, TuiHeader, TuiButton, TuiCurrencyPipe, DatePipe],
   templateUrl: './order-card.component.html',
   styleUrl: './order-card.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -66,5 +68,15 @@ export class OrderCardComponent {
 
   public getStationById(id: number) {
     return this.stations()?.find((item) => item.id === id)?.city;
+  }
+
+  public setTimes(time: string) {
+    if (!this.segments.length) return '';
+    return time === 'start' ? this.segments[0].time[0] : this.segments[this.segments.length - 1].time[1];
+  }
+
+  public duration() {
+    if (!this.segments.length) return '';
+    return calculateStopDuration(this.segments[this.segments.length - 1].time[1], this.segments[0].time[0]);
   }
 }
