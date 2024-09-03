@@ -116,7 +116,14 @@ export class SearchDetailPageComponent {
       this.segments = ride.schedule.segments.slice(fromIndex, toIndex);
       this.price = this.tripService.setPrices(this.segments);
 
-      this.bookSeats = this.tripService.getOccupieSeatsInCarriages(this.segments[0].occupiedSeats, ride.carriages);
+      const longestSegmentIndex = this.segments
+        .map((segment, index) => ({ length: segment.occupiedSeats.length, index }))
+        .reduce((max, current) => (current.length > max.length ? current : max), { length: 0, index: -1 }).index;
+
+      this.bookSeats = this.tripService.getOccupieSeatsInCarriages(
+        this.segments[longestSegmentIndex].occupiedSeats,
+        ride.carriages
+      );
 
       this.freeSeats = this.tripService.getAvailableSeats(this.bookSeats, this.carriageList);
     });
