@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
+import { CityInfo } from '@features/search/interfaces/city-info.interface';
 import { environment } from 'src/environments/environment';
-import { CityInfo } from '../../interfaces/city-info.interface';
 
 const responseLimit = 5;
 
