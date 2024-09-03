@@ -51,7 +51,7 @@ export class CarriagePreviewComponent {
     if (!bookSeats) return;
 
     bookSeats
-      .filter((seat) => seat.carriageType === this.carriage()?.name)
+      .filter((seat) => seat.carriageType === this.carriage()?.code)
       .forEach((seat) => this.reservedSeats.add(seat.localSeatNumber));
   }
 
@@ -85,7 +85,7 @@ export class CarriagePreviewComponent {
   public onSeatClick(seatNumber: number) {
     if (!this.options().isClick) return;
     this.selectedSeat = this.isSeatSelected(seatNumber) ? null : seatNumber;
-    const carriageType = this.carriage()?.name;
+    const carriageType = this.carriage()?.code;
     if (!carriageType || !this.selectedSeat) return;
     this.seatSelected.emit({ seatNumber: this.selectedSeat, carriageType });
   }

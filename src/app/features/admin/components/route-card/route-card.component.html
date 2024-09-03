@@ -10,5 +10,7 @@
   </header>
 
   <section class="card-description"><span class="subtitle">Path:</span> {{ route.path.join(', ') }}</section>
-  <section class="card-description"><span class="subtitle">Carriages:</span> {{ route.carriages.join(', ') }}</section>
+  <section class="card-description">
+    <span class="subtitle">Carriages:</span> {{ carriagesService.getCarriageNamesByCodes(route.carriages).join(', ') }}
+  </section>
 </ng-container>

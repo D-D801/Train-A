@@ -1,9 +1,8 @@
-import { Location, NgClass, NgFor, NgIf } from '@angular/common';
+import { KeyValuePipe, Location, NgClass, NgFor, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal, effect } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertService } from '@core/services/alert/alert.service';
-import { CarriageService } from '@core/services/carriage/carriage.service';
 import { CarriagePreviewComponent } from '@features/admin/components/carriage-preview/carriage-preview.component';
 import { RoadSection, Trip } from '@features/search/interfaces/search-route-response.interface';
 import { SearchApiService } from '@features/search/services/search-api/search-api.service';
@@ -41,6 +40,7 @@ import { CURRENCY } from '@shared/constants/currency';
     TuiChip,
     TuiButton,
     TuiHeader,
+    KeyValuePipe,
   ],
   templateUrl: './search-detail-page.component.html',
   styleUrl: './search-detail-page.component.scss',
@@ -57,17 +57,13 @@ export class SearchDetailPageComponent {
 
   private readonly ordersApiService = inject(OrdersApiService);
 
-  private readonly carriageService = inject(CarriageService);
-
-  private readonly tripService = inject(TripService);
+  protected readonly tripService = inject(TripService);
 
   private readonly destroy = inject(DestroyRef);
 
   private readonly alert = inject(AlertService);
 
   private readonly rideModalService = inject(RideModalService);
-
-  public carriages = this.carriageService.carriages;
 
   protected readonly ride = signal<Trip | null>(null);
 
@@ -83,7 +79,7 @@ export class SearchDetailPageComponent {
 
   protected activeItemIndex = 0;
 
-  private carriageList: CarriageList = {};
+  protected carriageList: CarriageList = {};
 
   private segments: RoadSection[] = [];
 
@@ -152,10 +148,6 @@ export class SearchDetailPageComponent {
     this.location.back();
   }
 
-  public getCarriageTypes() {
-    return Object.keys(this.carriageList);
-  }
-
   public getCarriageListForType(type: string) {
     return this.carriageList[type] || [];
   }
@@ -166,10 +158,6 @@ export class SearchDetailPageComponent {
 
   public getFreeSeatsByCarriage(index: number) {
     return this.freeSeats[index]?.availableSeats || 0;
-  }
-
-  public getCarriageByName(name: string) {
-    return this.carriages().find((carriage) => carriage.name === name) ?? null;
   }
 
   public totalSeatsForType(type: string): number {

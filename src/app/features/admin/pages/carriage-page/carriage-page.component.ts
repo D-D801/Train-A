@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AlertService } from '@core/services/alert/alert.service';
+import { CarriagesService } from '@core/services/carriages/carriages.service';
 import { CarriageCardComponent } from '@features/admin/components/carriage-card/carriage-card.component';
 import { CarriageFormComponent } from '@features/admin/components/carriage-form/carriage-form.component';
 import { CarriagePreviewComponent } from '@features/admin/components/carriage-preview/carriage-preview.component';
 import { Carriage } from '@features/admin/interfaces/carriage.interface';
 import { CarriageApiService } from '@features/admin/services/carriage-api/carriage-api.service';
 import { TuiButton } from '@taiga-ui/core';
-import { switchMap } from 'rxjs';
 
 @Component({
   selector: 'dd-carriage-page',
@@ -20,34 +20,21 @@ import { switchMap } from 'rxjs';
 export class CarriagePageComponent {
   private readonly carriageApiService = inject(CarriageApiService);
 
+  private readonly carriagesService = inject(CarriagesService);
+
   private readonly destroy = inject(DestroyRef);
 
   private readonly alert = inject(AlertService);
 
   public readonly showForm = signal(false);
 
-  private readonly _carriages = signal<Carriage[]>([]);
-
-  public readonly carriages = this._carriages.asReadonly();
+  public readonly carriages = this.carriagesService.carriages;
 
   public newCarriages = signal<Carriage[]>([]);
 
-  public allCarriages = computed(() => [...this.newCarriages(), ...this._carriages()]);
+  public allCarriages = computed(() => [...this.newCarriages(), ...this.carriages()]);
 
   public selectedCarriage: Carriage | null = null;
-
-  public constructor() {
-    this.loadCarriages()
-      .pipe(takeUntilDestroyed(this.destroy))
-      .subscribe({
-        next: (carriages) => {
-          this._carriages.set(carriages);
-        },
-        error: ({ error: { message } }) => {
-          this.alert.open({ message, label: 'Error', appearance: 'error' });
-        },
-      });
-  }
 
   public loadCarriages() {
     return this.carriageApiService.getCarriages();
@@ -76,12 +63,8 @@ export class CarriagePageComponent {
   }
 
   public createCarriage(carriageData: Carriage) {
-    const isCarriage = this._carriages().some((item) => item.code === carriageData.name);
-    const isCarriageNew = this.newCarriages().some((item) => item.code === carriageData.name);
-    if (isCarriage || isCarriageNew) {
-      this.alert.open({ message: 'Carriage already exists', label: 'Error', appearance: 'error' });
-      return;
-    }
+    if (!this.checkNameCarriage(carriageData)) return;
+
     this.carriageApiService
       .createCarriage(carriageData)
       .pipe(takeUntilDestroyed(this.destroy))
@@ -100,21 +83,31 @@ export class CarriagePageComponent {
   }
 
   public updateCarriage(carriageData: Carriage) {
-    this.carriageApiService
+    if (!this.checkNameCarriage(carriageData)) return;
+
+    this.carriagesService
       .updateCarriage(carriageData)
-      .pipe(
-        switchMap(() => this.loadCarriages()),
-        takeUntilDestroyed(this.destroy)
-      )
+      .pipe(takeUntilDestroyed(this.destroy))
       .subscribe({
-        next: (carriages) => {
-          this._carriages.set(carriages);
+        next: () => {
           this.showForm.set(false);
           this.newCarriages.set([]);
         },
-        error: ({ error: { message } }) => {
-          this.alert.open({ message, label: 'Error', appearance: 'error' });
-        },
       });
+  }
+
+  private checkNameCarriage(carriageData: Carriage) {
+    const isCarriage = this.carriages().some(
+      (item) => item.code === carriageData.name || item.name === carriageData.name
+    );
+    const isCarriageNew = this.newCarriages().some(
+      (item) => item.code === carriageData.name || item.name === carriageData.name
+    );
+
+    if (isCarriage || isCarriageNew) {
+      this.alert.open({ message: 'Carriage already exists', label: 'Error', appearance: 'error' });
+      return false;
+    }
+    return true;
   }
 }
