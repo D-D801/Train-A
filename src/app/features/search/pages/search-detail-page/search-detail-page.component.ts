@@ -109,8 +109,8 @@ export class SearchDetailPageComponent {
       const fromIndex = ride.path.indexOf(this.fromStation);
       const toIndex = ride.path.indexOf(this.toStation);
       if (fromIndex < 0 || toIndex < 0 || fromIndex > toIndex) {
+        this.router.navigate(['/404']);
         return;
-        this.router.navigate(['/404']); // TODO by 404
       }
       this.carriageList = this.tripService.groupCarriages(ride.carriages);
       this.segments = ride.schedule.segments.slice(fromIndex, toIndex);
@@ -120,10 +120,13 @@ export class SearchDetailPageComponent {
         .map((segment, index) => ({ length: segment.occupiedSeats.length, index }))
         .reduce((max, current) => (current.length > max.length ? current : max), { length: 0, index: -1 }).index;
 
-      this.bookSeats = this.tripService.getOccupieSeatsInCarriages(
-        this.segments[longestSegmentIndex].occupiedSeats,
-        ride.carriages
-      );
+      this.bookSeats =
+        longestSegmentIndex > -1
+          ? this.tripService.getOccupieSeatsInCarriages(
+              this.segments[longestSegmentIndex].occupiedSeats,
+              ride.carriages
+            )
+          : [];
 
       this.freeSeats = this.tripService.getAvailableSeats(this.bookSeats, this.carriageList);
     });

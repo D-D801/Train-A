@@ -18,9 +18,9 @@
   </tui-tabs-with-more>
 
   @if (isLoggedIn()) {
-    <button appearance="primary" size="m" tuiButton (click)="logout()">Logout</button>
+    <button class="auth-button" appearance="primary" size="m" tuiButton (click)="logout()">Logout</button>
   } @else {
-    <button appearance="primary" size="m" tuiButton [routerLink]="['/registration']">Sign Up</button>
+    <button class="auth-button" appearance="primary" size="m" tuiButton [routerLink]="['/signup']">Sign Up</button>
   }
 </header>
 

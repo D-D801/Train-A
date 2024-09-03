@@ -23,7 +23,7 @@ export const routes: Routes = [
     canMatch: [authGuard],
   },
   {
-    path: 'registration',
+    path: 'signup',
     loadComponent: () =>
       import('@features/auth/pages/registration-page/registration-page.component').then(
         (m) => m.RegistrationPageComponent
@@ -31,7 +31,7 @@ export const routes: Routes = [
     canMatch: [authGuard],
   },
   {
-    path: 'login',
+    path: 'signin',
     loadComponent: () =>
       import('@features/auth/pages/login-page/login-page.component').then((m) => m.LoginPageComponent),
     canMatch: [authGuard],
@@ -70,5 +70,10 @@ export const routes: Routes = [
       },
     ],
     canMatch: [adminGuard],
+  },
+
+  {
+    path: '**',
+    loadComponent: () => import('@core/pages/not-found/not-found.component').then((m) => m.NotFoundComponent),
   },
 ];

@@ -49,24 +49,25 @@ describe('AuthServiceService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should set isLoggedIn to true, store token, and navigate to home on successful signup', () => {
-    authApiServiceMock.signup.mockReturnValue(of(mockTokenResponse));
-    service.signup(mockUser);
-  });
-
-  it('should set isLoggedIn to true, store token, and navigate to home on successful signup', () => {
+  it('should set isLoggedIn to true, store token, and update role on successful signup', () => {
     authApiServiceMock.signup.mockReturnValue(of(mockTokenResponse));
     authApiServiceMock.signin.mockReturnValue(of(mockTokenResponse));
-    service.signup(mockUser).subscribe();
 
-    expect(localStorageServiceMock.setItem).toHaveBeenCalledWith(LocalStorageKey.UserToken, mockTokenResponse.token);
+    service.signup(mockUser).subscribe(() => {
+      expect(localStorageServiceMock.setItem).toHaveBeenCalledWith(LocalStorageKey.UserToken, mockTokenResponse.token);
+      expect(localStorageServiceMock.setItem).toHaveBeenCalledWith(LocalStorageKey.UserRole, 'admin'); // если роль администратора
+      expect(service.isLoggedIn()).toBeTruthy();
+    });
   });
 
   it('should show notification and not navigate on signup error', () => {
     const errorResponse = { error: { message: 'Error message' } };
     authApiServiceMock.signup.mockReturnValue(throwError(() => errorResponse));
 
-    service.signup(mockUser).subscribe();
-    expect(routerMock.navigate).not.toHaveBeenCalled();
+    service.signup(mockUser).subscribe({
+      error: () => {
+        expect(routerMock.navigate).not.toHaveBeenCalled();
+      },
+    });
   });
 });

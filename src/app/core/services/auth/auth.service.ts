@@ -39,7 +39,7 @@ export class AuthService {
   }
 
   public signup(body: UserRequest) {
-    return this.authApiService.signup(body).pipe(switchMap(() => this.signin(body)));
+    return this.authApiService.signup(body);
   }
 
   public logout() {

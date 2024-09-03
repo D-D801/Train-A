@@ -110,7 +110,7 @@ export class RegistrationPageComponent implements OnInit {
       )
       .subscribe({
         next: () => {
-          this.router.navigate(['/home']);
+          this.router.navigate(['/signin']);
         },
         error: ({ error: err }) => {
           if (err.reason === 'invalidUniqueKey')

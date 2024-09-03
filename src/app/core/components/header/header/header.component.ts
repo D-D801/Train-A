@@ -83,7 +83,7 @@ export class HeaderComponent implements OnInit {
   protected updateActiveElement(currentUrl: string) {
     const formattedUrl = currentUrl
       .replace('/', '')
-      .replace('login', 'sign in')
+      .replace('signin', 'sign in')
       .replace('orders', 'my orders')
       .split('/');
 
@@ -101,7 +101,7 @@ export class HeaderComponent implements OnInit {
   protected onClick(activeElement: string) {
     this.activeElement.set(activeElement);
 
-    const route = activeElement.replace('sign in', 'login').replace('my orders', 'orders');
+    const route = activeElement.replace('sign in', 'signin').replace('my orders', 'orders');
 
     if (this.adminPages.includes(activeElement)) {
       this.router.navigate([`/admin/${route}`]);
