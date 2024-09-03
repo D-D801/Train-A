@@ -5,7 +5,6 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AlertService } from '@core/services/alert/alert.service';
 import { SearchFilterComponent } from '@features/search/components/search-filter/search-filter.component';
 import { CityCoordinates } from '@features/search/interfaces/city-coordinates.interface';
-import { CityInfo } from '@features/search/interfaces/city-info.interface';
 import { DepartureDateWithIds } from '@features/search/interfaces/filter-dates.interface';
 import { SearchFromStation, SearchToStation } from '@features/search/interfaces/search-route-response.interface';
 import { LocationApiService } from '@features/search/services/location-api/location-api.service';
@@ -22,6 +21,8 @@ import { TuiButton, TuiDataList, TuiInitialsPipe, TuiTextfield } from '@taiga-ui
 import { TuiDataListWrapper } from '@taiga-ui/kit';
 import { TuiInputDateTimeModule, TuiInputModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { debounceTime } from 'rxjs';
+import { Station } from '@features/admin/interfaces/station-list-item.interface';
+import { StationsService } from '@core/services/stations/stations.service';
 
 type InputName = 'from' | 'to';
 
@@ -51,6 +52,8 @@ type InputName = 'from' | 'to';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchFormComponent implements OnInit {
+  private readonly stationsService = inject(StationsService);
+
   private readonly searchService = inject(SearchService);
 
   private readonly searchApiService = inject(SearchApiService);
@@ -63,7 +66,9 @@ export class SearchFormComponent implements OnInit {
 
   private readonly destroy = inject(DestroyRef);
 
-  public cities = this.searchService.cities;
+  public stations = this.stationsService.stations;
+
+  public cities = this.searchService.searchCities;
 
   private fromCityCoordinates: CityCoordinates = { latitude: 0, longitude: 0 };
 
@@ -91,7 +96,7 @@ export class SearchFormComponent implements OnInit {
         fromLongitude: 105.52123546402902,
         toLatitude: 13.729765248664648,
         toLongitude: 59.475481073285636,
-        time: new Date('2024-10-25T02:36:14.551Z').getTime(),
+        time: new Date('2024-10-25T02:36:14.551Z').getTime().toString(),
       })
       .subscribe((searchRouteResponse) => {
         if (this.date.value) {
@@ -118,54 +123,45 @@ export class SearchFormComponent implements OnInit {
 
   public ngOnInit() {
     const { from, to } = this.searchForm.controls;
-    from.valueChanges.pipe(debounceTime(1000), takeUntilDestroyed(this.destroy)).subscribe(() => {
+    from.valueChanges.pipe(debounceTime(300), takeUntilDestroyed(this.destroy)).subscribe(() => {
       if (!this.from.value) return;
       this.updateCities(this.from.value, 'from');
     });
-    to.valueChanges.pipe(debounceTime(1000), takeUntilDestroyed(this.destroy)).subscribe(() => {
+    to.valueChanges.pipe(debounceTime(300), takeUntilDestroyed(this.destroy)).subscribe(() => {
       if (!this.to.value) return;
       this.updateCities(this.to.value, 'to');
     });
   }
 
   public updateCities(city: string, inputName: InputName) {
-    this.locationService
-      .getLocationCoordinates(city)
-      .pipe(takeUntilDestroyed(this.destroy))
-      .subscribe({
-        next: (receivedCities) => {
-          if (!receivedCities) return;
-          const { lat, lon } = receivedCities[this.selectedCityIndex];
-          if (inputName === 'from') {
-            this.fromCityCoordinates = {
-              latitude: lat,
-              longitude: lon,
-            };
-          } else {
-            this.toCityCoordinates = {
-              latitude: lat,
-              longitude: lon,
-            };
-          }
-          this.searchService.setCities(receivedCities);
-        },
-        error: ({ error: { message } }) => {
-          this.alert.open({ message, label: 'Error:', appearance: 'error' });
-        },
-      });
+    const stationsArray = this.stations();
+    if (!stationsArray) return;
+    const receivedCities = stationsArray.filter((item) => item.city.toLowerCase().includes(city.toLowerCase()));
+    this.searchService.setSearchCities(receivedCities);
+    const { latitude, longitude } = receivedCities[this.selectedCityIndex];
+    if (inputName === 'from') {
+      this.fromCityCoordinates = {
+        latitude,
+        longitude,
+      };
+    } else {
+      this.toCityCoordinates = {
+        latitude,
+        longitude,
+      };
+    }
   }
 
-  public onSelected(city: CityInfo, inputName: string, index: number) {
+  public onSelected(city: Station, inputName: string, index: number) {
     this.selectedCityIndex = index;
     if (inputName === 'from') {
-      this.from.setValue(city.name);
+      this.from.setValue(city.city);
     }
     if (inputName === 'to') {
-      this.to.setValue(city.name);
+      this.to.setValue(city.city);
     }
   }
 
-  // TODO: For result list: If no rides are available, a message indicating that no rides are available must be displayed.
   public search() {
     if (this.searchForm.invalid) return;
     let date = '';
@@ -192,6 +188,15 @@ export class SearchFormComponent implements OnInit {
           this.alert.open({ message, label: 'Error:', appearance: 'error' });
         },
       });
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  public getMinDate() {
+    return new TuiDay(
+      new Date(Date.now()).getFullYear(),
+      new Date(Date.now()).getMonth(),
+      new Date(Date.now()).getDay() + 1
+    );
   }
 
   public get from() {
