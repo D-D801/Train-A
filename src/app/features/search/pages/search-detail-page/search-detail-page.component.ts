@@ -44,6 +44,7 @@ import { StationsService } from '@core/services/stations/stations.service';
     TuiIcon,
     TuiTabsWithMore,
     KeyValuePipe,
+    DatePipe,
   ],
   templateUrl: './search-detail-page.component.html',
   styleUrl: './search-detail-page.component.scss',

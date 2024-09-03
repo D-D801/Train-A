@@ -1,7 +1,7 @@
 @if (order()) {
   <div tuiCardLarge="normal" tuiSurface="elevated" class="card">
     @if (isAdmin()) {
-      <div>{{ getUserName(order().userId) }}</div>
+      <h3>{{ getUserName(order().userId) }}</h3>
     }
     <div class="time-section">
       <div class="time-info">
