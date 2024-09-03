@@ -1,11 +1,8 @@
 import { HttpClient } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, output } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Price } from '@features/admin/interfaces/segment.interface';
 import { Order } from '@features/orders/interfaces/order.interface';
 import { User } from '@features/orders/interfaces/user.interface';
-import { RoadSection } from '@features/search/interfaces/search-route-response.interface';
-import { BookSeats, TripService } from '@features/search/services/trip/trip.service';
 import { TuiButton, TuiDialogService, TuiSurface, TuiTitle } from '@taiga-ui/core';
 import { TuiCardLarge, TuiHeader } from '@taiga-ui/layout';
 import { TuiCurrencyPipe } from '@taiga-ui/addon-commerce';
@@ -19,6 +16,7 @@ import { AlertService } from '@core/services/alert/alert.service';
 import { AuthService } from '@core/services/auth/auth.service';
 import { Role } from '@shared/enums/role.enum';
 import { StationsService } from '@core/services/stations/stations.service';
+import { TripService } from '@features/search/services/trip/trip.service';
 
 @Component({
   selector: 'dd-order-card',
@@ -53,26 +51,22 @@ export class OrderCardComponent {
 
   private readonly role = this.authService.role;
 
-  private segments: RoadSection[] = [];
-
-  public price: Price = {};
-
-  public bookSeat!: BookSeats;
-
   protected currency = CURRENCY;
 
-  public constructor() {
-    effect(() => {
-      const order = this.order();
-      const fromIndex = order.path.indexOf(order.stationStart);
-      const toIndex = order.path.indexOf(order.stationEnd);
+  public segments = computed(() => {
+    return this.order().schedule.segments.slice(
+      this.order().path.indexOf(this.order().stationStart),
+      this.order().path.indexOf(this.order().stationEnd)
+    );
+  });
 
-      this.segments = order.schedule.segments.slice(fromIndex, toIndex);
-      this.price = this.tripService.setPrices(this.segments);
+  public price = computed(() => {
+    return this.tripService.setPrices(this.segments());
+  });
 
-      [this.bookSeat] = this.tripService.getOccupieSeatsInCarriages([order.seatId], order.carriages);
-    });
-  }
+  public bookSeat = computed(() => {
+    return this.tripService.getOccupieSeatsInCarriages([this.order().seatId], this.order().carriages)[0];
+  });
 
   public isAdmin() {
     return this.role() === Role.manager;
@@ -85,12 +79,12 @@ export class OrderCardComponent {
   }
 
   public setTimes(time: string) {
-    return this.tripService.setTimes(this.segments, time);
+    return this.tripService.setTimes(this.segments(), time);
   }
 
   public duration() {
-    if (!this.segments.length) return '';
-    return calculateStopDuration(this.segments[this.segments.length - 1].time[1], this.segments[0].time[0]);
+    if (!this.segments().length) return '';
+    return calculateStopDuration(this.segments()[this.segments().length - 1].time[1], this.segments()[0].time[0]);
   }
 
   public onCancel(event: MouseEvent) {

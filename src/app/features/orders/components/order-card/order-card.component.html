@@ -17,14 +17,14 @@
       </div>
     </div>
     <div class="details-section">
-      @if (bookSeat) {
+      @if (bookSeat()) {
         <div class="carriage-info">
           <strong>Carriage № </strong>
-          {{ bookSeat.carriageIndex }} ({{ bookSeat.carriageName }})
+          {{ bookSeat().carriageIndex }} ({{ bookSeat().carriageName }})
         </div>
         <div class="seat-price-info">
-          <span><strong>Seat: </strong> {{ bookSeat.localSeatNumber }}</span>
-          <span><strong>Price: </strong>{{ currency | tuiCurrency }}{{ price[bookSeat.carriageType] }}</span>
+          <span><strong>Seat: </strong> {{ bookSeat().localSeatNumber }}</span>
+          <span><strong>Price: </strong>{{ currency | tuiCurrency }}{{ price()[bookSeat().carriageType] }}</span>
         </div>
       }
     </div>

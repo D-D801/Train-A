@@ -1,0 +1,10 @@
+<tui-block-status *ngIf="size$ | async as size">
+  <!-- TODO: add img -->
+  <!-- <img alt="survived" src="./assets/images/going-up.svg" tuiSlot="top" /> -->
+
+  <h4>Not Found</h4>
+
+  <span class="text"> Oops! Page is not found. </span>
+
+  <button appearance="secondary" [routerLink]="['/home']" tuiButton [size]="size">Go to home</button>
+</tui-block-status>
