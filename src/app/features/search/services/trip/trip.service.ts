@@ -12,10 +12,6 @@ export interface CarriageList {
   }[];
 }
 
-export interface Price {
-  [key: string]: number;
-}
-
 export interface SeatsPerCarriage {
   [key: string]: number;
 }

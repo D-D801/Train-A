@@ -1,8 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, input, output } from '@angular/core';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Price } from '@features/admin/interfaces/segment.interface';
-import { Station } from '@features/admin/interfaces/station-list-item.interface';
 import { Order } from '@features/orders/interfaces/order.interface';
 import { User } from '@features/orders/interfaces/user.interface';
 import { RoadSection } from '@features/search/interfaces/search-route-response.interface';
@@ -11,7 +10,6 @@ import { TuiButton, TuiDialogService, TuiSurface, TuiTitle } from '@taiga-ui/cor
 import { TuiCardLarge, TuiHeader } from '@taiga-ui/layout';
 import { TuiCurrencyPipe } from '@taiga-ui/addon-commerce';
 import { CURRENCY } from '@shared/constants/currency';
-import { DatePipe } from '@angular/common';
 import { calculateStopDuration } from '@shared/utils/calculate-train-stop-duration';
 import { TUI_CONFIRM } from '@taiga-ui/kit';
 import { getDeletionConfirmationData } from '@shared/utils/getDeletionConfirmationData';
@@ -20,11 +18,12 @@ import { OrdersApiService } from '@features/orders/services/orders-api/orders-ap
 import { AlertService } from '@core/services/alert/alert.service';
 import { AuthService } from '@core/services/auth/auth.service';
 import { Role } from '@shared/enums/role.enum';
+import { StationsService } from '@core/services/stations/stations.service';
 
 @Component({
   selector: 'dd-order-card',
   standalone: true,
-  imports: [TuiCardLarge, TuiSurface, TuiTitle, TuiHeader, TuiButton, TuiCurrencyPipe, DatePipe],
+  imports: [TuiCardLarge, TuiSurface, TuiTitle, TuiHeader, TuiButton, TuiCurrencyPipe],
   templateUrl: './order-card.component.html',
   styleUrl: './order-card.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -35,6 +34,8 @@ export class OrderCardComponent {
   public users = input.required<User[]>();
 
   public cancelOrder = output<number>();
+
+  protected readonly stationsService = inject(StationsService);
 
   private readonly authService = inject(AuthService);
 
@@ -49,8 +50,6 @@ export class OrderCardComponent {
   public readonly alert = inject(AlertService);
 
   public readonly destroy = inject(DestroyRef);
-
-  private readonly stations = toSignal(this.httpClient.get<Station[]>('/api/station'));
 
   private readonly role = this.authService.role;
 
@@ -85,13 +84,8 @@ export class OrderCardComponent {
     return userName;
   }
 
-  public getStationById(id: number) {
-    return this.stations()?.find((item) => item.id === id)?.city;
-  }
-
   public setTimes(time: string) {
-    if (!this.segments.length) return '';
-    return time === 'start' ? this.segments[0].time[0] : this.segments[this.segments.length - 1].time[1];
+    return this.tripService.setTimes(this.segments, time);
   }
 
   public duration() {

@@ -14,7 +14,10 @@
       {{ stationsService.getStationNameById(toStation) }}
     </h2>
     @if (ride()) {
-      <h3>{{ setTimes('start') | date: 'MMMM dd, hh:mm' }} - {{ setTimes('end') | date: 'MMMM dd, hh:mm' }}</h3>
+      <h3>
+        {{ setTimes('start') }} -
+        {{ setTimes('end') }}
+      </h3>
       <div class="header-buttons">
         <p>Ride {{ ride()?.rideId }}</p>
         <button appearance="primary" size="xs" tuiButton (click)="showModal()">Route</button>
@@ -23,7 +26,7 @@
   </div>
 </div>
 
-<section class="horizontal">
+@if (getCarriageList()) {
   <tui-tabs-with-more class="tabs" [activeItemIndex]="activeItemIndex" [moreContent]="more">
     @for (type of carriageList | keyvalue; let i = $index; track type.key) {
       <button *tuiItem tuiTab class="type" (click)="activeItemIndex = i">
@@ -32,31 +35,31 @@
       </button>
     }
   </tui-tabs-with-more>
+}
 
-  <ng-template #more>
-    <tui-icon icon="@tui.ellipsis"></tui-icon>
-  </ng-template>
+<ng-template #more>
+  <tui-icon icon="@tui.ellipsis"></tui-icon>
+</ng-template>
 
-  @for (type of carriageList | keyvalue; let i = $index; track type) {
-    <div class="tab-content" *ngIf="activeItemIndex === i">
-      @for (carriage of getCarriageListForType(type.key); track carriage.index) {
-        <div>
-          <h3>
-            Car {{ carriage.index }}
-            <tui-chip appearance="whiteblock">{{ getFreeSeatsByCarriage(carriage.index) }} seats</tui-chip>
-          </h3>
-          <dd-carriage-preview
-            [ngClass]="{
-              'selected-wrapper': getCarriageClass(carriage.index),
-            }"
-            class="preview"
-            [carriage]="tripService.getCarriageByCode(type.key)"
-            [options]="options()"
-            [bookSeats]="getFilteredSeats(carriage.index)"
-            (seatSelected)="handleSeatSelected($event, carriage.index)"
-          ></dd-carriage-preview>
-        </div>
-      }
-    </div>
-  }
-</section>
+@for (type of carriageList | keyvalue; let i = $index; track type.key) {
+  <div class="tab-content" *ngIf="activeItemIndex === i">
+    @for (carriage of getCarriageListForType(type.key); track carriage.index) {
+      <div>
+        <h3>
+          Car {{ carriage.index }}
+          <tui-chip appearance="whiteblock">{{ getFreeSeatsByCarriage(carriage.index) }} seats</tui-chip>
+        </h3>
+        <dd-carriage-preview
+          [ngClass]="{
+            'selected-wrapper': getCarriageClass(carriage.index),
+          }"
+          class="preview"
+          [carriage]="tripService.getCarriageByCode(type.key)"
+          [options]="options()"
+          [bookSeats]="getFilteredSeats(carriage.index)"
+          (seatSelected)="handleSeatSelected($event, carriage.index)"
+        ></dd-carriage-preview>
+      </div>
+    }
+  </div>
+}

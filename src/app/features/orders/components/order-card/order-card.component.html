@@ -5,15 +5,15 @@
     }
     <div class="time-section">
       <div class="time-info">
-        <span class="time-point">{{ setTimes('start') | date: 'MMMM dd, hh:mm' }}</span>
+        <span class="time-point">{{ setTimes('start') }}</span>
         <span class="line"></span>
         <span class="duration">{{ duration() }}</span>
         <span class="line"></span>
-        <span class="time-point">{{ setTimes('end') | date: 'MMMM dd, hh:mm' }}</span>
+        <span class="time-point">{{ setTimes('end') }}</span>
       </div>
       <div class="station-info">
-        <span>{{ getStationById(order().stationStart) }}</span>
-        <span>{{ getStationById(order().stationEnd) }}</span>
+        <span>{{ stationsService.getStationNameById(order().stationStart) }}</span>
+        <span>{{ stationsService.getStationNameById(order().stationEnd) }}</span>
       </div>
     </div>
     <div class="details-section">
