@@ -25,8 +25,8 @@
 
 <section class="horizontal">
   <tui-tabs-with-more class="tabs" [activeItemIndex]="activeItemIndex" [moreContent]="more">
-    @for (type of carriageList | keyvalue; let i = $index; track type) {
-      <button *tuiItem tuiTab class="type">
+    @for (type of carriageList | keyvalue; let i = $index; track type.key) {
+      <button *tuiItem tuiTab class="type" (click)="activeItemIndex = i">
         {{ type.value[0].carriage }} ({{ totalSeatsForType(type.key) }})
         <div>{{ currency | tuiCurrency }}{{ price[type.key] || 0 }}</div>
       </button>

@@ -3,16 +3,21 @@ import { computed, inject, Injectable } from '@angular/core';
 import { CarriagesService } from '@core/services/carriages/carriages.service';
 import { Price } from '@features/admin/interfaces/segment.interface';
 import { RoadSection } from '@features/search/interfaces/search-route-response.interface';
+import { dateConverter } from '@shared/utils/date-converter';
 
 export interface CarriageList {
-  [carriage: string]: {
+  [key: string]: {
     index: number;
     carriage: string;
   }[];
 }
 
+export interface Price {
+  [key: string]: number;
+}
+
 export interface SeatsPerCarriage {
-  [carriage: string]: number;
+  [key: string]: number;
 }
 
 export interface SelectedOrder {
@@ -23,17 +28,14 @@ export interface SelectedOrder {
 }
 
 export interface BookSeats {
-  carriageType: string;
   carriageName: string;
+  carriageType: string;
   localSeatNumber: number;
   carriageIndex: number;
 }
 
 export interface FreeSeat {
-  [index: number]: {
-    carriageType: string;
-    availableSeats: number;
-  };
+  [key: number]: { carriageType: string; availableSeats: number };
 }
 @Injectable({
   providedIn: 'root',
@@ -90,7 +92,7 @@ export class TripService {
 
       for (let i = 0; i < carriages.length; i += 1) {
         const carriageType = carriages[i];
-
+        const carriageName = this.getCarriageByCode(carriages[i])?.name ?? '';
         const seatsInCarriage = this.seatsPerCarriage()[carriageType] || 0;
 
         if (globalSeatNumber <= totalSeatsBeforeCurrentCarriage + seatsInCarriage) {
