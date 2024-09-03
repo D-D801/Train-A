@@ -19,6 +19,7 @@ import { dateTimeValidator } from '@shared/validators/date-time.validator';
 import { buildInErrors } from '@shared/constants/build-in-errors';
 import { getISOStringDateTimeFromTuiDataTime } from '@shared/utils/getISOStringDateTimeFromTuiDataTime';
 import { EditableFormComponent } from '@shared/components/editable-form/editable-form.component';
+import { CarriagesService } from '@core/services/carriages/carriages.service';
 
 @Component({
   selector: 'dd-station-card',
@@ -62,6 +63,8 @@ export class StationCardComponent {
 
   public station = input.required<[number, number]>();
 
+  protected readonly carriagesService = inject(CarriagesService);
+
   public readonly rideApiService = inject(RideApiService);
 
   public readonly destroy = inject(DestroyRef);
@@ -102,7 +105,10 @@ export class StationCardComponent {
           this.priceForm.get(carriage)?.setValue(price[carriage]);
           return;
         }
-        this.priceForm.addControl(carriage, this.fb.control(price[carriage], [Validators.required, Validators.min(0)]));
+        this.priceForm.addControl(
+          this.carriagesService.getCarriageNameByCode(carriage),
+          this.fb.control(price[carriage], [Validators.required, Validators.min(0)])
+        );
       });
     });
   }
@@ -121,11 +127,22 @@ export class StationCardComponent {
     const departureDate = getISOStringDateTimeFromTuiDataTime(departure);
     const arrivalDate = getISOStringDateTimeFromTuiDataTime(arrival);
 
+    const priceWithCarriageCode = Object.entries(price).reduce(
+      (acc, [name, value]) => {
+        const code = this.carriagesService.getCarriageCodeByName(name) as string;
+        if (code) {
+          acc[code] = value as number;
+        }
+        return acc;
+      },
+      {} as Record<string, number>
+    );
+
     if (!(departureDate && arrivalDate)) return;
 
     segments[this.currentSegmentIndex()] = {
       time: [departureDate, arrivalDate],
-      price,
+      price: priceWithCarriageCode,
     };
 
     this.rideApiService

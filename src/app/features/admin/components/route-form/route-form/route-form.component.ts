@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  computed,
   DestroyRef,
   effect,
   inject,
@@ -22,8 +23,8 @@ import { TuiButton, TuiDataList, TuiIcon, TuiLoader, TuiSurface, TuiTitle } from
 import { TuiAvatar } from '@taiga-ui/kit';
 import { TuiCardLarge, TuiHeader } from '@taiga-ui/layout';
 import { TuiSelectModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
-import { map } from 'rxjs';
 import { updateAvailableStations } from '@shared/utils/update-available-stations';
+import { CarriagesService } from '@core/services/carriages/carriages.service';
 
 enum ControlsType {
   path = 'path',
@@ -58,6 +59,8 @@ export class RouteFormComponent {
 
   public save = output();
 
+  protected readonly carriagesService = inject(CarriagesService);
+
   private readonly alert = inject(AlertService);
 
   private readonly routeApiService = inject(RouteApiService);
@@ -72,7 +75,9 @@ export class RouteFormComponent {
 
   protected readonly stations = signal<Station[]>([]);
 
-  protected readonly carriages = signal<string[]>([]);
+  private readonly carriages = this.carriagesService.carriages;
+
+  protected carriageNames = computed(() => this.carriages().map((carriage) => carriage.name));
 
   protected readonly ControlsType = ControlsType;
 
@@ -84,16 +89,6 @@ export class RouteFormComponent {
   protected readonly MIN_ROUTE_FORM_CONTROL_COUNT = MIN_ROUTE_FORM_CONTROL_COUNT;
 
   public constructor() {
-    this.routeApiService
-      .getCarriages()
-      .pipe(
-        map((data) => data.map((carriage) => carriage.name)),
-        takeUntilDestroyed()
-      )
-      .subscribe((carriages) => {
-        this.carriages.set(carriages);
-      });
-
     this.routeApiService
       .getStations()
       .pipe(takeUntilDestroyed())
@@ -114,7 +109,9 @@ export class RouteFormComponent {
         route.path.forEach((stationId) =>
           this.form.controls.path.push(this.fb.control(this.getCityNameById(stationId) ?? '', Validators.required))
         );
-        route.carriages.forEach((carriage) => this.form.controls.carriages.push(this.fb.control(carriage)));
+        route.carriages.forEach((carriage) =>
+          this.form.controls.carriages.push(this.fb.control(this.carriagesService.getCarriageNameByCode(carriage)))
+        );
       } else {
         this.addInitialControls(ControlsType.path);
         this.addInitialControls(ControlsType.carriages);
@@ -175,11 +172,12 @@ export class RouteFormComponent {
   }
 
   public onSubmit() {
-    const { carriages } = this.form.value;
+    let { carriages } = this.form.value;
     const cityIds = this.getCityIds();
     const route = this.trainRoute();
 
     if (!carriages) return;
+    carriages = this.carriagesService.getCarriageCodesByNames(carriages);
     if (cityIds.some((cityId) => cityId == null)) return;
 
     if (route) {

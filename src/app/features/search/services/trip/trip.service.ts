@@ -1,6 +1,6 @@
 /* eslint-disable class-methods-use-this */
-import { effect, inject, Injectable } from '@angular/core';
-import { CarriageService } from '@core/services/carriage/carriage.service';
+import { computed, inject, Injectable } from '@angular/core';
+import { CarriagesService } from '@core/services/carriages/carriages.service';
 import { RoadSection } from '@features/search/interfaces/search-route-response.interface';
 import { dateConverter } from '@shared/utils/date-converter';
 
@@ -39,30 +39,24 @@ export interface FreeSeat {
   providedIn: 'root',
 })
 export class TripService {
-  private readonly carriageService = inject(CarriageService);
+  private readonly carriagesService = inject(CarriagesService);
 
-  public carriages = this.carriageService.carriages;
+  public carriages = this.carriagesService.carriages;
 
-  public seatsPerCarriage: SeatsPerCarriage = {};
-
-  public constructor() {
-    effect(() => {
-      if (this.carriages()) {
-        this.seatsPerCarriage = this.carriages().reduce((acc, carriage) => {
-          const totalSeats = (carriage.leftSeats + carriage.rightSeats) * carriage.rows;
-          acc[carriage.name] = totalSeats;
-          return acc;
-        }, {} as SeatsPerCarriage);
-      }
-    });
-  }
+  public seatsPerCarriage = computed<SeatsPerCarriage>(() => {
+    return this.carriages().reduce((acc, carriage) => {
+      const totalSeats = (carriage.leftSeats + carriage.rightSeats) * carriage.rows;
+      acc[carriage.code] = totalSeats;
+      return acc;
+    }, {} as SeatsPerCarriage);
+  });
 
   public groupCarriages(carriages: string[]): CarriageList {
     return carriages.reduce((acc, carriage, index) => {
       if (!acc[carriage]) {
         acc[carriage] = [];
       }
-      acc[carriage].push({ index: index + 1, carriage });
+      acc[carriage].push({ index: index + 1, carriage: this.getCarriageByCode(carriage)?.name ?? '' });
       return acc;
     }, {} as CarriageList);
   }
@@ -78,13 +72,13 @@ export class TripService {
 
   public setTimes(segments: RoadSection[], time: string): string {
     if (!segments.length) return '';
-    const date = time === 'start' ? segments[0].time[1] : segments[segments.length - 1].time[0];
+    const date = time === 'start' ? segments[0].time[0] : segments[segments.length - 1].time[1];
     return dateConverter(date);
   }
 
   public calculateGlobalSeatNumber(carriages: string[], index: number, seatNumber: number | null): number {
     const totalSeatsBeforeCurrentCarriage = carriages.slice(0, index - 1).reduce((acc, type) => {
-      return acc + (this.seatsPerCarriage[type] || 0);
+      return acc + (this.seatsPerCarriage()[type] || 0);
     }, 0);
 
     return totalSeatsBeforeCurrentCarriage + (seatNumber || 0);
@@ -99,7 +93,8 @@ export class TripService {
 
       for (let i = 0; i < carriages.length; i += 1) {
         const carriageType = carriages[i];
-        const seatsInCarriage = this.seatsPerCarriage[carriageType] || 0;
+
+        const seatsInCarriage = this.seatsPerCarriage()[carriageType] || 0;
 
         if (globalSeatNumber <= totalSeatsBeforeCurrentCarriage + seatsInCarriage) {
           return {
@@ -134,7 +129,7 @@ export class TripService {
     );
     const totalSeatsByIndex = Object.keys(carriageList).reduce((acc, type) => {
       carriageList[type].forEach((carriage) => {
-        acc[carriage.index] = { carriageType: type, availableSeats: this.seatsPerCarriage[type] || 0 };
+        acc[carriage.index] = { carriageType: type, availableSeats: this.seatsPerCarriage()[type] || 0 };
       });
       return acc;
     }, {} as FreeSeat);
@@ -159,5 +154,9 @@ export class TripService {
     return Object.values(seats).reduce((acc, { carriageType, availableSeats }) => {
       return carriageType === type ? acc + availableSeats : acc;
     }, 0);
+  }
+
+  public getCarriageByCode(code: string) {
+    return this.carriages().find((carriage) => carriage.code === code) ?? null;
   }
 }

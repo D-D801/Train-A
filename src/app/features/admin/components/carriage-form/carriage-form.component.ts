@@ -60,7 +60,7 @@ export class CarriageFormComponent {
   public onSubmit() {
     const { code, name, rows, leftSeats, rightSeats } = this.carriageForm.value;
     if (!(name && rows && leftSeats && rightSeats)) return;
-    this.submitForm.emit({ code, name, rows, leftSeats, rightSeats });
+    this.submitForm.emit({ code: code ?? '', name, rows, leftSeats, rightSeats });
   }
 
   public onCancel() {

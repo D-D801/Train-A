@@ -20,7 +20,7 @@
   @if (newRideService.isOpenNewRideForm()) {
     <dd-new-ride-form
       [path]="routeInfo.path"
-      [carriages]="carriages()"
+      [carriages]="carriagesService.getCarriageNamesByCodes(carriages())"
       [routeId]="routeInfo.id"
       (updateRouteInfo)="updateRouteInfo($event)"
     ></dd-new-ride-form>
