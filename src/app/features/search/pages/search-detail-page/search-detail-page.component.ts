@@ -1,6 +1,6 @@
-import { KeyValuePipe, Location, NgClass, NgFor, NgIf } from '@angular/common';
+import { KeyValuePipe, DatePipe, Location, NgClass, NgFor, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal, effect } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertService } from '@core/services/alert/alert.service';
 import { CarriagePreviewComponent } from '@features/admin/components/carriage-preview/carriage-preview.component';
@@ -77,6 +77,8 @@ export class SearchDetailPageComponent {
   public orderId = signal(0);
 
   public options = signal({ isClick: true, isShowTitle: false });
+
+  private readonly stations = toSignal(this.httpClient.get<Station[]>('/api/station'));
 
   public fromStation: number = 0;
 
@@ -179,6 +181,10 @@ export class SearchDetailPageComponent {
 
   public getCarriageClass(index: number) {
     return this.selectedCarriageIndex === index;
+  }
+
+  public getStationById(id: number) {
+    return this.stations()?.find((item) => item.id === id)?.city;
   }
 
   public handleSeatSelected(event: { seatNumber: number; carriageType: string }, index: number) {

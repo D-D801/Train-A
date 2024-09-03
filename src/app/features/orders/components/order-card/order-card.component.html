@@ -5,11 +5,11 @@
     }
     <div class="time-section">
       <div class="time-info">
-        <span class="time-point">{{ order().id }}</span>
+        <span class="time-point">{{ setTimes('start') | date: 'MMMM dd, hh:mm' }}</span>
         <span class="line"></span>
-        <span class="duration">{{ order().id }}</span>
+        <span class="duration">{{ duration() }}</span>
         <span class="line"></span>
-        <span class="time-point">{{ order().id }}</span>
+        <span class="time-point">{{ setTimes('end') | date: 'MMMM dd, hh:mm' }}</span>
       </div>
       <div class="station-info">
         <span>{{ getStationById(order().stationStart) }}</span>
@@ -19,12 +19,12 @@
     <div class="details-section">
       @if (bookSeat) {
         <div class="carriage-info">
-          <strong>{{ bookSeat.carriageType }}</strong> , <strong>№: </strong>
-          {{ bookSeat.carriageIndex }}
+          <strong>Carriage № </strong>
+          {{ bookSeat.carriageIndex }} ({{ bookSeat.carriageType }})
         </div>
         <div class="seat-price-info">
-          <strong>Seat: </strong> {{ bookSeat.localSeatNumber }}, <strong>Price: </strong> {{ currency | tuiCurrency
-          }}{{ price[bookSeat.carriageType] }}
+          <span><strong>Seat: </strong> {{ bookSeat.localSeatNumber }}</span>
+          <span><strong>Price: </strong>{{ currency | tuiCurrency }}{{ price[bookSeat.carriageType] }}</span>
         </div>
       }
     </div>
