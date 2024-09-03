@@ -88,33 +88,6 @@ export class SearchFormComponent implements OnInit {
 
   protected readonly filterDates = signal<DepartureDateWithIds[]>([]);
 
-  public constructor() {
-    // TODO: its mock search api request
-    this.searchApiService
-      .search({
-        fromLatitude: 5.655352203865391,
-        fromLongitude: 105.52123546402902,
-        toLatitude: 13.729765248664648,
-        toLongitude: 59.475481073285636,
-        time: new Date('2024-10-25T02:36:14.551Z').getTime().toString(),
-      })
-      .subscribe((searchRouteResponse) => {
-        if (this.date.value) {
-          const [{ day, month, year }] = this.date.value;
-          this.startDateWithoutTime = convertDateToISODateWithoutTime(new Date(Date.UTC(year, month, day)));
-        }
-        this.departureStation.set(searchRouteResponse.from);
-        this.arrivalStation.set(searchRouteResponse.to);
-        const sortedRidesWidthDepartureDate = findDepartureDatesOfRide(searchRouteResponse);
-
-        this.endDateWithoutTime = sortedRidesWidthDepartureDate.at(-1)?.departureDate ?? '';
-        const dates = generateDates(this.startDateWithoutTime, this.endDateWithoutTime);
-
-        const updatedDates = groupeRidesWithDates(dates, sortedRidesWidthDepartureDate);
-        this.filterDates.set(updatedDates);
-      });
-  }
-
   public searchForm = this.fb.group({
     from: this.fb.control('', [Validators.required]),
     to: this.fb.control('', [Validators.required]),
@@ -181,7 +154,19 @@ export class SearchFormComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroy))
       .subscribe({
         next: (response) => {
-          console.error(response);
+          if (this.date.value) {
+            const [{ day, month, year }] = this.date.value;
+            this.startDateWithoutTime = convertDateToISODateWithoutTime(new Date(Date.UTC(year, month, day)));
+          }
+          this.departureStation.set(response.from);
+          this.arrivalStation.set(response.to);
+          const sortedRidesWidthDepartureDate = findDepartureDatesOfRide(response);
+
+          this.endDateWithoutTime = sortedRidesWidthDepartureDate.at(-1)?.departureDate ?? '';
+          const dates = generateDates(this.startDateWithoutTime, this.endDateWithoutTime);
+
+          const updatedDates = groupeRidesWithDates(dates, sortedRidesWidthDepartureDate);
+          this.filterDates.set(updatedDates);
           this.searchService.setSearchResult(response);
         },
         error: ({ error: { message } }) => {
