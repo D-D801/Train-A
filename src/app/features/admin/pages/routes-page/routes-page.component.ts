@@ -5,7 +5,7 @@ import { RouteCardComponent } from '@features/admin/components/route-card/route-
 import { RouteFormComponent } from '@features/admin/components/route-form/route-form/route-form.component';
 import { TrainRoute } from '@features/admin/interfaces/train-route.interface';
 import { RouteApiService } from '@features/admin/services/route-api/route-api.service';
-import { TuiButton, TuiDialogService, TuiLoader, TuiSurface } from '@taiga-ui/core';
+import { TuiButton, TuiDialogService, TuiLoader, tuiLoaderOptionsProvider, TuiSurface } from '@taiga-ui/core';
 import { TUI_CONFIRM, TuiConfirmData } from '@taiga-ui/kit';
 import { TuiCardLarge } from '@taiga-ui/layout';
 import { filter, Subject, switchMap, tap } from 'rxjs';
@@ -16,6 +16,13 @@ import { filter, Subject, switchMap, tap } from 'rxjs';
   imports: [RouteFormComponent, RouteCardComponent, TuiCardLarge, TuiSurface, TuiButton, TuiLoader],
   templateUrl: './routes-page.component.html',
   styleUrl: './routes-page.component.scss',
+  providers: [
+    tuiLoaderOptionsProvider({
+      size: 'xl',
+      inheritColor: false,
+      overlay: true,
+    }),
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RoutesPageComponent implements OnInit {
@@ -40,6 +47,9 @@ export class RoutesPageComponent implements OnInit {
   public ngOnInit() {
     this.action$$
       .pipe(
+        tap(() => {
+          this.isLoading.set(true);
+        }),
         switchMap(() =>
           this.routeApiService.getRoutes().pipe(
             tap((trainRoutes) => {
@@ -51,6 +61,7 @@ export class RoutesPageComponent implements OnInit {
         takeUntilDestroyed(this.destroy)
       )
       .subscribe({
+        next: () => {},
         error: ({ error: { message } }) => {
           this.alert.open({ message, label: 'Error', appearance: 'error' });
         },

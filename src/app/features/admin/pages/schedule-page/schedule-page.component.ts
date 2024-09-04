@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal, OnInit } from '@angular/core';
 import { RouteApiService } from '@features/admin/services/route-api/route-api.service';
-import { TuiButton } from '@taiga-ui/core';
+import { TuiButton, TuiLoader, tuiLoaderOptionsProvider } from '@taiga-ui/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AlertService } from '@core/services/alert/alert.service';
 import { AsyncPipe, Location, NgFor } from '@angular/common';
@@ -16,11 +16,18 @@ import { NewRideFormComponent } from '../../components/new-ride-form/new-ride-fo
 @Component({
   selector: 'dd-schedule-page',
   standalone: true,
-  imports: [TuiButton, RideCardComponent, AsyncPipe, NgFor, NewRideFormComponent],
+  imports: [TuiButton, RideCardComponent, AsyncPipe, NgFor, NewRideFormComponent, TuiLoader],
   templateUrl: './schedule-page.component.html',
   styleUrl: './schedule-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [NewRideService],
+  providers: [
+    NewRideService,
+    tuiLoaderOptionsProvider({
+      size: 'xl',
+      inheritColor: false,
+      overlay: true,
+    }),
+  ],
 })
 export class SchedulePageComponent implements OnInit {
   protected readonly carriagesService = inject(CarriagesService);
@@ -43,8 +50,13 @@ export class SchedulePageComponent implements OnInit {
 
   private readonly routeUpdateSubject$$ = new Subject<number>();
 
+  public readonly isLoading = signal(false);
+
   protected routeInformation$ = merge(
     this.route.paramMap.pipe(
+      tap(() => {
+        this.isLoading.set(true);
+      }),
       switchMap((params) => this.routeApiService.getRoute(Number(params.get('id')))),
       tap((route) => {
         const currentCarriages = new Set<string>(route.carriages);
@@ -61,7 +73,11 @@ export class SchedulePageComponent implements OnInit {
     )
   ).pipe(
     tap({
+      next: () => {
+        this.isLoading.set(false);
+      },
       error: ({ error: { message } }) => {
+        this.isLoading.set(false);
         this.alert.open({ message, label: 'Error', appearance: 'error' });
       },
     }),
