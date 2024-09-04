@@ -109,8 +109,9 @@ export class SearchFormComponent implements OnInit {
     if (!stationsArray) return;
     const receivedCities = stationsArray.filter((item) => item.city.toLowerCase().includes(city.toLowerCase()));
     this.searchService.setSearchCities(receivedCities);
-    if (receivedCities.length === 0 || this.selectedCityIndex < 0) return;
-    const { latitude, longitude } = receivedCities[this.selectedCityIndex];
+    const receivedCity = receivedCities[this.selectedCityIndex];
+    if (receivedCities.length === 0 || this.selectedCityIndex < 0 || !receivedCity) return;
+    const { latitude, longitude } = receivedCity;
     if (inputName === 'from') {
       this.fromCityCoordinates = {
         latitude,
