@@ -7,6 +7,7 @@
           tuiSurface="elevated"
           [routerLink]="['/trip', trip.rideId]"
           [queryParams]="{ from: searchResult().from.stationId, to: searchResult().to.stationId }"
+          class="card"
         >
           <header tuiHeader>
             <h2 tuiTitle>Ride {{ trip.rideId }}</h2>
@@ -16,25 +17,28 @@
           @if (arrivalIndex >= 0 && departureIndex >= 0) {
             <section class="info-container">
               <div class="info">
-                <div>
-                  <div>{{ convertTime(trip.schedule.segments[departureIndex].time[0]) }}</div>
-                  <div>{{ searchResult().from.city }}</div>
+                <div class="time-section">
+                  <div class="time-info">
+                    <span class="time-point">{{ convertTime(trip.schedule.segments[departureIndex].time[0]) }}</span>
+                    <span class="line"></span>
+                    <span class="duration">{{
+                      getTravelTime(
+                        trip.schedule.segments[arrivalIndex].time[1],
+                        trip.schedule.segments[departureIndex].time[0]
+                      )
+                    }}</span>
+                    <span class="line"></span>
+                    <span class="time-point">{{ convertTime(trip.schedule.segments[arrivalIndex].time[1]) }}</span>
+                  </div>
+                  <div class="station-info">
+                    <span>{{ searchResult().from.city }}</span>
+                    <span>{{ searchResult().to.city }}</span>
+                  </div>
                 </div>
-                <div>
-                  {{
-                    getTravelTime(
-                      trip.schedule.segments[arrivalIndex].time[1],
-                      trip.schedule.segments[departureIndex].time[0]
-                    )
-                  }}
-                </div>
-                <hr />
-                <div>
-                  <div>{{ convertTime(trip.schedule.segments[arrivalIndex].time[1]) }}</div>
-                  <div>{{ searchResult().to.city }}</div>
-                </div>
-                <div>
-                  <div>
+
+                <div class="details-section">
+                  <div class="route">
+                    <tui-icon class="accessories" icon="@tui.bus" />
                     {{ getStation(trip.path[0]).city }} - {{ getStation(trip.path[trip.path.length - 1]).city }}
                   </div>
                   <button
@@ -46,22 +50,23 @@
                     Route
                   </button>
                 </div>
-              </div>
-              <div>
-                @let segments = trip.schedule.segments.slice(departureIndex, arrivalIndex + 1);
-                @let freeSeats = getFreeSeats(segments, trip.carriages);
-                @let uniqueCarriageTypes = getUniqueCarriages(trip.carriages);
-                @let carriageTypes = getCarriageTypes(uniqueCarriageTypes);
-                @for (type of carriageTypes; track type) {
-                  @for (carriage of getCarriageListForType(uniqueCarriageTypes, type); track carriage.index) {
-                    <div>
-                      <span
-                        >{{ type }}: ${{ getPrice(segments)[type] }},
-                        {{ freeSeats[carriage.index].availableSeats }} free seats</span
-                      >
-                    </div>
+
+                <div class="details-section price">
+                  @let segments = trip.schedule.segments.slice(departureIndex, arrivalIndex + 1);
+                  @let freeSeats = getFreeSeats(segments, trip.carriages);
+                  @let uniqueCarriageTypes = getUniqueCarriages(trip.carriages);
+                  @let carriageTypes = getCarriageTypes(uniqueCarriageTypes);
+                  @for (type of carriageTypes; track type) {
+                    @for (carriage of getCarriageListForType(uniqueCarriageTypes, type); track carriage.index) {
+                      <div class="item">
+                        <span
+                          ><strong>{{ type }}:</strong> ${{ getPrice(segments)[type] }},<br />
+                          {{ totalSeatsForType(freeSeats, type) }} free seats</span
+                        >
+                      </div>
+                    }
                   }
-                }
+                </div>
               </div>
             </section>
           }
