@@ -6,14 +6,14 @@ import { StationsService } from '@core/services/stations/stations.service';
 import { ConnectedStation } from '@features/admin/interfaces/station-list-item.interface';
 import { StationsApiService } from '@features/admin/services/stations-api/stations-api.service';
 import { TuiPlatform } from '@taiga-ui/cdk';
-import { TuiButton, TuiIcon, TuiIconPipe, TuiSurface, TuiTitle } from '@taiga-ui/core';
+import { TuiIcon, TuiIconPipe, TuiSurface, TuiTitle } from '@taiga-ui/core';
 import { TuiCardLarge } from '@taiga-ui/layout';
 import { filter, switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'dd-existing-stations-list',
   standalone: true,
-  imports: [TuiCardLarge, TuiSurface, TuiTitle, TuiPlatform, TuiButton, NgFor, TuiIcon, TuiIconPipe],
+  imports: [TuiCardLarge, TuiSurface, TuiTitle, TuiPlatform, NgFor, TuiIcon, TuiIconPipe],
   templateUrl: './existing-stations-list.component.html',
   styleUrl: './existing-stations-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

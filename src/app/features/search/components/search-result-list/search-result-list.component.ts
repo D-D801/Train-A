@@ -1,5 +1,5 @@
 /* eslint-disable class-methods-use-this */
-import { DatePipe } from '@angular/common';
+import { DatePipe, KeyValuePipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -50,6 +50,7 @@ interface Response {
     TuiButton,
     TuiBlockStatus,
     TuiIcon,
+    KeyValuePipe,
   ],
   templateUrl: './search-result-list.component.html',
   styleUrl: './search-result-list.component.scss',
@@ -132,7 +133,7 @@ export class SearchResultListComponent {
   }
 
   public getCarriageTypes(carriages: string[]) {
-    return Object.keys(this.tripService.groupCarriages(carriages));
+    return this.tripService.groupCarriages(carriages);
   }
 
   public getCarriageListForType(carriages: string[], type: string) {

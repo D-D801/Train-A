@@ -10,9 +10,11 @@
   </header>
 
   <section class="card-description">
-    <span class="subtitle">Path:</span> {{ stationsService.getStationNamesByIds(route.path).join(', ') }}
+    <span class="subtitle">Cities:</span>
+    <span>{{ stationsService.getStationNamesByIds(route.path).join(' ➝ ') }}</span>
   </section>
   <section class="card-description">
-    <span class="subtitle">Carriages:</span> {{ carriagesService.getCarriageNamesByCodes(route.carriages).join(', ') }}
+    <span class="subtitle">Carriages:</span>
+    <span>{{ carriagesService.getCarriageNamesByCodes(route.carriages).join(' - ') }}</span>
   </section>
 </ng-container>

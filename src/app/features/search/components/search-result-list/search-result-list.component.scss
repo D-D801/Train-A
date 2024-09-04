@@ -1,7 +1,7 @@
 @import '@taiga-ui/core/styles/taiga-ui-local';
 
 .card {
-  margin-top: 1rem;
+  margin: 1rem;
 }
 
 .info-container {
@@ -56,8 +56,8 @@
 }
 
 .duration {
-  font-size: 12px;
-  color: var(--tui-status-neutral);
+  font-size: 1rem;
+  color: var(--tui-background-accent-1);
   text-align: center;
 }
 
@@ -66,41 +66,68 @@
   justify-content: space-between;
   width: 100%;
   font-size: 14px;
+
+  span {
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
 }
 
 .route {
   margin-right: 1rem;
-  padding: 3px;
+  padding: 3px 5px;
   border: 1px solid var(--tui-text-tertiary);
-  border-radius: 5px;
+  border-radius: 15px;
+}
+
+.carriage {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+
+  .seat {
+    margin-top: 4px;
+    font-size: 1.2rem;
+  }
 }
 
 .details-section {
   display: flex;
+  align-items: center;
   margin-top: 1rem;
-}
 
-.price {
-  @media #{$tui-mobile} {
+  .item {
+    display: flex;
     flex-direction: column;
+    flex-grow: 1;
+    align-items: center;
+    justify-content: center;
+
+    padding: 10px;
+
+    border: 1px solid var(--tui-text-tertiary);
+    border-right: none;
+    border-bottom: none;
+
+    @media #{$tui-mobile} {
+      width: 100%;
+      border-left: none;
+    }
   }
-}
 
-.item {
-  padding: 10px;
-  border: 1px solid var(--tui-text-tertiary);
-  border-right: none;
-  border-bottom: none;
+  .item:last-of-type {
+    border-right: none;
+  }
 
-  @media #{$tui-mobile} {
+  .item:first-of-type {
     border-left: none;
   }
 }
 
-.item:last-of-type {
-  border-right: none;
-}
+.price {
+  flex: 1;
 
-.item:first-of-type {
-  border-left: none;
+  @media #{$tui-mobile} {
+    flex-direction: column;
+  }
 }
