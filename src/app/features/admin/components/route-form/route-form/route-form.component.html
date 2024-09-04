@@ -5,7 +5,7 @@
       <h3 tuiTitle>Route {{ route ? route.id : '' }}</h3>
 
       <div tuiAccessories>
-        <button size="m" tuiButton type="submit" [disabled]="form.invalid">
+        <button size="m" tuiButton type="submit" [disabled]="!isStationValid() || !isCarriageValid()">
           {{ route ? 'Update' : 'Save' }}
         </button>
       </div>
@@ -28,9 +28,6 @@
           </tui-loader>
         }
         <div class="from-buttons">
-          <button class="button" size="s" tuiButton type="button" (click)="addControl(ControlsType.path)">
-            <tui-icon icon="@tui.plus" />
-          </button>
           <button
             class="button"
             size="s"
@@ -49,7 +46,7 @@
 
       <div class="form-rows" formArrayName="carriages">
         <div tuiHeader="xs">
-          <h6 tuiTitle>Cariages</h6>
+          <h6 tuiTitle>Carriages</h6>
         </div>
         @for (station of form.controls.carriages.controls; track $index) {
           <tui-select [formControl]="$any(station)" [valueContent]="selectTemplate" tuiTextfieldSize="m">
@@ -58,16 +55,13 @@
           </tui-select>
         }
         <div class="from-buttons">
-          <button class="button" size="s" tuiButton type="button" (click)="addControl(ControlsType.carriages)">
-            <tui-icon icon="@tui.plus" />
-          </button>
           <button
             class="button"
             size="s"
             tuiButton
             type="button"
             (click)="removeControl(ControlsType.carriages)"
-            [disabled]="form.controls.carriages.length <= 3"
+            [disabled]="form.controls.carriages.length <= MIN_ROUTE_FORM_CONTROL_COUNT"
           >
             <tui-icon icon="@tui.minus" />
           </button>

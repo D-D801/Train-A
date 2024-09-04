@@ -1,16 +1,18 @@
 @import '@taiga-ui/core/styles/taiga-ui-local';
 
 :host {
+  width: 100%;
+}
+
+.loader {
   display: flex;
   flex-direction: column;
   gap: 2rem;
 
   box-sizing: border-box;
-  width: 100%;
   padding: 2rem;
 
   @media #{$tui-tablet} {
-    gap: 2rem;
     padding: 1rem;
   }
 }
