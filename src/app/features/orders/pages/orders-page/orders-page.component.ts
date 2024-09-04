@@ -8,12 +8,13 @@ import { User } from '@features/orders/interfaces/user.interface';
 import { OrdersApiService } from '@features/orders/services/orders-api/orders-api.service';
 import { UsersApiService } from '@features/orders/services/users-api/users-api.service';
 import { Role } from '@shared/enums/role.enum';
+import { TuiBlockStatus } from '@taiga-ui/layout';
 import { switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'dd-orders-page',
   standalone: true,
-  imports: [OrderCardComponent],
+  imports: [OrderCardComponent, TuiBlockStatus],
   templateUrl: './orders-page.component.html',
   styleUrl: './orders-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

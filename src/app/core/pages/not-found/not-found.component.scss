@@ -1,0 +1,11 @@
+:host {
+  width: 100%;
+  height: 80vh;
+}
+
+:host ::ng-deep {
+  tui-block-status .t-block-image {
+    width: 100%;
+    margin: 0;
+  }
+}

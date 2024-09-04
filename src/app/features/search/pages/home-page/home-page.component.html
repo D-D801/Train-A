@@ -1,4 +1,7 @@
+<h2>It’s more than just a trip</h2>
 <dd-search-form></dd-search-form>
+
+<div class="background-map"></div>
 
 @if (filterDates().length) {
   <dd-search-filter [filteredDates]="filterDates()" (currentIndex)="onFilterSelect($event)"></dd-search-filter>

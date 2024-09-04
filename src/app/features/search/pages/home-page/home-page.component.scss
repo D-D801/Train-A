@@ -1,4 +1,36 @@
+@import '@taiga-ui/core/styles/taiga-ui-local';
+
 :host {
+  position: relative;
+  display: flex;
   flex: 1;
-  padding-top: 3rem;
+  flex-direction: column;
+}
+
+h2 {
+  font-size: 5rem;
+  line-height: 1;
+  text-align: center;
+
+  @media #{$tui-tablet} {
+    font-size: 4rem;
+  }
+
+  @media #{$tui-mobile} {
+    font-size: 3rem;
+  }
+}
+
+.background-map {
+  position: absolute;
+  z-index: -100;
+  top: -6rem;
+
+  width: 100%;
+  height: 555px;
+
+  background-image: url('https://s3-alpha-sig.figma.com/img/0fe5/59b5/92404e3cffe33e768062dc2ed0732c3d?Expires=1726444800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=HVwWDrQQLQf49bsyDW5SFnn2GxLH3-b3Su9OBMNSoVNaJ23hlPNrT4DqiNAbqgm3-egfEYl83mIKLffRb9cE827gdZ8gzdwX37Sh6oCTBVNqQPa8Aoa8dr0vDjkAHNCgyCkAMEDI~m6VV4iZLPORmg7Kj3BOxZJWfUvrW8fHh5day4mvSge9Nz6LXYyckBlNNnXWOsgRFR0lHaTHSEh0xrE5uwpNWbXy8FEbFX9XHApXYyFcgIoJmaj9Fdf0480Un6Zy3R8SQXviG6fxjNspmXb0R83sGrpMB6~l9Yj0Re3qhKnv9ha~nzzoFeykxXasZlX8Lr8rOrZN6fk~XqkZhw__');
+  background-repeat: no-repeat;
+  background-position: 50%;
+  background-size: 1080px 555px;
 }
