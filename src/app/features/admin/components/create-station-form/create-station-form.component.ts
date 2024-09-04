@@ -1,5 +1,5 @@
 import { AsyncPipe, NgForOf, NgIf, NgTemplateOutlet, TitleCasePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AbstractControl, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AlertService } from '@core/services/alert/alert.service';
@@ -54,6 +54,8 @@ export class CreateStationFormComponent implements OnInit {
 
   private readonly locationService = inject(LocationApiService);
 
+  private readonly cdr = inject(ChangeDetectorRef);
+
   private readonly alert = inject(AlertService);
 
   private readonly destroy = inject(DestroyRef);
@@ -88,11 +90,11 @@ export class CreateStationFormComponent implements OnInit {
   public ngOnInit() {
     this.controls.connectedStations.valueChanges
       .pipe(
-        debounceTime(1000),
         filter(() => this.controls.connectedStations.at(-1).value !== ''),
         takeUntilDestroyed(this.destroy)
       )
       .subscribe(() => {
+        this.cdr.detectChanges();
         if (this.controls.connectedStations.length !== 1) {
           this.controls.connectedStations.controls[this.controls.connectedStations.length - 1].addValidators([
             Validators.required,
@@ -106,7 +108,7 @@ export class CreateStationFormComponent implements OnInit {
 
     this.controls.cityName.valueChanges
       .pipe(
-        debounceTime(1000),
+        debounceTime(300),
         filter((city) => !!city),
         switchMap((city) => {
           return this.locationService.getLocationCoordinates(city as string);

@@ -7,9 +7,9 @@
         <input placeholder="Type city name" tuiTextfieldLegacy />
         <ng-container *ngIf="cities.length">
           <tui-data-list *tuiDataList>
-            @for (city of cities; track city) {
+            @for (city of cities; track city.lon) {
               <button tuiOption [value]="city.name" (click)="onSelectedCity(city)">
-                {{ city.name }}, {{ city.country }}
+                {{ city.name }}
               </button>
             }
           </tui-data-list>
