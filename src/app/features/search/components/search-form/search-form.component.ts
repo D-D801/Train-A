@@ -4,22 +4,21 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AlertService } from '@core/services/alert/alert.service';
 import { StationsService } from '@core/services/stations/stations.service';
-import { Station } from '@features/admin/interfaces/station-list-item.interface';
 import { SearchFilterComponent } from '@features/search/components/search-filter/search-filter.component';
 import { CityCoordinates } from '@features/search/interfaces/city-coordinates.interface';
-import { LocationApiService } from '@features/search/services/location-api/location-api.service';
 import { SearchApiService } from '@features/search/services/search-api/search-api.service';
 import { SearchService } from '@features/search/services/search/search.service';
 import { findDepartureDatesOfRide } from '@features/search/utils/find-departure-dates-of-ride';
 import { generateDates } from '@features/search/utils/generate-filter-dates';
 import { groupeRidesWithDates } from '@features/search/utils/groupe-rides-with-dates';
-import { dateValidator } from '@features/search/validators/date.validator';
 import { convertDateToISODateWithoutTime } from '@shared/utils/date-converter';
+import { getCurrentDate } from '@shared/utils/getCurrentDateTime';
+import { dateValidator } from '@shared/validators/date-time.validator';
 
-import { TuiDay, TuiLet, TuiTime } from '@taiga-ui/cdk';
+import { TuiDay, TuiLet } from '@taiga-ui/cdk';
 import { TuiButton, TuiDataList, TuiInitialsPipe, TuiTextfield } from '@taiga-ui/core';
 import { TuiDataListWrapper } from '@taiga-ui/kit';
-import { TuiInputDateTimeModule, TuiInputModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
+import { TuiInputDateModule, TuiInputModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 
 type InputName = 'from' | 'to';
 
@@ -38,7 +37,7 @@ type InputName = 'from' | 'to';
     TuiInitialsPipe,
     TuiDataListWrapper,
     TuiTextfield,
-    TuiInputDateTimeModule,
+    TuiInputDateModule,
     TuiButton,
     NgTemplateOutlet,
     TitleCasePipe,
@@ -57,8 +56,6 @@ export class SearchFormComponent implements OnInit {
 
   private readonly fb = inject(FormBuilder);
 
-  private readonly locationService = inject(LocationApiService);
-
   private readonly alert = inject(AlertService);
 
   private readonly destroy = inject(DestroyRef);
@@ -71,13 +68,13 @@ export class SearchFormComponent implements OnInit {
 
   private toCityCoordinates: CityCoordinates = { latitude: 0, longitude: 0 };
 
-  private selectedCityIndex: number = 0;
-
   private startDateWithoutTime = '';
 
   private endDateWithoutTime = '';
 
   protected readonly isLoading = signal(false);
+
+  protected getCurrentDate = getCurrentDate;
 
   // private readonly departureStation = signal<SearchFromStation | null>(null);
 
@@ -90,7 +87,7 @@ export class SearchFormComponent implements OnInit {
   public searchForm = this.fb.group({
     from: this.fb.control('', [Validators.required]),
     to: this.fb.control('', [Validators.required]),
-    date: this.fb.control<[TuiDay, TuiTime]>([TuiDay.currentUtc(), new TuiTime(0, 0)], dateValidator()),
+    date: this.fb.control<TuiDay>(TuiDay.currentUtc(), dateValidator()),
   });
 
   public ngOnInit() {
@@ -110,8 +107,8 @@ export class SearchFormComponent implements OnInit {
     if (!stationsArray) return;
     const receivedCities = stationsArray.filter((item) => item.city.toLowerCase().includes(city.toLowerCase()));
     this.searchService.setSearchCities(receivedCities);
-    const receivedCity = receivedCities[this.selectedCityIndex];
-    if (receivedCities.length === 0 || this.selectedCityIndex < 0 || !receivedCity) return;
+    const receivedCity = receivedCities.find((item) => item.city === city);
+    if (receivedCities.length === 0 || !receivedCity) return;
     const { latitude, longitude } = receivedCity;
     if (inputName === 'from') {
       this.fromCityCoordinates = {
@@ -126,23 +123,13 @@ export class SearchFormComponent implements OnInit {
     }
   }
 
-  public onSelected(city: Station, inputName: string, index: number) {
-    this.selectedCityIndex = index;
-    if (inputName === 'from') {
-      this.from.setValue(city.city);
-    }
-    if (inputName === 'to') {
-      this.to.setValue(city.city);
-    }
-  }
-
   public search() {
     if (this.searchForm.invalid) return;
     let date = '';
     // console.error(this.date.value);
     if (this.date.value) {
-      const [{ day, month, year }, { hours, minutes }] = this.date.value;
-      date = new Date(year, month, day, hours, minutes).toISOString();
+      const { day, month, year } = this.date.value;
+      date = new Date(year, month, day).toISOString();
     }
     this.isLoading.set(true);
     // console.log(this.searchForm.value);
@@ -159,7 +146,7 @@ export class SearchFormComponent implements OnInit {
         next: (response) => {
           this.isLoading.set(false);
           if (this.date.value) {
-            const [{ day, month, year }] = this.date.value;
+            const { day, month, year } = this.date.value;
             this.startDateWithoutTime = convertDateToISODateWithoutTime(new Date(Date.UTC(year, month, day)));
           }
           this.searchService.departureStation.set(response.from);
@@ -179,15 +166,6 @@ export class SearchFormComponent implements OnInit {
           this.alert.open({ message, label: 'Error:', appearance: 'error' });
         },
       });
-  }
-
-  // eslint-disable-next-line class-methods-use-this
-  public getMinDate() {
-    return new TuiDay(
-      new Date(Date.now()).getFullYear(),
-      new Date(Date.now()).getMonth(),
-      new Date(Date.now()).getDay() + 1
-    );
   }
 
   public get from() {

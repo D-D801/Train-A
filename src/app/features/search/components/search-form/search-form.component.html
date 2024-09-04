@@ -1,9 +1,9 @@
 <form class="tui-form__row_multi-fields" [formGroup]="searchForm" (ngSubmit)="search()">
   <ng-container [ngTemplateOutlet]="input" [ngTemplateOutletContext]="{ title: 'from' }"></ng-container>
   <ng-container [ngTemplateOutlet]="input" [ngTemplateOutletContext]="{ title: 'to' }"></ng-container>
-  <tui-input-date-time class="tui-form__multi-field" formControlName="date" timeMode="HH:MM" [min]="getMinDate()">
-    Choose date and time
-  </tui-input-date-time>
+  <tui-input-date class="tui-form__multi-field" formControlName="date" [min]="getCurrentDate()">
+    Choose date
+  </tui-input-date>
   <button
     class="tui-form__multi-field tui-form__button submit"
     tuiButton
@@ -26,12 +26,7 @@
     <input placeholder="Type city name" tuiTextfieldLegacy />
     <ng-container *ngIf="cities?.length">
       <tui-data-list *tuiDataList>
-        <button
-          *ngFor="let city of cities; index as i"
-          tuiOption
-          [value]="city.city"
-          (click)="onSelected(city, title, i)"
-        >
+        <button *ngFor="let city of cities; index as i" tuiOption [value]="city.city">
           {{ city.city }}
         </button>
       </tui-data-list>

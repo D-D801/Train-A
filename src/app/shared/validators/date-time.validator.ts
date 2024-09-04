@@ -28,3 +28,21 @@ export function dateTimeValidator(): ValidatorFn {
     return null;
   };
 }
+
+export function dateValidator(): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    const { value: date } = control;
+
+    if (!date) {
+      return { incorrectDateTime: true };
+    }
+
+    const { day, month, year } = date;
+
+    if (!(day && month && year)) {
+      return { incorrectDateTime: true };
+    }
+
+    return null;
+  };
+}
