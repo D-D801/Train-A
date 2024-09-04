@@ -1,5 +1,5 @@
 import { AsyncPipe, NgForOf, NgIf, NgTemplateOutlet, TitleCasePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AlertService } from '@core/services/alert/alert.service';
@@ -20,7 +20,6 @@ import { TuiDay, TuiLet, TuiTime } from '@taiga-ui/cdk';
 import { TuiButton, TuiDataList, TuiInitialsPipe, TuiTextfield } from '@taiga-ui/core';
 import { TuiDataListWrapper } from '@taiga-ui/kit';
 import { TuiInputDateTimeModule, TuiInputModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
-import { debounceTime } from 'rxjs';
 
 type InputName = 'from' | 'to';
 
@@ -78,6 +77,8 @@ export class SearchFormComponent implements OnInit {
 
   private endDateWithoutTime = '';
 
+  protected readonly isLoading = signal(false);
+
   // private readonly departureStation = signal<SearchFromStation | null>(null);
 
   // private readonly arrivalStation = signal<SearchToStation | null>(null);
@@ -94,11 +95,11 @@ export class SearchFormComponent implements OnInit {
 
   public ngOnInit() {
     const { from, to } = this.searchForm.controls;
-    from.valueChanges.pipe(debounceTime(300), takeUntilDestroyed(this.destroy)).subscribe(() => {
+    from.valueChanges.pipe(takeUntilDestroyed(this.destroy)).subscribe(() => {
       if (!this.from.value) return;
       this.updateCities(this.from.value, 'from');
     });
-    to.valueChanges.pipe(debounceTime(300), takeUntilDestroyed(this.destroy)).subscribe(() => {
+    to.valueChanges.pipe(takeUntilDestroyed(this.destroy)).subscribe(() => {
       if (!this.to.value) return;
       this.updateCities(this.to.value, 'to');
     });
@@ -143,6 +144,8 @@ export class SearchFormComponent implements OnInit {
       const [{ day, month, year }, { hours, minutes }] = this.date.value;
       date = new Date(year, month, day, hours, minutes).toISOString();
     }
+    this.isLoading.set(true);
+    // console.log(this.searchForm.value);
     this.searchApiService
       .search({
         fromLatitude: this.fromCityCoordinates.latitude,
@@ -154,6 +157,7 @@ export class SearchFormComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroy))
       .subscribe({
         next: (response) => {
+          this.isLoading.set(false);
           if (this.date.value) {
             const [{ day, month, year }] = this.date.value;
             this.startDateWithoutTime = convertDateToISODateWithoutTime(new Date(Date.UTC(year, month, day)));
@@ -171,6 +175,7 @@ export class SearchFormComponent implements OnInit {
           // this.searchService.setSearchResult(response);
         },
         error: ({ error: { message } }) => {
+          this.isLoading.set(false);
           this.alert.open({ message, label: 'Error:', appearance: 'error' });
         },
       });

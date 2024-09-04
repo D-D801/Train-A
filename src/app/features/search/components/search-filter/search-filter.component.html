@@ -18,7 +18,8 @@
     >
       @for (date of dates; track date.departureDate; let i = $index) {
         <button *tuiItem class="item" [ngClass]="{ active: i === activeIndex }" (click)="onItemClick(i)">
-          {{ dateConverter2(date.departureDate) }} {{ date.rideIds.length }}
+          {{ dateConverter2(date.departureDate) }}<br />
+          <span class="rides-count">rides: {{ date.rideIds.length }}</span>
         </button>
       }
     </tui-carousel>

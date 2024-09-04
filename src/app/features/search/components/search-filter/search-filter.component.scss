@@ -10,6 +10,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  margin: 1.5rem 0;
 }
 
 .carousel {
@@ -19,7 +20,10 @@
 
 .item {
   cursor: pointer;
-  height: 4rem;
+
+  height: 100%;
+  padding: 0.3rem;
+
   border: 1px solid var(--tui-border-normal);
   border-radius: 1rem;
 }
@@ -31,6 +35,10 @@
 .active {
   background-color: var(--tui-background-base);
   border-color: var(--tui-background-accent-1);
+}
+
+.rides-count {
+  font-size: 12px;
 }
 
 @media (width <= 830px) {

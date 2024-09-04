@@ -14,12 +14,12 @@ import { RouterLink } from '@angular/router';
 import { StationsService } from '@core/services/stations/stations.service';
 import { RoadSection, Trip } from '@features/search/interfaces/search-route-response.interface';
 import { SearchApiService } from '@features/search/services/search-api/search-api.service';
-import { TripService } from '@features/search/services/trip/trip.service';
+import { FreeSeat, TripService } from '@features/search/services/trip/trip.service';
 import { RideModalService } from '@shared/services/ride-modal.service';
 import { calculateStopDuration } from '@shared/utils/calculate-train-stop-duration';
 import { dateConverter } from '@shared/utils/date-converter';
 import { TuiPlatform } from '@taiga-ui/cdk';
-import { TuiButton, TuiSurface, TuiTitle } from '@taiga-ui/core';
+import { TuiButton, TuiIcon, TuiSurface, TuiTitle } from '@taiga-ui/core';
 import { TuiBlockStatus, TuiCardLarge, TuiHeader } from '@taiga-ui/layout';
 import { forkJoin, take, tap } from 'rxjs';
 
@@ -49,6 +49,7 @@ interface Response {
     TuiPlatform,
     TuiButton,
     TuiBlockStatus,
+    TuiIcon,
   ],
   templateUrl: './search-result-list.component.html',
   styleUrl: './search-result-list.component.scss',
@@ -140,5 +141,9 @@ export class SearchResultListComponent {
 
   public convertTime(date: string) {
     return dateConverter(date);
+  }
+
+  public totalSeatsForType(freeSeats: FreeSeat, type: string): number {
+    return this.tripService.sumSeatsByType(freeSeats, type);
   }
 }
