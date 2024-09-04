@@ -5,9 +5,9 @@ import {
   ChangeDetectorRef,
   Component,
   DestroyRef,
+  effect,
   inject,
-  Input,
-  OnInit,
+  input,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
@@ -21,7 +21,7 @@ import { dateConverter } from '@shared/utils/date-converter';
 import { TuiPlatform } from '@taiga-ui/cdk';
 import { TuiButton, TuiSurface, TuiTitle } from '@taiga-ui/core';
 import { TuiBlockStatus, TuiCardLarge, TuiHeader } from '@taiga-ui/layout';
-import { forkJoin, tap } from 'rxjs';
+import { forkJoin, take, tap } from 'rxjs';
 
 interface Response {
   from: {
@@ -54,7 +54,7 @@ interface Response {
   styleUrl: './search-result-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SearchResultListComponent implements OnInit {
+export class SearchResultListComponent {
   private readonly searchApiService = inject(SearchApiService);
 
   private readonly cdr = inject(ChangeDetectorRef);
@@ -67,20 +67,26 @@ export class SearchResultListComponent implements OnInit {
 
   private readonly rideModalService = inject(RideModalService);
 
-  @Input({ required: true }) public searchResult!: Response;
+  // @Input({ required: true }) public searchResult!: Response;
+  public searchResult = input.required<Response>();
 
   public rides: Trip[] | null = null;
 
-  public ngOnInit() {
-    forkJoin(this.searchResult.routes.map((routeId) => this.searchApiService.searchId(routeId)))
-      .pipe(
-        tap((trips) => {
-          this.rides = trips;
-          this.cdr.detectChanges();
-        }),
-        takeUntilDestroyed(this.destroy)
-      )
-      .subscribe();
+  public constructor() {
+    effect(() => {
+      if (!this.searchResult()) return;
+
+      forkJoin(this.searchResult().routes.map((routeId) => this.searchApiService.searchId(routeId)))
+        .pipe(
+          tap((trips) => {
+            this.rides = trips;
+            this.cdr.markForCheck();
+          }),
+          take(1),
+          takeUntilDestroyed(this.destroy)
+        )
+        .subscribe();
+    });
   }
 
   public getTravelTime(arrival: string, departure: string) {
@@ -114,10 +120,10 @@ export class SearchResultListComponent implements OnInit {
       .map((segment, index) => ({ length: segment.occupiedSeats.length, index }))
       .reduce((max, current) => (current.length > max.length ? current : max), { length: 0, index: -1 }).index;
 
-    const bookSeats = this.tripService.getOccupieSeatsInCarriages(
-      segments[longestSegmentIndex].occupiedSeats,
-      carriages
-    );
+    const bookSeats =
+      longestSegmentIndex > -1
+        ? this.tripService.getOccupieSeatsInCarriages(segments[longestSegmentIndex].occupiedSeats, carriages)
+        : [];
 
     const carriageList = this.tripService.groupCarriages(carriages);
 

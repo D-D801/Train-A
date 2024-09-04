@@ -16,20 +16,21 @@ export interface SearchRouteResponse {
   };
   routes: Route[];
 }
+// TODO: replace the interface with existing ones
+export interface SearchResultListParams {
+  from: SearchFromStation;
+  to: SearchToStation;
+  rideIds: number[];
+}
 
 export interface SearchFromStation {
   stationId: number;
   city: string;
-  geolocation: CityCoordinates;
 }
 
 export interface SearchToStation {
   stationId: number;
   city: string;
-  geolocation: {
-    latitude: number;
-    longitude: number;
-  };
 }
 
 interface Route {

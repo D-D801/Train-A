@@ -19,7 +19,7 @@ export function dateConverter(date: string) {
   const isoDate = new Date(date);
 
   const month = months[isoDate.getMonth()];
-  const day = isoDate.getDate();
+  const day = isoDate.getUTCDate();
   const hours = String(isoDate.getUTCHours()).padStart(2, '0');
   const minutes = String(isoDate.getUTCMinutes()).padStart(2, '0');
 
