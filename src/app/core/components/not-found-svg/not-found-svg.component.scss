@@ -1,0 +1,190 @@
+.main {
+  margin-top: 15%;
+}
+
+.st0 {
+  fill: #fff;
+}
+
+.st2 {
+  fill: var(--tui-background-accent-1-pressed);
+}
+
+.st3 {
+  fill: var(--tui-background-accent-1-pressed);
+}
+
+.st4,
+.st6 {
+  fill: #fff;
+  stroke: var(--tui-background-accent-1-hover);
+  stroke-miterlimit: 10;
+}
+
+.st6 {
+  stroke: var(--tui-background-accent-1-pressed);
+  stroke-width: 2;
+}
+
+.st7,
+.st8,
+.st9 {
+  stroke: var(--tui-background-accent-1-pressed);
+  stroke-miterlimit: 10;
+}
+
+.st7 {
+  fill: none;
+  stroke-linecap: round;
+  stroke-width: 5;
+}
+
+.st8,
+.st9 {
+  fill: #fff;
+}
+
+.st9 {
+  fill: none;
+}
+
+#cloud1 {
+  animation: cloud003 15s linear infinite;
+}
+
+#cloud2 {
+  animation: cloud002 25s linear infinite;
+}
+
+#cloud3 {
+  animation: cloud003 20s linear infinite;
+}
+
+#cloud4 {
+  animation: float 4s linear infinite;
+}
+
+#cloud5 {
+  animation: float 8s linear infinite;
+}
+
+#cloud7 {
+  animation: float 5s linear infinite;
+}
+
+#tracks {
+  animation: slide 650ms linear infinite;
+}
+
+#bumps {
+  animation: land 10000ms linear infinite;
+}
+
+@keyframes jig {
+  0% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(1px);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
+
+#car-layers {
+  animation: jig 0.35s linear infinite;
+}
+
+@keyframes land {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(1000px);
+  }
+}
+
+@keyframes slide {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(100px);
+  }
+}
+
+@keyframes cloud001 {
+  0% {
+    transform: translateX(-1000px) translateY(3px);
+  }
+
+  100% {
+    transform: translateX(1000px) translateY(0);
+  }
+}
+
+@keyframes cloud002 {
+  0% {
+    transform: translateX(-1000px) translateY(3px);
+  }
+
+  100% {
+    transform: translateX(1000px) translateY(0);
+  }
+}
+
+@keyframes cloud003 {
+  0% {
+    transform: translateX(-1000px) translateY(3px);
+  }
+
+  100% {
+    transform: translateX(1000px) translateY(0);
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0) translateX(0);
+  }
+
+  50% {
+    transform: translateY(8px) translateX(5px);
+  }
+
+  100% {
+    transform: translateY(0) translateX(0);
+  }
+}
+
+#bracefront,
+#braceback {
+  animation: braces 1s linear infinite;
+}
+
+@keyframes braces {
+  0% {
+    transform: translateX(-2px);
+  }
+
+  25% {
+    transform: translateX(3px);
+  }
+
+  50% {
+    transform: translateX(-2px);
+  }
+
+  75% {
+    transform: translateX(3px);
+  }
+
+  100% {
+    transform: translateX(-2px);
+  }
+}
