@@ -39,7 +39,7 @@
                 <div class="details-section">
                   <div class="route">
                     <tui-icon class="accessories" icon="@tui.bus" />
-                    {{ getStation(trip.path[0]).city }} - {{ getStation(trip.path[trip.path.length - 1]).city }}
+                    {{ getStation(trip.path[0]).city }} -> {{ getStation(trip.path[trip.path.length - 1]).city }}
                   </div>
                   <button
                     appearance="primary"
@@ -56,12 +56,15 @@
                   @let freeSeats = getFreeSeats(segments, trip.carriages);
                   @let uniqueCarriageTypes = getUniqueCarriages(trip.carriages);
                   @let carriageTypes = getCarriageTypes(uniqueCarriageTypes);
-                  @for (type of carriageTypes; track type) {
-                    @for (carriage of getCarriageListForType(uniqueCarriageTypes, type); track carriage.index) {
+                  @for (type of carriageTypes | keyvalue; track type.key) {
+                    @for (carriage of getCarriageListForType(uniqueCarriageTypes, type.key); track carriage.index) {
                       <div class="item">
+                        <span class="carriage"
+                          >{{ type.value[0].carriage }}: <tui-icon class="accessories seat" icon="@tui.armchair" />
+                          {{ totalSeatsForType(freeSeats, type.key) }}</span
+                        >
                         <span
-                          ><strong>{{ type }}:</strong> ${{ getPrice(segments)[type] }},<br />
-                          {{ totalSeatsForType(freeSeats, type) }} free seats</span
+                          ><strong>${{ getPrice(segments)[type.key] }}</strong></span
                         >
                       </div>
                     }

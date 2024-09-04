@@ -3,27 +3,23 @@
     <div tuiCardLarge tuiSurface="elevated" class="tui-space_vertical-4">
       <header tuiHeader>
         <div tuiTitle="m">{{ station.city }}</div>
-        <button
-          appearance="secondary"
-          size="m"
-          tuiButton
-          type="button"
-          (click)="deleteStation(station.id)"
-          class="tui-form__button"
-        >
-          <img alt="delete button" [src]="'@tui.trash' | tuiIcon" />
-        </button>
+        <tui-icon class="accessories" icon="@tui.trash" (click)="deleteStation(station.id)" />
       </header>
 
-      <section>
-        <div>
-          <div><span class="tui-text_body-l">Latitude: </span>{{ station.latitude }}</div>
-          <div><span class="tui-text_body-l">Longitude: </span>{{ station.longitude }}</div>
-        </div>
-        <span class="tui-text_body-l">Connected to:</span>
-        @for (connectedStation of getStations(station.connectedTo); track connectedStation.id) {
-          <span> {{ connectedStation.city }} </span>
-        }
+      <section class="card-description">
+        <div><span class="subtitle">Latitude: </span>{{ station.latitude }}</div>
+        <div><span class="subtitle">Longitude: </span>{{ station.longitude }}</div>
+      </section>
+      <section class="card-description">
+        <span class="subtitle">Connected to:</span>
+        <span>
+          @for (connectedStation of getStations(station.connectedTo); let last = $last; track connectedStation.id) {
+            {{ connectedStation.city }}
+            @if (!last) {
+              <span> - </span>
+            }
+          }
+        </span>
       </section>
     </div>
   </div>
