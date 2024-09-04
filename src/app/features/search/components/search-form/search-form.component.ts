@@ -1,12 +1,12 @@
 import { AsyncPipe, NgForOf, NgIf, NgTemplateOutlet, TitleCasePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AlertService } from '@core/services/alert/alert.service';
+import { StationsService } from '@core/services/stations/stations.service';
+import { Station } from '@features/admin/interfaces/station-list-item.interface';
 import { SearchFilterComponent } from '@features/search/components/search-filter/search-filter.component';
 import { CityCoordinates } from '@features/search/interfaces/city-coordinates.interface';
-import { DepartureDateWithIds } from '@features/search/interfaces/filter-dates.interface';
-import { SearchFromStation, SearchToStation } from '@features/search/interfaces/search-route-response.interface';
 import { LocationApiService } from '@features/search/services/location-api/location-api.service';
 import { SearchApiService } from '@features/search/services/search-api/search-api.service';
 import { SearchService } from '@features/search/services/search/search.service';
@@ -21,8 +21,6 @@ import { TuiButton, TuiDataList, TuiInitialsPipe, TuiTextfield } from '@taiga-ui
 import { TuiDataListWrapper } from '@taiga-ui/kit';
 import { TuiInputDateTimeModule, TuiInputModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { debounceTime } from 'rxjs';
-import { Station } from '@features/admin/interfaces/station-list-item.interface';
-import { StationsService } from '@core/services/stations/stations.service';
 
 type InputName = 'from' | 'to';
 
@@ -80,13 +78,13 @@ export class SearchFormComponent implements OnInit {
 
   private endDateWithoutTime = '';
 
-  private readonly departureStation = signal<SearchFromStation | null>(null);
+  // private readonly departureStation = signal<SearchFromStation | null>(null);
 
-  private readonly arrivalStation = signal<SearchToStation | null>(null);
+  // private readonly arrivalStation = signal<SearchToStation | null>(null);
 
-  private readonly filteredRides = signal<number[]>([]);
+  // private readonly filteredRides = signal<number[]>([]);
 
-  protected readonly filterDates = signal<DepartureDateWithIds[]>([]);
+  // protected readonly filterDates = signal<DepartureDateWithIds[]>([]);
 
   public searchForm = this.fb.group({
     from: this.fb.control('', [Validators.required]),
@@ -111,6 +109,7 @@ export class SearchFormComponent implements OnInit {
     if (!stationsArray) return;
     const receivedCities = stationsArray.filter((item) => item.city.toLowerCase().includes(city.toLowerCase()));
     this.searchService.setSearchCities(receivedCities);
+    if (receivedCities.length === 0 || this.selectedCityIndex < 0) return;
     const { latitude, longitude } = receivedCities[this.selectedCityIndex];
     if (inputName === 'from') {
       this.fromCityCoordinates = {
@@ -138,7 +137,7 @@ export class SearchFormComponent implements OnInit {
   public search() {
     if (this.searchForm.invalid) return;
     let date = '';
-    console.error(this.date.value);
+    // console.error(this.date.value);
     if (this.date.value) {
       const [{ day, month, year }, { hours, minutes }] = this.date.value;
       date = new Date(year, month, day, hours, minutes).toISOString();
@@ -158,16 +157,17 @@ export class SearchFormComponent implements OnInit {
             const [{ day, month, year }] = this.date.value;
             this.startDateWithoutTime = convertDateToISODateWithoutTime(new Date(Date.UTC(year, month, day)));
           }
-          this.departureStation.set(response.from);
-          this.arrivalStation.set(response.to);
+          this.searchService.departureStation.set(response.from);
+          this.searchService.arrivalStation.set(response.to);
           const sortedRidesWidthDepartureDate = findDepartureDatesOfRide(response);
 
           this.endDateWithoutTime = sortedRidesWidthDepartureDate.at(-1)?.departureDate ?? '';
           const dates = generateDates(this.startDateWithoutTime, this.endDateWithoutTime);
 
           const updatedDates = groupeRidesWithDates(dates, sortedRidesWidthDepartureDate);
-          this.filterDates.set(updatedDates);
-          this.searchService.setSearchResult(response);
+          // this.filterDates.set(updatedDates);
+          this.searchService.setfilterDates(updatedDates);
+          // this.searchService.setSearchResult(response);
         },
         error: ({ error: { message } }) => {
           this.alert.open({ message, label: 'Error:', appearance: 'error' });
@@ -195,10 +195,10 @@ export class SearchFormComponent implements OnInit {
   public get date() {
     return this.searchForm.controls.date;
   }
-
-  public onFilterSelect(index: number) {
-    // TODO: filterDates()[index].rideIds must be passed to search-result-list
-    // eslint-disable-next-line no-console
-    console.log('filteredRides', index, this.filterDates()[index].rideIds);
-  }
+  //
+  // public onFilterSelect(index: number) {
+  //   // TODO: filterDates()[index].rideIds must be passed to search-result-list
+  //   // eslint-disable-next-line no-console
+  //   console.log('filteredRides', index, this.filterDates()[index].rideIds);
+  // }
 }

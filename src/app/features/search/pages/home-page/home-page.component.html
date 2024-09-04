@@ -1,16 +1,8 @@
 <dd-search-form></dd-search-form>
-<!-- @if (result() !== null) { -->
-<dd-search-result-list
-  [searchResult]="{
-    from: {
-      city: 'string',
-      stationId: 61,
-    },
-    routes: [1927],
-    to: {
-      city: 'string',
-      stationId: 63,
-    },
-  }"
-></dd-search-result-list>
-<!-- } -->
+
+@if (filterDates().length) {
+  <dd-search-filter [filteredDates]="filterDates()" (currentIndex)="onFilterSelect($event)"></dd-search-filter>
+}
+@if (searchResultParams(); as params) {
+  <dd-search-result-list [searchResult]="params"></dd-search-result-list>
+}

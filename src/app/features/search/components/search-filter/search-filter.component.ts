@@ -30,7 +30,7 @@ export class SearchFilterComponent implements OnInit {
 
   public activeIndex: number = 0;
 
-  protected index = 2;
+  protected index = 0;
 
   public onItemClick(index: number): void {
     this.activeIndex = index;

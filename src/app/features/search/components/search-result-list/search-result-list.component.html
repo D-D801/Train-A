@@ -1,67 +1,77 @@
-@if (rides && rides.length > 0) {
-  @for (trip of rides; track trip.rideId) {
-    <div tuiPlatform="web">
-      <div
-        tuiCardLarge
-        tuiSurface="elevated"
-        [routerLink]="['/trip', trip.rideId]"
-        [queryParams]="{ from: searchResult.from.stationId, to: searchResult.to.stationId }"
-      >
-        <header tuiHeader>
-          <h2 tuiTitle>Ride {{ trip.rideId }}</h2>
-        </header>
-        @let departureIndex = getStationIndexInPath(searchResult.from.stationId, trip.path);
-        @let arrivalIndex = getStationIndexInPath(searchResult.to.stationId, trip.path) - 1;
-        <section class="info-container">
-          <div class="info">
-            <div>
-              <div>{{ convertTime(trip.schedule.segments[departureIndex].time[0]) }}</div>
-              <div>{{ searchResult.from.city }}</div>
-            </div>
-            <div>
-              {{
-                getTravelTime(
-                  trip.schedule.segments[arrivalIndex].time[1],
-                  trip.schedule.segments[departureIndex].time[0]
-                )
-              }}
-            </div>
-            <hr />
-            <div>
-              <div>{{ convertTime(trip.schedule.segments[arrivalIndex].time[1]) }}</div>
-              <div>{{ searchResult.to.city }}</div>
-            </div>
-            <div>
-              <div>{{ getStation(trip.path[0]).city }} - {{ getStation(trip.path[trip.path.length - 1]).city }}</div>
-              <button
-                appearance="primary"
-                size="xs"
-                tuiButton
-                (click)="showModal(searchResult.from.stationId, searchResult.to.stationId, trip, $event)"
-              >
-                Route
-              </button>
-            </div>
-          </div>
-          <div>
-            @let segments = trip.schedule.segments.slice(departureIndex, arrivalIndex + 1);
-            @let freeSeats = getFreeSeats(segments, trip.carriages);
-            @let uniqueCarriageTypes = getUniqueCarriages(trip.carriages);
-            @let carriageTypes = getCarriageTypes(uniqueCarriageTypes);
-            @for (type of carriageTypes; track type) {
-              @for (carriage of getCarriageListForType(uniqueCarriageTypes, type); track carriage.index) {
+@if (searchResult().routes.length) {
+  @if (rides && rides.length > 0) {
+    @for (trip of rides; track trip.rideId) {
+      <div tuiPlatform="web">
+        <div
+          tuiCardLarge
+          tuiSurface="elevated"
+          [routerLink]="['/trip', trip.rideId]"
+          [queryParams]="{ from: searchResult().from.stationId, to: searchResult().to.stationId }"
+        >
+          <header tuiHeader>
+            <h2 tuiTitle>Ride {{ trip.rideId }}</h2>
+          </header>
+          @let departureIndex = getStationIndexInPath(searchResult().from.stationId, trip.path);
+          @let arrivalIndex = getStationIndexInPath(searchResult().to.stationId, trip.path) - 1;
+          @if (arrivalIndex >= 0 && departureIndex >= 0) {
+            <section class="info-container">
+              <div class="info">
                 <div>
-                  <span
-                    >{{ type }}: ${{ getPrice(segments)[type] }}, {{ freeSeats[carriage.index].availableSeats }} free
-                    seats</span
-                  >
+                  <div>{{ convertTime(trip.schedule.segments[departureIndex].time[0]) }}</div>
+                  <div>{{ searchResult().from.city }}</div>
                 </div>
-              }
-            }
-          </div>
-        </section>
+                <div>
+                  {{
+                    getTravelTime(
+                      trip.schedule.segments[arrivalIndex].time[1],
+                      trip.schedule.segments[departureIndex].time[0]
+                    )
+                  }}
+                </div>
+                <hr />
+                <div>
+                  <div>{{ convertTime(trip.schedule.segments[arrivalIndex].time[1]) }}</div>
+                  <div>{{ searchResult().to.city }}</div>
+                </div>
+                <div>
+                  <div>
+                    {{ getStation(trip.path[0]).city }} - {{ getStation(trip.path[trip.path.length - 1]).city }}
+                  </div>
+                  <button
+                    appearance="primary"
+                    size="xs"
+                    tuiButton
+                    (click)="showModal(searchResult().from.stationId, searchResult().to.stationId, trip, $event)"
+                  >
+                    Route
+                  </button>
+                </div>
+              </div>
+              <div>
+                @let segments = trip.schedule.segments.slice(departureIndex, arrivalIndex + 1);
+                @let freeSeats = getFreeSeats(segments, trip.carriages);
+                @let uniqueCarriageTypes = getUniqueCarriages(trip.carriages);
+                @let carriageTypes = getCarriageTypes(uniqueCarriageTypes);
+                @for (type of carriageTypes; track type) {
+                  @for (carriage of getCarriageListForType(uniqueCarriageTypes, type); track carriage.index) {
+                    <div>
+                      <span
+                        >{{ type }}: ${{ getPrice(segments)[type] }},
+                        {{ freeSeats[carriage.index].availableSeats }} free seats</span
+                      >
+                    </div>
+                  }
+                }
+              </div>
+            </section>
+          }
+        </div>
       </div>
-    </div>
+    }
+  } @else {
+    <tui-block-status>
+      <h4>No rides available</h4>
+    </tui-block-status>
   }
 } @else {
   <tui-block-status>
