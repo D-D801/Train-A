@@ -10,7 +10,7 @@
     appearance="primary"
     size="l"
     type="submit"
-    [disabled]="isLoading()"
+    [disabled]="isLoading() || from.invalid"
   >
     Search
   </button>

@@ -86,7 +86,11 @@ export class CarriagePreviewComponent {
     if (!this.options().isClick) return;
     this.selectedSeat = this.isSeatSelected(seatNumber) ? null : seatNumber;
     const carriageType = this.carriage()?.code;
-    if (!carriageType || !this.selectedSeat) return;
+    if (!this.selectedSeat) {
+      this.seatSelected.emit({ seatNumber: 0, carriageType: '' });
+    }
+    if (!carriageType || !this.selectedSeat || this.isSeatReserved(seatNumber)) return;
+
     this.seatSelected.emit({ seatNumber: this.selectedSeat, carriageType });
   }
 

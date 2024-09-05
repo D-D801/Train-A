@@ -132,7 +132,7 @@ export class CreateStationFormComponent implements OnInit {
   }
 
   public onSelected(station: Station, index: number) {
-    if (this.relations.includes(index)) return;
+    if (index >= 0 && index < this.relations.length) return;
     this.controls.connectedStations.controls[index].setValue(station.city);
     this.relations[index] = station.id;
   }
