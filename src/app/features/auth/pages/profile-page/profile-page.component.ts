@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 import { ProfileApiService } from '@features/auth/services/profile-api/profile-api.service';
 import { LocalStorageService } from '@core/services/local-storage/local-storage.service';
 import { LocalStorageKey } from '@shared/enums/local-storage-key.enum';
-import { tap } from 'rxjs';
+import { catchError, map, of, tap } from 'rxjs';
 
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { tuiMarkControlAsTouchedAndValidate } from '@taiga-ui/cdk';
@@ -90,18 +90,18 @@ export class ProfilePageComponent {
     const fieldValue = form.get(fieldName)?.value;
 
     if (form.valid && fieldValue) {
-      this.profileApiService
-        .updateUserInformation({ [fieldName]: fieldValue })
-        .pipe(takeUntilDestroyed(this.destroy))
-        .subscribe({
-          next: () => {
-            this.alert.open({ message: fieldValue, label: `Change ${fieldName}` });
-          },
-          error: ({ error: { message } }) => {
-            this.alert.open({ message, label: 'Error', appearance: 'error' });
-          },
-        });
+      return this.profileApiService.updateUserInformation({ [fieldName]: fieldValue }).pipe(
+        map(() => {
+          this.alert.open({ message: fieldValue, label: `Change ${fieldName}` });
+          return true;
+        }),
+        catchError(({ error: { message } }) => {
+          this.alert.open({ message, label: 'Error', appearance: 'error' });
+          return of(false);
+        })
+      );
     }
+    return null;
   }
 
   protected logout() {

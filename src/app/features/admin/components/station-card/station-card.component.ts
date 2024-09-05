@@ -21,6 +21,7 @@ import { getISOStringDateTimeFromTuiDataTime } from '@shared/utils/getISOStringD
 import { EditableFormComponent } from '@shared/components/editable-form/editable-form.component';
 import { CarriagesService } from '@core/services/carriages/carriages.service';
 import { StationsService } from '@core/services/stations/stations.service';
+import { catchError, map, of } from 'rxjs';
 
 @Component({
   selector: 'dd-station-card',
@@ -110,22 +111,22 @@ export class StationCardComponent {
         }
         this.priceForm.addControl(
           this.carriagesService.getCarriageNameByCode(carriage),
-          this.fb.control(price[carriage], [Validators.required, Validators.min(0)])
+          this.fb.control(price[carriage], [Validators.required, Validators.min(1)])
         );
       });
     });
   }
 
   public saveSegment() {
-    if (this.timeForm.invalid && this.priceForm.invalid) return;
+    if (this.timeForm.invalid && this.priceForm.invalid) return null;
     const segments = this.segments();
-    if (!segments) return;
+    if (!segments) return null;
 
     const { routeId, rideId } = this.ids();
     const { departure, arrival } = this.timeForm.value;
     const price = this.priceForm.value;
 
-    if (!(departure && arrival && price)) return;
+    if (!(departure && arrival && price)) return null;
 
     const departureDate = getISOStringDateTimeFromTuiDataTime(departure);
     const arrivalDate = getISOStringDateTimeFromTuiDataTime(arrival);
@@ -141,21 +142,23 @@ export class StationCardComponent {
       {} as Record<string, number>
     );
 
-    if (!(departureDate && arrivalDate)) return;
+    if (!(departureDate && arrivalDate)) return null;
 
     segments[this.currentSegmentIndex()] = {
       time: [departureDate, arrivalDate],
       price: priceWithCarriageCode,
     };
 
-    this.rideApiService
+    return this.rideApiService
       .updateRide(routeId, rideId, {
         segments,
       })
-      .subscribe({
-        error: ({ error: { message } }) => {
+      .pipe(
+        map(() => true),
+        catchError(({ error: { message } }) => {
           this.alert.open({ message, label: 'Error', appearance: 'error' });
-        },
-      });
+          return of(false);
+        })
+      );
   }
 }

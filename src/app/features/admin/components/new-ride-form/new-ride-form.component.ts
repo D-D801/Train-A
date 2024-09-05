@@ -10,7 +10,9 @@ import {
   Validators,
 } from '@angular/forms';
 import { AlertService } from '@core/services/alert/alert.service';
+import { CarriagesService } from '@core/services/carriages/carriages.service';
 import { StationsService } from '@core/services/stations/stations.service';
+import { Price } from '@features/admin/interfaces/segment.interface';
 import { NewRideService } from '@features/admin/services/new-ride/new-ride.service';
 import { RideApiService } from '@features/admin/services/ride-api/ride-api.service';
 import { buildInErrors } from '@shared/constants/build-in-errors';
@@ -76,6 +78,8 @@ export class NewRideFormComponent implements OnInit {
 
   protected readonly stationsService = inject(StationsService);
 
+  private readonly carriagesService = inject(CarriagesService);
+
   private readonly newRideService = inject(NewRideService);
 
   private readonly rideApiService = inject(RideApiService);
@@ -107,7 +111,7 @@ export class NewRideFormComponent implements OnInit {
             (acc, carriage) => {
               return {
                 ...acc,
-                [carriage]: this.fb.control<number | null>(null, [Validators.required, Validators.min(0)]),
+                [carriage]: this.fb.control<number | null>(null, [Validators.required, Validators.min(1)]),
               };
             },
             {} as { [key: string]: FormControl<number | null> }
@@ -125,8 +129,14 @@ export class NewRideFormComponent implements OnInit {
     if (!newSegments) return;
 
     const segments = newSegments.map((segment) => {
+      const price = Object.keys(segment.price).reduce((acc, key) => {
+        acc[this.carriagesService.getCarriageCodeByName(key)] = segment.price[key];
+        return acc;
+      }, {} as Price);
+
       return {
         ...segment,
+        price,
         time: [
           getISOStringDateTimeFromTuiDataTime(segment?.time[0]),
           getISOStringDateTimeFromTuiDataTime(segment?.time[1]),
