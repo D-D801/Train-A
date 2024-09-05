@@ -32,7 +32,7 @@
             <ng-container *ngIf="stations">
               <tui-data-list *tuiDataList>
                 @for (station of stations; track station) {
-                  <button tuiOption [value]="station.city" (click)="onSelected(station, controlIndex)">
+                  <button tuiOption [value]="station.city">
                     {{ station.city }}
                   </button>
                 }

@@ -1,10 +1,9 @@
 import { AsyncPipe, NgForOf, NgIf, NgTemplateOutlet, TitleCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { AbstractControl, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AlertService } from '@core/services/alert/alert.service';
 import { NewStation } from '@features/admin/interfaces/new-station.interface';
-import { Station } from '@features/admin/interfaces/station-list-item.interface';
 import { StationsApiService } from '@features/admin/services/stations-api/stations-api.service';
 import { latitudeValidator } from '@features/admin/validators/latitude.validator';
 import { longitudeValidator } from '@features/admin/validators/longitude.validator';
@@ -15,7 +14,7 @@ import { TUI_VALIDATION_ERRORS, TuiFieldErrorPipe } from '@taiga-ui/kit';
 import { TuiLet } from '@taiga-ui/cdk';
 import { TuiButton, TuiDataList, TuiError } from '@taiga-ui/core';
 import { TuiInputModule } from '@taiga-ui/legacy';
-import { debounceTime, filter, map, switchMap, tap } from 'rxjs';
+import { debounceTime, filter, switchMap, tap } from 'rxjs';
 import { StationsService } from '@core/services/stations/stations.service';
 
 @Component({
@@ -60,18 +59,18 @@ export class CreateStationFormComponent implements OnInit {
 
   private readonly destroy = inject(DestroyRef);
 
-  private readonly fb = inject(FormBuilder);
+  private readonly fb = inject(NonNullableFormBuilder);
 
   public readonly stations = this.stationsService.stations;
 
   public cities = this.searchService.cities;
 
-  private readonly connectedStationValidator = (control: AbstractControl) =>
-    this.stationsService.stations()?.find((station) => station.city === control.value)
+  private readonly connectedStationValidator = (control: AbstractControl) => {
+    if (!control.value) return null;
+    return this.stationsService.stations()?.find((station) => station.city === control.value)
       ? null
       : { invalidConnectedStation: true };
-
-  public relations: number[] = [];
+  };
 
   public createdStationId: number = 0;
 
@@ -90,19 +89,12 @@ export class CreateStationFormComponent implements OnInit {
   public ngOnInit() {
     this.controls.connectedStations.valueChanges
       .pipe(
-        filter(() => this.controls.connectedStations.at(-1).value !== ''),
+        filter(() => this.controls.connectedStations?.at(-1)?.value !== ''),
         takeUntilDestroyed(this.destroy)
       )
       .subscribe(() => {
-        this.cdr.detectChanges();
-        if (this.controls.connectedStations.length !== 1) {
-          this.controls.connectedStations.controls[this.controls.connectedStations.length - 1].addValidators([
-            Validators.required,
-            this.connectedStationValidator,
-          ]);
-        }
-        if (this.controls.connectedStations.controls[this.controls.connectedStations.length - 1].valid) {
-          this.controls.connectedStations.push(this.createConnectedStationControl());
+        if (this.controls.connectedStations.controls[this.controls.connectedStations.length - 1]?.valid) {
+          this.controls.connectedStations.push(this.fb.control('', [this.connectedStationValidator]));
         }
       });
 
@@ -122,29 +114,29 @@ export class CreateStationFormComponent implements OnInit {
       });
   }
 
-  private createConnectedStationControl() {
-    return this.fb.control('');
-  }
-
   public onSelectedCity(city: CityInfo) {
     this.controls.latitude.setValue(city.lat);
     this.controls.longitude.setValue(city.lon);
   }
 
-  public onSelected(station: Station, index: number) {
-    if (index >= 0 && index < this.relations.length) return;
-    this.controls.connectedStations.controls[index].setValue(station.city);
-    this.relations[index] = station.id;
-  }
-
   public createStation() {
+    const relations = [
+      ...new Set(
+        this.createStationForm.controls.connectedStations.controls
+          .map((item) => this.stationsService.getStationIdByName(item.value))
+          .filter((item) => item != null)
+      ),
+    ];
+    this.createStationForm.controls.connectedStations.controls.map((item) => {
+      return item.value;
+    });
     if (!this.createStationForm.valid) return;
     if (!this.controls.cityName.value || !this.controls.latitude.value || !this.controls.longitude.value) return;
     const body: NewStation = {
       city: this.controls.cityName.value,
       latitude: this.controls.latitude.value,
       longitude: this.controls.longitude.value,
-      relations: this.relations,
+      relations: relations as number[],
     };
     this.stationsApiService
       .createNewStation(body)
@@ -153,14 +145,14 @@ export class CreateStationFormComponent implements OnInit {
           this.createdStationId = id;
         }),
         switchMap(() => this.stationsApiService.getStations()),
-        map((stations) => stations.find((station) => station.id === this.createdStationId)),
-        filter((station) => !station),
+        // map((stations) => stations.find((station) => station.id === this.createdStationId)),
+        // filter((station) => !station),
         takeUntilDestroyed(this.destroy)
       )
       .subscribe({
-        next: (createdStation) => {
-          if (!createdStation) return;
-          this.stationsService.addStationInList(createdStation);
+        next: (stations) => {
+          this.stationsService.addStationInList(stations);
+          this.resetForm();
         },
         error: ({ error: { message } }) => {
           this.alert.open({ message, label: 'Error', appearance: 'error' });
@@ -170,5 +162,12 @@ export class CreateStationFormComponent implements OnInit {
 
   public get controls() {
     return this.createStationForm.controls;
+  }
+
+  public resetForm() {
+    this.createStationForm.reset();
+    const connectedStations = this.createStationForm.get('connectedStations') as FormArray;
+    connectedStations.clear();
+    connectedStations.push(this.fb.control('', [Validators.required, this.connectedStationValidator]));
   }
 }
