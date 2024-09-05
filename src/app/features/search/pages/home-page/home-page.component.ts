@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { SearchFilterComponent } from '@features/search/components/search-filter/search-filter.component';
+import { SearchFilterService } from '@features/search/services/search-filter/search-filter.service';
 import { SearchService } from '@features/search/services/search/search.service';
 import { TuiBlockStatus } from '@taiga-ui/layout';
 import { SearchFormComponent } from '../../components/search-form/search-form.component';
@@ -16,7 +17,7 @@ import { SearchResultListComponent } from '../../components/search-result-list/s
 export class HomePageComponent {
   private readonly searchService = inject(SearchService);
 
-  public result = this.searchService.searchResult;
+  private readonly searchFilterService = inject(SearchFilterService);
 
   protected filterDates = this.searchService.filterDates;
 
@@ -24,14 +25,11 @@ export class HomePageComponent {
 
   protected to = this.searchService.arrivalStation;
 
-  private readonly indexSignal = signal<number>(0);
-
-  protected rides = computed(() => this.filterDates()[this.indexSignal()]?.rideIds ?? []);
+  protected rides = computed(() => this.filterDates()[this.searchFilterService.activeTabIndex()]?.rideIds ?? []);
 
   protected searchResultParams = computed(() => {
     const from = this.from();
     const to = this.to();
-    // const rides = this.rides();
     if (!from || !this.rides() || !to) return null;
 
     return {
@@ -40,11 +38,4 @@ export class HomePageComponent {
       to,
     };
   });
-
-  public hasResults = computed(() => Array.isArray(this.result()?.routes) && !!this.result()?.routes.length);
-
-  public onFilterSelect(index: number) {
-    this.indexSignal.set(index);
-    // console.log('filteredRides', index, this.filterDates()[index].rideIds);
-  }
 }

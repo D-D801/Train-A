@@ -4,7 +4,7 @@
 <div class="background-map"></div>
 
 @if (filterDates().length) {
-  <dd-search-filter [filteredDates]="filterDates()" (currentIndex)="onFilterSelect($event)"></dd-search-filter>
+  <dd-search-filter [filteredDates]="filterDates()"></dd-search-filter>
 }
 @if (searchResultParams(); as params) {
   <dd-search-result-list [searchResult]="params"></dd-search-result-list>

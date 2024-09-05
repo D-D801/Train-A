@@ -1,6 +1,7 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, input, OnInit, output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, input, OnInit } from '@angular/core';
 import { DepartureDateWithIds } from '@features/search/interfaces/filter-dates.interface';
+import { SearchFilterService } from '@features/search/services/search-filter/search-filter.service';
 import { dateConverter2 } from '@shared/utils/date-converter';
 import { TuiItem } from '@taiga-ui/cdk';
 import { TuiButton, TuiLoader } from '@taiga-ui/core';
@@ -22,19 +23,18 @@ export class SearchFilterComponent implements OnInit {
 
   private readonly cdr = inject(ChangeDetectorRef);
 
-  public currentIndex = output<number>();
+  private readonly searchFilterService = inject(SearchFilterService);
 
   public readonly filteredDates = input.required<DepartureDateWithIds[]>();
 
   protected readonly dateConverter2 = dateConverter2;
 
-  public activeIndex: number = 0;
+  protected activeIndex = this.searchFilterService.activeTabIndex;
 
-  protected index = 0;
+  protected index = this.searchFilterService.carouselIndex;
 
   public onItemClick(index: number): void {
-    this.activeIndex = index;
-    this.currentIndex.emit(this.activeIndex);
+    this.searchFilterService.setActiveTabIndex(index);
   }
 
   public itemsCount = 5;
@@ -49,6 +49,10 @@ export class SearchFilterComponent implements OnInit {
         this.updateItemsCount(target.innerWidth);
       }
     });
+  }
+
+  public setCarouselIndex(index: number) {
+    this.searchFilterService.setCarouselIndex(index);
   }
 
   private updateItemsCount(width: number) {

@@ -5,7 +5,7 @@
       tuiIconButton
       type="button"
       (click)="carousel.prev()"
-      [disabled]="index === 0"
+      [disabled]="index() === 0"
     >
       Previous
     </button>
@@ -13,11 +13,12 @@
       #carousel
       class="carousel disable-padding"
       [itemsCount]="itemsCount"
-      [(index)]="index"
+      [index]="index()"
+      (indexChange)="setCarouselIndex($event)"
       [draggable]="true"
     >
       @for (date of dates; track date.departureDate; let i = $index) {
-        <button *tuiItem class="item" [ngClass]="{ active: i === activeIndex }" (click)="onItemClick(i)">
+        <button *tuiItem class="item" [ngClass]="{ active: i === activeIndex() }" (click)="onItemClick(i)">
           {{ dateConverter2(date.departureDate) }}<br />
           <span class="rides-count">rides: {{ date.rideIds.length }}</span>
         </button>
@@ -28,7 +29,7 @@
       tuiIconButton
       type="button"
       (click)="carousel.next()"
-      [disabled]="index === dates.length - itemsCount"
+      [disabled]="index() === dates.length - itemsCount"
     >
       Next
     </button>
