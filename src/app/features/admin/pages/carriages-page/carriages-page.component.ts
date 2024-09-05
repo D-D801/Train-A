@@ -84,8 +84,6 @@ export class CarriagesPageComponent {
   }
 
   public updateCarriage(carriageData: Carriage) {
-    if (!this.checkNameCarriage(carriageData)) return;
-
     this.carriagesService
       .updateCarriage(carriageData)
       .pipe(takeUntilDestroyed(this.destroy))

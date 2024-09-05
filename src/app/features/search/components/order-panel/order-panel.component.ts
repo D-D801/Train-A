@@ -34,6 +34,8 @@ export class OrderPanelComponent {
       () => {
         if (this.selectedOrder().seatNumber) {
           this.open.set(true);
+        } else {
+          this.open.set(false);
         }
       },
       { allowSignalWrites: true }

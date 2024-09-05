@@ -87,7 +87,7 @@ export class SearchFormComponent implements OnInit {
   public searchForm = this.fb.group({
     from: this.fb.control('', [Validators.required]),
     to: this.fb.control('', [Validators.required]),
-    date: this.fb.control<TuiDay>(TuiDay.currentUtc(), dateValidator()),
+    date: this.fb.control<TuiDay>(TuiDay.currentUtc(), [Validators.required, dateValidator()]),
   });
 
   public ngOnInit() {
