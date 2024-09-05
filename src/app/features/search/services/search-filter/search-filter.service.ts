@@ -8,7 +8,7 @@ export class SearchFilterService {
 
   public carouselIndex = this._carouselIndex.asReadonly();
 
-  private readonly _activeTabIndex = signal<number>(0);
+  private readonly _activeTabIndex = signal<number | null>(null);
 
   public activeTabIndex = this._activeTabIndex.asReadonly();
 
@@ -16,7 +16,7 @@ export class SearchFilterService {
     this._carouselIndex.set(result);
   }
 
-  public setActiveTabIndex(result: number) {
+  public setActiveTabIndex(result: number | null) {
     this._activeTabIndex.set(result);
   }
 }

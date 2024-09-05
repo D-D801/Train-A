@@ -25,7 +25,11 @@ export class HomePageComponent {
 
   protected to = this.searchService.arrivalStation;
 
-  protected rides = computed(() => this.filterDates()[this.searchFilterService.activeTabIndex()]?.rideIds ?? []);
+  protected rides = computed(() => {
+    const index = this.searchFilterService.activeTabIndex();
+    if (index == null) return [];
+    return this.filterDates()[index]?.rideIds ?? [];
+  });
 
   protected searchResultParams = computed(() => {
     const from = this.from();
