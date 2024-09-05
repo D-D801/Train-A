@@ -1,1 +1,1 @@
-export const mailRegex = /^[\w\d_]+@[\w\d_]+.\w{2,7}$/;
+export const mailRegex = /^[\w\d._]+@[\w\d_]+\.\w{2,7}$/;

@@ -1,6 +1,7 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { mailRegex } from '@shared/constants/mail-regex';
 
 export function emailValidator(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null =>
-    !/^[\w\d_]+@[\w\d_]+.\w{2,7}$/.test(control.value) ? { emailRegex: true } : null;
+    !mailRegex.test(control.value) ? { emailRegex: true } : null;
 }

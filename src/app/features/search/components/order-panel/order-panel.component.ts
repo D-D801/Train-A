@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, effect, inject, input, output, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import { AlertService } from '@core/services/alert/alert.service';
 import { AuthService } from '@core/services/auth/auth.service';
 import { SelectedOrder } from '@features/search/services/trip/trip.service';
@@ -24,6 +25,8 @@ export class OrderPanelComponent {
   private readonly authService = inject(AuthService);
 
   private readonly alert = inject(AlertService);
+
+  private readonly router = inject(Router);
 
   protected open = signal(false);
 
@@ -51,6 +54,7 @@ export class OrderPanelComponent {
       this.bookSeat.emit(this.selectedOrder());
     } else {
       this.alert.open({ message: 'No autorization', label: 'Error', appearance: 'error' });
+      this.router.navigate(['/signin']);
     }
   }
 }
