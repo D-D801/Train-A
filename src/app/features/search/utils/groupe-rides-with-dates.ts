@@ -4,7 +4,7 @@ export function groupeRidesWithDates(
   dates: DepartureDateWithIds[],
   sortedRidesWidthDepartureDate: DepartureDateWithId[]
 ) {
-  return dates.map((dateWithRides) => {
+  const datesWithRides = dates.map((dateWithRides) => {
     const findDate = sortedRidesWidthDepartureDate.filter((date) => date.departureDate === dateWithRides.departureDate);
     const rideIds = findDate.map((item) => item.rideId);
 
@@ -13,4 +13,6 @@ export function groupeRidesWithDates(
       rideIds: [...rideIds],
     };
   });
+
+  return datesWithRides.filter((dateWithRides) => dateWithRides.rideIds.length);
 }
