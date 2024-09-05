@@ -7,6 +7,7 @@ import { StationsService } from '@core/services/stations/stations.service';
 import { SearchFilterComponent } from '@features/search/components/search-filter/search-filter.component';
 import { CityCoordinates } from '@features/search/interfaces/city-coordinates.interface';
 import { SearchApiService } from '@features/search/services/search-api/search-api.service';
+import { SearchFilterService } from '@features/search/services/search-filter/search-filter.service';
 import { SearchService } from '@features/search/services/search/search.service';
 import { findDepartureDatesOfRide } from '@features/search/utils/find-departure-dates-of-ride';
 import { generateDates } from '@features/search/utils/generate-filter-dates';
@@ -60,6 +61,8 @@ export class SearchFormComponent implements OnInit {
 
   private readonly destroy = inject(DestroyRef);
 
+  private readonly searchFilterService = inject(SearchFilterService);
+
   public stations = this.stationsService.stations;
 
   public cities = this.searchService.searchCities;
@@ -75,14 +78,6 @@ export class SearchFormComponent implements OnInit {
   protected readonly isLoading = signal(false);
 
   protected getCurrentDate = getCurrentDate;
-
-  // private readonly departureStation = signal<SearchFromStation | null>(null);
-
-  // private readonly arrivalStation = signal<SearchToStation | null>(null);
-
-  // private readonly filteredRides = signal<number[]>([]);
-
-  // protected readonly filterDates = signal<DepartureDateWithIds[]>([]);
 
   public searchForm = this.fb.group({
     from: this.fb.control('', [Validators.required]),
@@ -125,14 +120,16 @@ export class SearchFormComponent implements OnInit {
 
   public search() {
     if (this.searchForm.invalid) return;
+    this.searchFilterService.setCarouselIndex(0);
+    this.searchFilterService.setActiveTabIndex(0);
     let date = '';
-    // console.error(this.date.value);
+
     if (this.date.value) {
       const { day, month, year } = this.date.value;
       date = new Date(year, month, day).toISOString();
     }
+
     this.isLoading.set(true);
-    // console.log(this.searchForm.value);
     this.searchApiService
       .search({
         fromLatitude: this.fromCityCoordinates.latitude,
@@ -157,9 +154,8 @@ export class SearchFormComponent implements OnInit {
           const dates = generateDates(this.startDateWithoutTime, this.endDateWithoutTime);
 
           const updatedDates = groupeRidesWithDates(dates, sortedRidesWidthDepartureDate);
-          // this.filterDates.set(updatedDates);
+
           this.searchService.setfilterDates(updatedDates);
-          // this.searchService.setSearchResult(response);
         },
         error: ({ error: { message } }) => {
           this.isLoading.set(false);
@@ -179,10 +175,4 @@ export class SearchFormComponent implements OnInit {
   public get date() {
     return this.searchForm.controls.date;
   }
-  //
-  // public onFilterSelect(index: number) {
-  //   // TODO: filterDates()[index].rideIds must be passed to search-result-list
-  //   // eslint-disable-next-line no-console
-  //   console.log('filteredRides', index, this.filterDates()[index].rideIds);
-  // }
 }
