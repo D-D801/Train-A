@@ -30,6 +30,8 @@
     </div>
     @if (order().status === 'active') {
       <button appearance="accent" size="s" tuiButton (click)="onCancel($event)">Cancel order</button>
+    } @else {
+      <button appearance="secondary" size="s" tuiButton>{{ order().status }}</button>
     }
   </div>
 }
