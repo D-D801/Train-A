@@ -61,7 +61,6 @@ export class RoutesPageComponent implements OnInit {
         takeUntilDestroyed(this.destroy)
       )
       .subscribe({
-        next: () => {},
         error: ({ error: { message } }) => {
           this.alert.open({ message, label: 'Error', appearance: 'error' });
         },

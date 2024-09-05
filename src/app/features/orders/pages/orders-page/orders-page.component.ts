@@ -8,13 +8,14 @@ import { User } from '@features/orders/interfaces/user.interface';
 import { OrdersApiService } from '@features/orders/services/orders-api/orders-api.service';
 import { UsersApiService } from '@features/orders/services/users-api/users-api.service';
 import { Role } from '@shared/enums/role.enum';
+import { TuiLoader } from '@taiga-ui/core';
 import { TuiBlockStatus } from '@taiga-ui/layout';
 import { switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'dd-orders-page',
   standalone: true,
-  imports: [OrderCardComponent, TuiBlockStatus],
+  imports: [OrderCardComponent, TuiBlockStatus, TuiLoader],
   templateUrl: './orders-page.component.html',
   styleUrl: './orders-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -36,11 +37,14 @@ export class OrdersPageComponent {
 
   protected readonly users = signal<User[]>([]);
 
+  public readonly isLoading = signal(false);
+
   public constructor() {
     this.loadOrders();
   }
 
   public loadOrders() {
+    this.isLoading.set(true);
     const ordersObservable =
       this.role() === Role.manager
         ? this.usersApiService.getUsers().pipe(
@@ -58,8 +62,10 @@ export class OrdersPageComponent {
         });
 
         this.orders.set(orders);
+        this.isLoading.set(false);
       },
       error: ({ error: { message } }) => {
+        this.isLoading.set(false);
         this.alert.open({ message, label: 'Error', appearance: 'error' });
       },
     });
