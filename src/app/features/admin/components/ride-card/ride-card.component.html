@@ -13,7 +13,7 @@
         </div>
 
         <ng-template tuiAccordionItemContent>
-          @for (segment of segments; track segment; let currentSegmentIndex = $index) {
+          @for (segment of segments; track $index; let currentSegmentIndex = $index) {
             <dd-station-card
               [station]="[path()[currentSegmentIndex], path()[currentSegmentIndex + 1]]"
               [ids]="{ routeId: routeId(), rideId: ride().rideId }"

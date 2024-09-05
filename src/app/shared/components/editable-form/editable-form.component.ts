@@ -8,7 +8,7 @@ import {
   inject,
   input,
   OnInit,
-  output,
+  signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
@@ -24,7 +24,7 @@ import {
   TuiInputNumberModule,
   TuiTextfieldControllerModule,
 } from '@taiga-ui/legacy';
-import { take } from 'rxjs';
+import { Observable, take } from 'rxjs';
 
 @Component({
   selector: 'dd-editable-form',
@@ -53,7 +53,7 @@ export class EditableFormComponent implements OnInit {
 
   public typeInputs = input.required<'text' | 'date-time' | 'price'>();
 
-  public save = output();
+  public save = input.required<Observable<boolean> | null>();
 
   private readonly destroy = inject(DestroyRef);
 
@@ -61,7 +61,7 @@ export class EditableFormComponent implements OnInit {
 
   protected isPrice = computed(() => (this.typeInputs() === 'price' ? this.currency : ''));
 
-  protected isEditMode = false;
+  protected isEditMode = signal(false);
 
   protected minDate = getCurrentDateTime();
 
@@ -78,13 +78,18 @@ export class EditableFormComponent implements OnInit {
   }
 
   protected enableEditMode() {
-    this.isEditMode = true;
+    this.isEditMode.set(true);
   }
 
   protected saveForm() {
     if (this.form().valid) {
-      this.isEditMode = false;
-      this.save.emit();
+      this.save()
+        ?.pipe(takeUntilDestroyed(this.destroy))
+        .subscribe({
+          next: (res) => {
+            this.isEditMode.set(!res);
+          },
+        });
     }
   }
 }
