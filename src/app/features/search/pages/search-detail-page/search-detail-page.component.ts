@@ -19,7 +19,7 @@ import {
 } from '@features/search/services/trip/trip.service';
 import { OrderPanelComponent } from '@features/search/components/order-panel/order-panel.component';
 import { OrdersApiService } from '@features/orders/services/orders-api/orders-api.service';
-import { TuiButton, TuiIcon } from '@taiga-ui/core';
+import { TuiButton, TuiIcon, TuiLoader } from '@taiga-ui/core';
 import { TuiHeader } from '@taiga-ui/layout';
 import { CURRENCY } from '@shared/constants/currency';
 import { Price } from '@features/admin/interfaces/segment.interface';
@@ -44,6 +44,7 @@ import { StationsService } from '@core/services/stations/stations.service';
     TuiIcon,
     TuiTabsWithMore,
     KeyValuePipe,
+    TuiLoader,
   ],
   templateUrl: './search-detail-page.component.html',
   styleUrl: './search-detail-page.component.scss',
@@ -77,6 +78,8 @@ export class SearchDetailPageComponent {
   public orderId = signal(0);
 
   public options = signal({ isClick: true, isShowTitle: false });
+
+  protected readonly isLoading = signal(false);
 
   public fromStation: number = 0;
 
@@ -133,6 +136,7 @@ export class SearchDetailPageComponent {
   }
 
   private loadRide() {
+    this.isLoading.set(true);
     this.route.params
       .pipe(
         takeUntilDestroyed(this.destroy),
@@ -152,8 +156,10 @@ export class SearchDetailPageComponent {
       .subscribe({
         next: (ride: Trip) => {
           this.ride.set(ride);
+          this.isLoading.set(false);
         },
         error: ({ error: { message } }) => {
+          this.isLoading.set(false);
           this.alert.open({ message, label: 'Error:', appearance: 'error' });
         },
       });
