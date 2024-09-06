@@ -99,6 +99,8 @@ export class RouteFormComponent {
   private initializingForm = false;
 
   public constructor() {
+    this.carriagesService.addCarriages().pipe(takeUntilDestroyed()).subscribe();
+
     effect(() => {
       const route = this.trainRoute();
       if (route) {
