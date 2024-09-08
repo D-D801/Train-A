@@ -39,7 +39,7 @@
               {
                 "glob": "**/*",
                 "input": "node_modules/leaflet/dist/images",
-                "output": "assets/leaflet/images"
+                "output": "public"
               }
             ],
             "styles": [
