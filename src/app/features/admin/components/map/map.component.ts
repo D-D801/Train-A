@@ -25,10 +25,28 @@ export class MapComponent implements OnDestroy {
 
   private map!: L.Map;
 
+  private polylines: L.Polyline[] = [];
+
+  private newStationMarker: L.Marker | null = null;
+
+  private readonly myIcon = L.icon({
+    iconUrl: 'marker-icon.png',
+    iconAnchor: [12, 40],
+    popupAnchor: [1, -33],
+    shadowUrl: 'marker-shadow.png',
+    shadowAnchor: [12, 40],
+  });
+
   public constructor() {
     effect(() => {
       if (this.stations()) {
         this.updateMap(this.stations());
+      }
+    });
+    effect(() => {
+      if (this.stations()) {
+        this.locationService.connectedStationList();
+        this.drawLinesBetweenSelectedPointAndConnectedList();
       }
     });
   }
@@ -59,12 +77,47 @@ export class MapComponent implements OnDestroy {
   }
 
   private addMarkers(stations: Station[]): void {
+    const selectedMarkers: L.Marker[] = [];
     const markers = stations.map((station) => {
-      return L.marker([station.latitude, station.longitude]).bindPopup(station.city);
+      const marker = L.marker([station.latitude, station.longitude], { icon: this.myIcon }).bindPopup(station.city);
+
+      this.addMarkerClickHandler(marker, station, stations);
+
+      selectedMarkers.push(marker);
+      return marker;
     });
 
     const cities = L.layerGroup(markers);
     cities.addTo(this.map);
+  }
+
+  private addMarkerClickHandler(marker: L.Marker, station: Station, stations: Station[]) {
+    marker.on('click', () => {
+      this.clearPolylines();
+
+      station.connectedTo.forEach((connect) => {
+        const connectStation = stations.find((station1) => station1.id === connect.id);
+        if (connectStation) {
+          const marker2 = L.marker([connectStation.latitude, connectStation.longitude], { icon: this.myIcon });
+          this.drawLineBetweenMarkers([marker, marker2]);
+        }
+      });
+    });
+  }
+
+  private drawLineBetweenMarkers(markers: [L.Marker, L.Marker]) {
+    const latlngs = markers.map((marker) => marker.getLatLng());
+
+    const polyline = L.polyline(latlngs, { color: 'var(--tui-info)' }).addTo(this.map);
+
+    this.polylines.push(polyline);
+  }
+
+  private clearPolylines() {
+    this.polylines.forEach((polyline) => {
+      this.map.removeLayer(polyline);
+    });
+    this.polylines = [];
   }
 
   private cleanUpMap(): void {
@@ -76,6 +129,13 @@ export class MapComponent implements OnDestroy {
 
   private handleMapClick(e: L.LeafletMouseEvent): void {
     const { lat, lng } = e.latlng;
+
+    if (this.newStationMarker) {
+      this.map.removeLayer(this.newStationMarker);
+    }
+
+    this.clearPolylines();
+
     this.locationApiService.getCityName(lat, lng).subscribe((city) => {
       const cityWithCoordinates: CityWithCoordinates = {
         title: city ?? '',
@@ -84,7 +144,33 @@ export class MapComponent implements OnDestroy {
           lng,
         },
       };
+
+      this.locationService.setIsClickedMap(true);
+
       this.locationService.setCitySignal(cityWithCoordinates);
+      this.newStationMarker = L.marker([lat, lng], { icon: this.myIcon }).bindPopup(cityWithCoordinates.title);
+      this.newStationMarker.addTo(this.map);
+      this.newStationMarker.openPopup();
+
+      this.drawLinesBetweenSelectedPointAndConnectedList();
+      this.newStationMarker.on('click', () => {
+        this.drawLinesBetweenSelectedPointAndConnectedList();
+      });
     });
+  }
+
+  private drawLinesBetweenSelectedPointAndConnectedList() {
+    if (this.stations()) {
+      this.clearPolylines();
+
+      this.locationService.connectedStationList().forEach((cityName) => {
+        const connectedStation = this.stations().find((station) => station.city === cityName);
+        if (connectedStation && this.newStationMarker) {
+          const newMarker = L.marker([connectedStation.latitude, connectedStation.longitude], { icon: this.myIcon });
+
+          this.drawLineBetweenMarkers([this.newStationMarker, newMarker]);
+        }
+      });
+    }
   }
 }

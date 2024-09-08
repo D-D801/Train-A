@@ -9,7 +9,23 @@ export class LocationService {
 
   public city = this._city.asReadonly();
 
-  public setCitySignal(city: CityWithCoordinates) {
+  private readonly _connectedStationList = signal<string[]>([]);
+
+  public connectedStationList = this._connectedStationList.asReadonly();
+
+  private readonly _isClickedMap = signal<boolean>(false);
+
+  public isClickedMap = this._isClickedMap.asReadonly();
+
+  public setCitySignal(city: CityWithCoordinates | null) {
     this._city.set(city);
+  }
+
+  public setConnectedStationList(cities: string[]) {
+    this._connectedStationList.set(cities);
+  }
+
+  public setIsClickedMap(isClicked: boolean) {
+    this._isClickedMap.set(isClicked);
   }
 }
