@@ -1,30 +1,22 @@
 import { AsyncPipe, NgForOf, NgIf, NgTemplateOutlet, TitleCasePipe } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  DestroyRef,
-  effect,
-  inject,
-  OnInit,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AbstractControl, FormArray, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AlertService } from '@core/services/alert/alert.service';
+import { StationsService } from '@core/services/stations/stations.service';
 import { NewStation } from '@features/admin/interfaces/new-station.interface';
 import { StationsApiService } from '@features/admin/services/stations-api/stations-api.service';
 import { latitudeValidator } from '@features/admin/validators/latitude.validator';
 import { longitudeValidator } from '@features/admin/validators/longitude.validator';
 import { CityInfo } from '@features/search/interfaces/city-info.interface';
 import { LocationApiService } from '@features/search/services/location-api/location-api.service';
+import { LocationService } from '@features/search/services/location/location.service';
 import { SearchService } from '@features/search/services/search/search.service';
-import { TUI_VALIDATION_ERRORS, TuiFieldErrorPipe } from '@taiga-ui/kit';
 import { TuiLet } from '@taiga-ui/cdk';
 import { TuiButton, TuiDataList, TuiError } from '@taiga-ui/core';
+import { TUI_VALIDATION_ERRORS, TuiFieldErrorPipe } from '@taiga-ui/kit';
 import { TuiInputModule } from '@taiga-ui/legacy';
 import { debounceTime, filter, switchMap, tap } from 'rxjs';
-import { StationsService } from '@core/services/stations/stations.service';
-import { LocationService } from '@features/search/services/location/location.service';
 
 @Component({
   selector: 'dd-create-station-form',
@@ -64,8 +56,6 @@ export class CreateStationFormComponent implements OnInit {
 
   private readonly locationService = inject(LocationService);
 
-  private readonly cdr = inject(ChangeDetectorRef);
-
   private readonly alert = inject(AlertService);
 
   private readonly destroy = inject(DestroyRef);
@@ -101,7 +91,7 @@ export class CreateStationFormComponent implements OnInit {
   public constructor() {
     effect(() => {
       const city = this.city();
-      if (city) {
+      if (city && this.locationService.isClickedMap()) {
         this.controls.cityName.setValue(city.title);
         this.controls.latitude.setValue(city.coordinates.lat);
         this.controls.longitude.setValue(city.coordinates.lng);
@@ -113,6 +103,11 @@ export class CreateStationFormComponent implements OnInit {
   public ngOnInit() {
     this.controls.connectedStations.valueChanges
       .pipe(
+        tap(() => {
+          if (this.controls.connectedStations.controls[this.controls.connectedStations.length - 1]?.valid) {
+            this.setUniqueConnectedStationsList();
+          }
+        }),
         filter(() => this.controls.connectedStations?.at(-1)?.value !== ''),
         takeUntilDestroyed(this.destroy)
       )
@@ -134,8 +129,28 @@ export class CreateStationFormComponent implements OnInit {
       .subscribe({
         next: (receivedCities) => {
           this.searchService.setCities(receivedCities);
+
+          this.locationService.setIsClickedMap(false);
+          const { latitude, longitude } = this.createStationForm.controls;
+          if (!latitude.value || !longitude.value) return;
+          const cityWithCoordinates = {
+            title: this.createStationForm.controls.cityName.value,
+            coordinates: {
+              lat: latitude.value,
+              lng: longitude.value,
+            },
+          };
+          this.locationService.setCitySignal(cityWithCoordinates);
         },
       });
+  }
+
+  private setUniqueConnectedStationsList() {
+    const connectedStations = this.controls.connectedStations.value;
+
+    const uniqueConnectedStations = Array.from(new Set(connectedStations.filter((station) => station !== '')));
+
+    this.locationService.setConnectedStationList(uniqueConnectedStations);
   }
 
   public onSelectedCity(city: CityInfo) {
@@ -151,9 +166,7 @@ export class CreateStationFormComponent implements OnInit {
           .filter((item) => item != null)
       ),
     ];
-    this.createStationForm.controls.connectedStations.controls.map((item) => {
-      return item.value;
-    });
+
     if (!this.createStationForm.valid) return;
     if (!this.controls.cityName.value || !this.controls.latitude.value || !this.controls.longitude.value) return;
     const body: NewStation = {
@@ -169,14 +182,14 @@ export class CreateStationFormComponent implements OnInit {
           this.createdStationId = id;
         }),
         switchMap(() => this.stationsApiService.getStations()),
-        // map((stations) => stations.find((station) => station.id === this.createdStationId)),
-        // filter((station) => !station),
         takeUntilDestroyed(this.destroy)
       )
       .subscribe({
         next: (stations) => {
           this.stationsService.addStationInList(stations);
           this.resetForm();
+          this.locationService.setCitySignal(null);
+          this.locationService.setConnectedStationList([]);
         },
         error: ({ error: { message } }) => {
           this.alert.open({ message, label: 'Error', appearance: 'error' });
