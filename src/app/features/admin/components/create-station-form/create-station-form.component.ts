@@ -1,5 +1,13 @@
 import { AsyncPipe, NgForOf, NgIf, NgTemplateOutlet, TitleCasePipe } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  effect,
+  inject,
+  OnInit,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AbstractControl, FormArray, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AlertService } from '@core/services/alert/alert.service';
@@ -16,6 +24,7 @@ import { TuiButton, TuiDataList, TuiError } from '@taiga-ui/core';
 import { TuiInputModule } from '@taiga-ui/legacy';
 import { debounceTime, filter, switchMap, tap } from 'rxjs';
 import { StationsService } from '@core/services/stations/stations.service';
+import { LocationService } from '@features/search/services/location/location.service';
 
 @Component({
   selector: 'dd-create-station-form',
@@ -51,7 +60,9 @@ export class CreateStationFormComponent implements OnInit {
 
   private readonly stationsService = inject(StationsService);
 
-  private readonly locationService = inject(LocationApiService);
+  private readonly locationApiService = inject(LocationApiService);
+
+  private readonly locationService = inject(LocationService);
 
   private readonly cdr = inject(ChangeDetectorRef);
 
@@ -62,6 +73,8 @@ export class CreateStationFormComponent implements OnInit {
   private readonly fb = inject(NonNullableFormBuilder);
 
   public readonly stations = this.stationsService.stations;
+
+  public readonly city = this.locationService.city;
 
   public cities = this.searchService.cities;
 
@@ -85,6 +98,17 @@ export class CreateStationFormComponent implements OnInit {
     connectedStations: this.fb.array([this.fb.control('', [Validators.required, this.connectedStationValidator])]),
   });
 
+  public constructor() {
+    effect(() => {
+      const city = this.city();
+      if (city) {
+        this.controls.cityName.setValue(city.title);
+        this.controls.latitude.setValue(city.coordinates.lat);
+        this.controls.longitude.setValue(city.coordinates.lng);
+      }
+    });
+  }
+
   // TODO: place the retrieveStationList method in another location in code
   public ngOnInit() {
     this.controls.connectedStations.valueChanges
@@ -103,7 +127,7 @@ export class CreateStationFormComponent implements OnInit {
         debounceTime(300),
         filter((city) => !!city),
         switchMap((city) => {
-          return this.locationService.getLocationCoordinates(city as string);
+          return this.locationApiService.getLocationCoordinates(city as string);
         }),
         takeUntilDestroyed(this.destroy)
       )
