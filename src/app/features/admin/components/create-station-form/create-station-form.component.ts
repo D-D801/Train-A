@@ -129,20 +129,33 @@ export class CreateStationFormComponent implements OnInit {
       .subscribe({
         next: (receivedCities) => {
           this.searchService.setCities(receivedCities);
-
-          this.locationService.setIsClickedMap(false);
-          const { latitude, longitude } = this.createStationForm.controls;
-          if (!latitude.value || !longitude.value) return;
-          const cityWithCoordinates = {
-            title: this.createStationForm.controls.cityName.value,
-            coordinates: {
-              lat: latitude.value,
-              lng: longitude.value,
-            },
-          };
-          this.locationService.setCitySignal(cityWithCoordinates);
+          this.setNewCityWithCoordinates();
         },
       });
+    this.controls.latitude.valueChanges.pipe(debounceTime(500), takeUntilDestroyed(this.destroy)).subscribe({
+      next: () => {
+        this.setNewCityWithCoordinates();
+      },
+    });
+    this.controls.longitude.valueChanges.pipe(debounceTime(500), takeUntilDestroyed(this.destroy)).subscribe({
+      next: () => {
+        this.setNewCityWithCoordinates();
+      },
+    });
+  }
+
+  private setNewCityWithCoordinates() {
+    this.locationService.setIsClickedMap(false);
+    const { latitude, longitude } = this.createStationForm.controls;
+    if (!latitude.value || !longitude.value) return;
+    const cityWithCoordinates = {
+      title: this.createStationForm.controls.cityName.value,
+      coordinates: {
+        lat: latitude.value,
+        lng: longitude.value,
+      },
+    };
+    this.locationService.setCitySignal(cityWithCoordinates);
   }
 
   private setUniqueConnectedStationsList() {
