@@ -49,6 +49,10 @@ export class MapComponent implements OnDestroy {
         this.drawLinesBetweenSelectedPointAndConnectedList();
       }
     });
+    effect(() => {
+      const city = this.locationService.city();
+      if (city) this.drawNewStationMarkerOnMap(city.coordinates.lat, city.coordinates.lng, city.title);
+    });
   }
 
   public ngOnDestroy(): void {
@@ -130,12 +134,6 @@ export class MapComponent implements OnDestroy {
   private handleMapClick(e: L.LeafletMouseEvent): void {
     const { lat, lng } = e.latlng;
 
-    if (this.newStationMarker) {
-      this.map.removeLayer(this.newStationMarker);
-    }
-
-    this.clearPolylines();
-
     this.locationApiService.getCityName(lat, lng).subscribe((city) => {
       const cityWithCoordinates: CityWithCoordinates = {
         title: city ?? '',
@@ -146,16 +144,25 @@ export class MapComponent implements OnDestroy {
       };
 
       this.locationService.setIsClickedMap(true);
-
       this.locationService.setCitySignal(cityWithCoordinates);
-      this.newStationMarker = L.marker([lat, lng], { icon: this.myIcon }).bindPopup(cityWithCoordinates.title);
-      this.newStationMarker.addTo(this.map);
-      this.newStationMarker.openPopup();
 
+      this.drawNewStationMarkerOnMap(lat, lng, cityWithCoordinates.title);
+    });
+  }
+
+  private drawNewStationMarkerOnMap(lat: number, lng: number, title: string) {
+    if (this.newStationMarker) {
+      this.map.removeLayer(this.newStationMarker);
+    }
+
+    this.clearPolylines();
+    this.newStationMarker = L.marker([lat, lng], { icon: this.myIcon }).bindPopup(title);
+    this.newStationMarker.addTo(this.map);
+    this.newStationMarker.openPopup();
+
+    this.drawLinesBetweenSelectedPointAndConnectedList();
+    this.newStationMarker.on('click', () => {
       this.drawLinesBetweenSelectedPointAndConnectedList();
-      this.newStationMarker.on('click', () => {
-        this.drawLinesBetweenSelectedPointAndConnectedList();
-      });
     });
   }
 
