@@ -34,10 +34,13 @@ The primary goal of this project is to develop a platform for managing train tri
 ```
 Npm package that simulates backend functionality
 
-## Additional instruments and technologies
+## External libraries
 
 - [Leaflet](https://www.npmjs.com/package/@types/leaflet) - Library for mobile-friendly interactive maps
 - [Nominatim](https://nominatim.org/release-docs/develop/) - A tool to search OSM (OpenStreetMap) data by name and address and to generate synthetic addresses of OSM points (reverse geocoding)
+
+## Additional instruments and technologies
+
 - [SASS(SCSS)](https://sass-lang.com/) - CSS pre-processor with additional features
 - [Prettier](https://prettier.io/) - automatic code formatting to a single style
 - [ESLint](https://eslint.org/)- a linter that provides a consistent code style
