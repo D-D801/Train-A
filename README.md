@@ -38,11 +38,10 @@ Npm package that simulates backend functionality
 
 - [Leaflet](https://www.npmjs.com/package/@types/leaflet) - Library for mobile-friendly interactive maps
 - [Nominatim](https://nominatim.org/release-docs/develop/) - A tool to search OSM (OpenStreetMap) data by name and address and to generate synthetic addresses of OSM points (reverse geocoding)
-- [Vite](https://vitejs.dev/) - project bundler
 - [SASS(SCSS)](https://sass-lang.com/) - CSS pre-processor with additional features
 - [Prettier](https://prettier.io/) - automatic code formatting to a single style
 - [ESLint](https://eslint.org/)- a linter that provides a consistent code style
-- [Vitest](https://vitest.dev/) - testing framework
+- [Jest](https://jestjs.io/) - testing framework
 - [Husky](https://typicode.github.io/husky/) - tool that automatically lint commit messages, code, and run tests upon committing or pushing
 - [Git](https://git-scm.com/) - version control system and project repository management
 - [GitHub](https://pages.github.com/) - the complete developer platform to build, scale, and deliver secure software
