@@ -69,7 +69,6 @@ export class SearchResultListComponent {
 
   private readonly rideModalService = inject(RideModalService);
 
-  // @Input({ required: true }) public searchResult!: Response;
   public searchResult = input.required<Response>();
 
   public rides: Trip[] | null = null;
