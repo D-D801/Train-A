@@ -5,6 +5,7 @@ import { AlertService } from '@core/services/alert/alert.service';
 import { StationsService } from '@core/services/stations/stations.service';
 import { ConnectedStation } from '@features/admin/interfaces/station-list-item.interface';
 import { StationsApiService } from '@features/admin/services/stations-api/stations-api.service';
+import { OrdersApiService } from '@features/orders/services/orders-api/orders-api.service';
 import { TuiPlatform } from '@taiga-ui/cdk';
 import { TuiIcon, TuiIconPipe, TuiSurface, TuiTitle } from '@taiga-ui/core';
 import { TuiCardLarge } from '@taiga-ui/layout';
@@ -23,6 +24,8 @@ export class ExistingStationsListComponent {
 
   private readonly stationsApiService = inject(StationsApiService);
 
+  private readonly ordersApiService = inject(OrdersApiService);
+
   private readonly destroy = inject(DestroyRef);
 
   private readonly alert = inject(AlertService);
@@ -30,7 +33,7 @@ export class ExistingStationsListComponent {
   public readonly stations = this.stationsService.stations;
 
   public deleteStation(id: number) {
-    this.stationsApiService
+    this.ordersApiService
       .retrieveOrders()
       .pipe(
         filter((orders) => {

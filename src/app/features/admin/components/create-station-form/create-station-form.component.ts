@@ -99,7 +99,6 @@ export class CreateStationFormComponent implements OnInit {
     });
   }
 
-  // TODO: place the retrieveStationList method in another location in code
   public ngOnInit() {
     this.controls.connectedStations.valueChanges
       .pipe(
