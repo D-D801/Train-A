@@ -55,7 +55,7 @@ describe('AuthServiceService', () => {
 
     service.signup(mockUser).subscribe(() => {
       expect(localStorageServiceMock.setItem).toHaveBeenCalledWith(LocalStorageKey.UserToken, mockTokenResponse.token);
-      expect(localStorageServiceMock.setItem).toHaveBeenCalledWith(LocalStorageKey.UserRole, 'admin'); // если роль администратора
+      expect(localStorageServiceMock.setItem).toHaveBeenCalledWith(LocalStorageKey.UserRole, 'admin');
       expect(service.isLoggedIn()).toBeTruthy();
     });
   });
