@@ -26,6 +26,8 @@ The primary goal of this project is to develop a platform for managing train tri
 - [Taiga UI](https://taiga-ui.dev/) - A UI component library for Angular, offering a wide range of customizable components to build a user-friendly interface
 - [RxJS](https://angular.dev) - Library for reactive programming
 - [TypeScript](https://www.typescriptlang.org/) - a strongly typed programming language that builds on JavaScript, giving you better tooling at any scale
+- [Jest](https://jestjs.io/) - testing framework
+- [SASS(SCSS)](https://sass-lang.com/) - CSS pre-processor with additional features
 
 ## Backend
 
@@ -41,18 +43,14 @@ Npm package that simulates backend functionality
 
 ## Additional instruments and technologies
 
-- [SASS(SCSS)](https://sass-lang.com/) - CSS pre-processor with additional features
 - [Prettier](https://prettier.io/) - automatic code formatting to a single style
 - [ESLint](https://eslint.org/)- a linter that provides a consistent code style
-- [Jest](https://jestjs.io/) - testing framework
 - [Husky](https://typicode.github.io/husky/) - tool that automatically lint commit messages, code, and run tests upon committing or pushing
 - [Git](https://git-scm.com/) - version control system and project repository management
 - [GitHub](https://pages.github.com/) - the complete developer platform to build, scale, and deliver secure software
 - [VS Code](https://code.visualstudio.com/) - code editor
 
 # Available scripts
-
-- **ng**: Executes the Angular CLI command `ng`, allowing you to run various Angular-related tasks.
 
 - **start**: Serves the Angular application locally using `ng serve` at `http://localhost:4200/`.
 
@@ -91,4 +89,4 @@ What do you need to do to run our project locally?
 3. Install Code Editor of your choice.
 4. Clone this repository to your local computer.
 5. Install all dependencies using `npm ci`.
-6. Finally run a development server: `npm run dev`
+6. Finally run a development server: `npm start`
