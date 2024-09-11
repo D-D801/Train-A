@@ -30,4 +30,8 @@ export class OrdersApiService {
   public deleteOrder(orderId: number) {
     return this.httpClient.delete(`/api/order/${orderId}`);
   }
+
+  public retrieveOrders() {
+    return this.httpClient.get<Order[]>('/api/order');
+  }
 }
