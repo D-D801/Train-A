@@ -1,4 +1,3 @@
-/* eslint-disable class-methods-use-this */
 import { DatePipe, KeyValuePipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
@@ -12,9 +11,10 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { StationsService } from '@core/services/stations/stations.service';
+import { FreeSeat } from '@features/search/interfaces/free-seat.interface';
 import { Trip } from '@features/search/interfaces/trip.interface';
 import { SearchApiService } from '@features/search/services/search-api/search-api.service';
-import { FreeSeat, TripService } from '@features/search/services/trip/trip.service';
+import { TripService } from '@features/search/services/trip/trip.service';
 import { Segment } from '@shared/interfaces/segment.interface';
 import { RideModalService } from '@shared/services/ride-modal.service';
 import { calculateStopDuration } from '@shared/utils/calculate-train-stop-duration';
@@ -24,7 +24,7 @@ import { TuiButton, TuiIcon, TuiSurface, TuiTitle } from '@taiga-ui/core';
 import { TuiBlockStatus, TuiCardLarge, TuiHeader } from '@taiga-ui/layout';
 import { forkJoin, take, tap } from 'rxjs';
 
-interface Response {
+interface SearchResult {
   from: {
     city: string;
     stationId: number;
@@ -35,6 +35,10 @@ interface Response {
     stationId: number;
   };
 }
+
+const getUniqueCarriages = (carriages: string[]) => {
+  return [...new Set(carriages)];
+};
 
 @Component({
   selector: 'dd-search-result-list',
@@ -58,6 +62,8 @@ interface Response {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchResultListComponent {
+  public searchResult = input.required<SearchResult>();
+
   private readonly searchApiService = inject(SearchApiService);
 
   private readonly cdr = inject(ChangeDetectorRef);
@@ -70,9 +76,13 @@ export class SearchResultListComponent {
 
   private readonly rideModalService = inject(RideModalService);
 
-  public searchResult = input.required<Response>();
-
   public rides: Trip[] | null = null;
+
+  public getTravelTime = calculateStopDuration;
+
+  public getUniqueCarriages = getUniqueCarriages;
+
+  public convertTime = dateConverter;
 
   public constructor() {
     effect(() => {
@@ -91,23 +101,11 @@ export class SearchResultListComponent {
     });
   }
 
-  public getTravelTime(arrival: string, departure: string) {
-    return calculateStopDuration(arrival, departure);
-  }
-
-  public getUniqueCarriages = (carriages: string[]) => {
-    return [...new Set(carriages)];
-  };
-
   public getPrice(segments: Segment[]) {
     return this.tripService.setPrices(segments);
   }
 
-  public getStationIndexInPath(stationId: number, path: number[]) {
-    return path.indexOf(stationId);
-  }
-
-  public showModal(from: number, to: number, ride: Trip, event: Event) {
+  public showRouteModal(from: number, to: number, ride: Trip, event: Event) {
     event.stopPropagation();
     if (!ride) return;
     this.rideModalService.showRideInfo({ from, to, ride }).pipe(takeUntilDestroyed(this.destroy)).subscribe();
@@ -138,10 +136,6 @@ export class SearchResultListComponent {
 
   public getCarriageListForType(carriages: string[], type: string) {
     return this.tripService.groupCarriages(carriages)[type] || [];
-  }
-
-  public convertTime(date: string) {
-    return dateConverter(date);
   }
 
   public totalSeatsForType(freeSeats: FreeSeat, type: string): number {

@@ -1,6 +1,6 @@
 import { NgClass, NgFor } from '@angular/common';
 import { ChangeDetectionStrategy, Component, effect, input, output, signal } from '@angular/core';
-import { BookSeats } from '@features/search/services/trip/trip.service';
+import { BookSeats } from '@shared/interfaces/book-seats.interface';
 import { Carriage } from '@shared/interfaces/carriage.interface';
 import { TuiAppearance, TuiSurface, TuiTitle } from '@taiga-ui/core';
 import { TuiCardLarge, TuiHeader } from '@taiga-ui/layout';

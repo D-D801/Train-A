@@ -1,37 +1,36 @@
-/* eslint-disable class-methods-use-this */
 import { computed, inject, Injectable } from '@angular/core';
 import { CarriagesService } from '@core/services/carriages/carriages.service';
+import { CarriageList } from '@features/search/interfaces/carriage-list.interface';
+import { FreeSeat } from '@features/search/interfaces/free-seat.interface';
+import { BookSeats } from '@shared/interfaces/book-seats.interface';
 import { Price, Segment } from '@shared/interfaces/segment.interface';
 import { dateConverter } from '@shared/utils/date-converter';
 
-export interface CarriageList {
-  [key: string]: {
-    index: number;
-    carriage: string;
-  }[];
-}
-
-export interface SeatsPerCarriage {
+interface SeatsPerCarriage {
   [key: string]: number;
 }
 
-export interface SelectedOrder {
-  seatNumber: number;
-  carriageNumber: number;
-  globalSeatNumber: number;
-  price: number;
+function setPrices(segments: Segment[]): Price {
+  return segments.reduce((acc, segment) => {
+    Object.entries(segment.price).forEach(([carriageType, price]) => {
+      acc[carriageType] = (acc[carriageType] || 0) + price;
+    });
+    return acc;
+  }, {} as Price);
 }
 
-export interface BookSeats {
-  carriageName: string;
-  carriageType: string;
-  localSeatNumber: number;
-  carriageIndex: number;
+function setTimes(segments: Segment[], time: string): string {
+  if (!segments.length) return '';
+  const date = time === 'start' ? segments[0].time[0] : segments[segments.length - 1].time[1];
+  return dateConverter(date);
 }
 
-export interface FreeSeat {
-  [key: number]: { carriageType: string; availableSeats: number };
+function sumSeatsByType(seats: FreeSeat, type: string): number {
+  return Object.values(seats).reduce((acc, { carriageType, availableSeats }) => {
+    return carriageType === type ? acc + availableSeats : acc;
+  }, 0);
 }
+
 @Injectable({
   providedIn: 'root',
 })
@@ -48,29 +47,23 @@ export class TripService {
     }, {} as SeatsPerCarriage);
   });
 
+  public setPrices = setPrices;
+
+  public setTimes = setTimes;
+
+  public sumSeatsByType = sumSeatsByType;
+
   public groupCarriages(carriages: string[]): CarriageList {
     return carriages.reduce((acc, carriage, index) => {
       if (!acc[carriage]) {
         acc[carriage] = [];
       }
-      acc[carriage].push({ index: index + 1, carriage: this.getCarriageByCode(carriage)?.name ?? '' });
-      return acc;
-    }, {} as CarriageList);
-  }
-
-  public setPrices(segments: Segment[]): Price {
-    return segments.reduce((acc, segment) => {
-      Object.entries(segment.price).forEach(([carriageType, price]) => {
-        acc[carriageType] = (acc[carriageType] || 0) + price;
+      acc[carriage].push({
+        index: index + 1,
+        carriage: this.carriagesService.getCarriageNameByCode(carriage),
       });
       return acc;
-    }, {} as Price);
-  }
-
-  public setTimes(segments: Segment[], time: string): string {
-    if (!segments.length) return '';
-    const date = time === 'start' ? segments[0].time[0] : segments[segments.length - 1].time[1];
-    return dateConverter(date);
+    }, {} as CarriageList);
   }
 
   public calculateGlobalSeatNumber(carriages: string[], index: number, seatNumber: number | null): number {
@@ -87,7 +80,7 @@ export class TripService {
 
       for (let i = 0; i < carriages.length; i += 1) {
         const carriageType = carriages[i];
-        const carriageName = this.getCarriageByCode(carriages[i])?.name ?? '';
+        const carriageName = this.carriagesService.getCarriageNameByCode(carriages[i]);
         const seatsInCarriage = this.seatsPerCarriage()[carriageType] || 0;
 
         if (globalSeatNumber <= totalSeatsBeforeCurrentCarriage + seatsInCarriage) {
@@ -144,15 +137,5 @@ export class TripService {
     }, {} as FreeSeat);
 
     return availableSeatsByIndex;
-  }
-
-  public sumSeatsByType(seats: FreeSeat, type: string): number {
-    return Object.values(seats).reduce((acc, { carriageType, availableSeats }) => {
-      return carriageType === type ? acc + availableSeats : acc;
-    }, 0);
-  }
-
-  public getCarriageByCode(code: string) {
-    return this.carriages().find((carriage) => carriage.code === code) ?? null;
   }
 }
