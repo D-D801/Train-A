@@ -55,7 +55,7 @@
                 'selected-wrapper': getCarriageClass(carriage.index),
               }"
               class="preview"
-              [carriage]="tripService.getCarriageByCode(type.key)"
+              [carriage]="carriagesService.getCarriageByCode(type.key) ?? null"
               [options]="options()"
               [bookSeats]="getFilteredSeats(carriage.index)"
               (seatSelected)="handleSeatSelected($event, carriage.index)"

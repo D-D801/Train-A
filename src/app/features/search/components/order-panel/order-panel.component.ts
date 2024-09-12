@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, effect, inject, input, output, sign
 import { Router } from '@angular/router';
 import { AlertService } from '@core/services/alert/alert.service';
 import { AuthService } from '@core/services/auth/auth.service';
-import { SelectedOrder } from '@features/search/services/trip/trip.service';
+import { SelectedOrder } from '@features/search/interfaces/selected-order.interface';
 import { CURRENCY } from '@shared/constants/currency';
 import { TuiButton } from '@taiga-ui/core';
 import { TuiPush, TuiPushDirective } from '@taiga-ui/kit';

@@ -9,13 +9,7 @@ import { RideModalService } from '@shared/services/ride-modal.service';
 import { TuiChip, TuiTab, TuiTabs, TuiTabsWithMore } from '@taiga-ui/kit';
 import { map, switchMap } from 'rxjs';
 import { TuiCurrencyPipe } from '@taiga-ui/addon-commerce';
-import {
-  BookSeats,
-  CarriageList,
-  FreeSeat,
-  TripService,
-  SelectedOrder,
-} from '@features/search/services/trip/trip.service';
+import { TripService } from '@features/search/services/trip/trip.service';
 import { OrderPanelComponent } from '@features/search/components/order-panel/order-panel.component';
 import { OrdersApiService } from '@features/orders/services/orders-api/orders-api.service';
 import { TuiButton, TuiIcon, TuiLoader } from '@taiga-ui/core';
@@ -25,6 +19,11 @@ import { Price, Segment } from '@shared/interfaces/segment.interface';
 import { OrderRequest } from '@features/orders/interfaces/order.request.interface';
 import { StationsService } from '@core/services/stations/stations.service';
 import { Trip } from '@features/search/interfaces/trip.interface';
+import { CarriageList } from '@features/search/interfaces/carriage-list.interface';
+import { SelectedOrder } from '@features/search/interfaces/selected-order.interface';
+import { BookSeats } from '@shared/interfaces/book-seats.interface';
+import { FreeSeat } from '@features/search/interfaces/free-seat.interface';
+import { CarriagesService } from '@core/services/carriages/carriages.service';
 
 @Component({
   selector: 'dd-search-detail-page',
@@ -52,6 +51,8 @@ import { Trip } from '@features/search/interfaces/trip.interface';
 })
 export class SearchDetailPageComponent {
   protected readonly stationsService = inject(StationsService);
+
+  protected readonly carriagesService = inject(CarriagesService);
 
   private readonly route = inject(ActivatedRoute);
 

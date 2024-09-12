@@ -43,6 +43,10 @@ export class CarriagesService {
     );
   }
 
+  public getCarriageByCode(code: string) {
+    return this.carriages().find((carriage) => carriage.code === code);
+  }
+
   public getCarriageNamesByCodes(codes: string[]) {
     return codes.map((code) => this.getCarriageNameByCode(code));
   }

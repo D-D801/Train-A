@@ -12,8 +12,8 @@
           <header tuiHeader>
             <h2 tuiTitle>Ride {{ trip.rideId }}</h2>
           </header>
-          @let departureIndex = getStationIndexInPath(searchResult().from.stationId, trip.path);
-          @let arrivalIndex = getStationIndexInPath(searchResult().to.stationId, trip.path) - 1;
+          @let departureIndex = trip.path.indexOf(searchResult().from.stationId);
+          @let arrivalIndex = trip.path.indexOf(searchResult().to.stationId) - 1;
           @if (arrivalIndex >= 0 && departureIndex >= 0) {
             <section class="info-container">
               <div class="info">
@@ -45,7 +45,7 @@
                     appearance="primary"
                     size="xs"
                     tuiButton
-                    (click)="showModal(searchResult().from.stationId, searchResult().to.stationId, trip, $event)"
+                    (click)="showRouteModal(searchResult().from.stationId, searchResult().to.stationId, trip, $event)"
                   >
                     Route
                   </button>

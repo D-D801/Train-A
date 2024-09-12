@@ -3,7 +3,7 @@
 }
 
 .st0 {
-  fill: #fff;
+  fill: var(--tui-background-base);
 }
 
 .st2 {
@@ -16,7 +16,7 @@
 
 .st4,
 .st6 {
-  fill: #fff;
+  fill: var(--tui-background-base);
   stroke: var(--tui-background-accent-1-hover);
   stroke-miterlimit: 10;
 }
@@ -41,7 +41,7 @@
 
 .st8,
 .st9 {
-  fill: #fff;
+  fill: var(--tui-background-base);
 }
 
 .st9 {
