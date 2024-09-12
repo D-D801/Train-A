@@ -33,10 +33,6 @@ export class StationsService {
     this._stations.update((stations) => stations.filter((station) => station.id !== id));
   }
 
-  public addStationInList(stations: Station[]) {
-    this._stations.set(stations);
-  }
-
   public getStations(connectedStationsIds: number[]) {
     const stations = this.stations();
     return stations ? stations.filter((station: Station) => connectedStationsIds.includes(station.id)) : [];
