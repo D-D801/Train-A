@@ -5,12 +5,12 @@ import { AbstractControl, FormArray, NonNullableFormBuilder, ReactiveFormsModule
 import { AlertService } from '@core/services/alert/alert.service';
 import { StationsService } from '@core/services/stations/stations.service';
 import { NewStation } from '@features/admin/interfaces/new-station.interface';
+import { LocationApiService } from '@features/admin/services/location-api/location-api.service';
 import { StationsApiService } from '@features/admin/services/stations-api/stations-api.service';
 import { latitudeValidator } from '@features/admin/validators/latitude.validator';
 import { longitudeValidator } from '@features/admin/validators/longitude.validator';
 import { CityInfo } from '@features/search/interfaces/city-info.interface';
-import { LocationApiService } from '@features/search/services/location-api/location-api.service';
-import { LocationService } from '@features/search/services/location/location.service';
+import { LocationService } from '@features/admin/services/location/location.service';
 import { SearchService } from '@features/search/services/search/search.service';
 import { TuiLet } from '@taiga-ui/cdk';
 import { TuiButton, TuiDataList, TuiError } from '@taiga-ui/core';

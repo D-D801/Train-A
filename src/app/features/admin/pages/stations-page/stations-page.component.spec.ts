@@ -2,8 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { StationsApiService } from '@features/admin/services/stations-api/stations-api.service';
 import { signal } from '@angular/core';
-import { LocationApiService } from '@features/search/services/location-api/location-api.service';
 import { provideHttpClient } from '@angular/common/http';
+import { LocationApiService } from '@features/admin/services/location-api/location-api.service';
 import { StationsPageComponent } from './stations-page.component';
 
 describe('StationsPageComponent', () => {

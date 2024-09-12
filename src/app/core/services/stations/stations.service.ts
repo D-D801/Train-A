@@ -50,10 +50,6 @@ export class StationsService {
     return this.stations().find((carriage) => carriage.id === id)?.city ?? '';
   }
 
-  public getStationIdsByNames(names: string[]) {
-    return names.map((name) => this.getStationIdByName(name));
-  }
-
   public getStationIdByName(name: string) {
     return this.stations().find((carriage) => carriage.city === name)?.id ?? null;
   }
