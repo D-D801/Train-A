@@ -3,13 +3,13 @@
 ## General
 
 This platform is designed to manage train trips efficiently. It provides the following pages:
-- **User pages**:
+#### User pages:
 - Registration page;
 - Login page;
 - User Profile page;
 - Search page includes trip details;
 - Order page;
-- **Manager pages**:
+#### Manager pages:
 - Stations management
 - Carriages/Cars management
 - Route management including Ride management
