@@ -1,7 +1,7 @@
 import { AsyncPipe, NgForOf, NgIf, NgTemplateOutlet, TitleCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { AbstractControl, FormArray, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AlertService } from '@core/services/alert/alert.service';
 import { StationsService } from '@core/services/stations/stations.service';
 import { NewStation } from '@features/admin/interfaces/new-station.interface';
@@ -17,6 +17,7 @@ import { TUI_VALIDATION_ERRORS, TuiFieldErrorPipe } from '@taiga-ui/kit';
 import { TuiInputModule } from '@taiga-ui/legacy';
 import { debounceTime, filter, switchMap, tap } from 'rxjs';
 import { CityInfo } from '@shared/interfaces/city-info.interface';
+import { connectedStationValidator } from '@features/admin/validators/connected-station.validator';
 
 @Component({
   selector: 'dd-create-station-form',
@@ -68,13 +69,6 @@ export class CreateStationFormComponent implements OnInit {
 
   public cities = this.searchService.cities;
 
-  private readonly connectedStationValidator = (control: AbstractControl) => {
-    if (!control.value) return null;
-    return this.stationsService.stations()?.find((station) => station.city === control.value)
-      ? null
-      : { invalidConnectedStation: true };
-  };
-
   public createdStationId: number = 0;
 
   public createStationForm = this.fb.group({
@@ -85,7 +79,9 @@ export class CreateStationFormComponent implements OnInit {
     ]),
     latitude: this.fb.control<number | null>(null, [Validators.required, latitudeValidator()]),
     longitude: this.fb.control<number | null>(null, [Validators.required, longitudeValidator()]),
-    connectedStations: this.fb.array([this.fb.control('', [Validators.required, this.connectedStationValidator])]),
+    connectedStations: this.fb.array([
+      this.fb.control('', [Validators.required, connectedStationValidator(this.stationsService)]),
+    ]),
   });
 
   public constructor() {
@@ -112,7 +108,7 @@ export class CreateStationFormComponent implements OnInit {
       )
       .subscribe(() => {
         if (this.controls.connectedStations.controls[this.controls.connectedStations.length - 1]?.valid) {
-          this.controls.connectedStations.push(this.fb.control('', [this.connectedStationValidator]));
+          this.controls.connectedStations.push(this.fb.control('', [connectedStationValidator(this.stationsService)]));
         }
       });
 
@@ -131,6 +127,7 @@ export class CreateStationFormComponent implements OnInit {
           this.setNewCityWithCoordinates();
         },
       });
+
     this.controls.latitude.valueChanges.pipe(debounceTime(500), takeUntilDestroyed(this.destroy)).subscribe({
       next: () => {
         this.setNewCityWithCoordinates();
@@ -180,25 +177,28 @@ export class CreateStationFormComponent implements OnInit {
     ];
 
     if (!this.createStationForm.valid) return;
-    if (!this.controls.cityName.value || !this.controls.latitude.value || !this.controls.longitude.value) return;
-    const body: NewStation = {
-      city: this.controls.cityName.value,
-      latitude: this.controls.latitude.value,
-      longitude: this.controls.longitude.value,
+
+    const { cityName, latitude, longitude } = this.controls;
+    if (!cityName.value || !latitude.value || !longitude.value) return;
+
+    const newStation: NewStation = {
+      city: cityName.value,
+      latitude: latitude.value,
+      longitude: longitude.value,
       relations: relations as number[],
     };
+
     this.stationsApiService
-      .createNewStation(body)
+      .createNewStation(newStation)
       .pipe(
         tap(({ id }) => {
           this.createdStationId = id;
         }),
-        switchMap(() => this.stationsApiService.getStations()),
+        switchMap(() => this.stationsService.addStations()),
         takeUntilDestroyed(this.destroy)
       )
       .subscribe({
-        next: (stations) => {
-          this.stationsService.addStationInList(stations);
+        next: () => {
           this.resetForm();
           this.locationService.setCitySignal(null);
           this.locationService.setConnectedStationList([]);
@@ -217,6 +217,6 @@ export class CreateStationFormComponent implements OnInit {
     this.createStationForm.reset();
     const connectedStations = this.createStationForm.get('connectedStations') as FormArray;
     connectedStations.clear();
-    connectedStations.push(this.fb.control('', [Validators.required, this.connectedStationValidator]));
+    connectedStations.push(this.fb.control('', [Validators.required, connectedStationValidator(this.stationsService)]));
   }
 }
