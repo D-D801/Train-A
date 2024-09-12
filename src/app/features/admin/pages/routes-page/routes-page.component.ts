@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal 
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AlertService } from '@core/services/alert/alert.service';
 import { RouteCardComponent } from '@features/admin/components/route-card/route-card.component';
-import { RouteFormComponent } from '@features/admin/components/route-form/route-form/route-form.component';
+import { RouteFormComponent } from '@features/admin/components/route-form/route-form.component';
 import { RouteApiService } from '@features/admin/services/route-api/route-api.service';
 import { TrainRoute } from '@shared/interfaces/train-route.interface';
 import { TuiButton, TuiDialogService, TuiLoader, tuiLoaderOptionsProvider, TuiSurface } from '@taiga-ui/core';
