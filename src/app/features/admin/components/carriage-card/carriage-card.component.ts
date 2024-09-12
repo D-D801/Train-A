@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
-import { Carriage } from '@features/admin/interfaces/carriage.interface';
 import { TuiCardLarge, TuiHeader } from '@taiga-ui/layout';
 import { TuiButton, TuiSurface, TuiTitle } from '@taiga-ui/core';
+import { Carriage } from '@shared/interfaces/carriage.interface';
 import { CarriagePreviewComponent } from '../carriage-preview/carriage-preview.component';
 
 @Component({

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Segment } from '@features/admin/interfaces/segment.interface';
+import { Segment } from '@shared/interfaces/segment.interface';
 
 @Injectable({
   providedIn: 'root',

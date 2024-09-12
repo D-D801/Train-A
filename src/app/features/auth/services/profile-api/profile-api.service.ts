@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { UserInformation } from '@features/auth/interfaces/user-information.interface';
+import { UserInfo } from '@features/auth/interfaces/user-info.interface';
 import { UserRequest } from '@features/auth/interfaces/user-request.interface';
 
 @Injectable({
@@ -10,11 +10,11 @@ export class ProfileApiService {
   private readonly httpClient: HttpClient = inject(HttpClient);
 
   public getUserInformation() {
-    return this.httpClient.get<UserInformation>('/api/profile');
+    return this.httpClient.get<UserInfo>('/api/profile');
   }
 
   public updateUserInformation(body: Partial<UserRequest>) {
-    return this.httpClient.put<UserInformation>('/api/profile', body);
+    return this.httpClient.put<UserInfo>('/api/profile', body);
   }
 
   public updatePassword(newPassword: string) {

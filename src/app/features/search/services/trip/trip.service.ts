@@ -1,8 +1,7 @@
 /* eslint-disable class-methods-use-this */
 import { computed, inject, Injectable } from '@angular/core';
 import { CarriagesService } from '@core/services/carriages/carriages.service';
-import { Price } from '@features/admin/interfaces/segment.interface';
-import { RoadSection } from '@features/search/interfaces/search-route-response.interface';
+import { Price, Segment } from '@shared/interfaces/segment.interface';
 import { dateConverter } from '@shared/utils/date-converter';
 
 export interface CarriageList {
@@ -59,7 +58,7 @@ export class TripService {
     }, {} as CarriageList);
   }
 
-  public setPrices(segments: RoadSection[]): Price {
+  public setPrices(segments: Segment[]): Price {
     return segments.reduce((acc, segment) => {
       Object.entries(segment.price).forEach(([carriageType, price]) => {
         acc[carriageType] = (acc[carriageType] || 0) + price;
@@ -68,7 +67,7 @@ export class TripService {
     }, {} as Price);
   }
 
-  public setTimes(segments: RoadSection[], time: string): string {
+  public setTimes(segments: Segment[], time: string): string {
     if (!segments.length) return '';
     const date = time === 'start' ? segments[0].time[0] : segments[segments.length - 1].time[1];
     return dateConverter(date);

@@ -2,7 +2,7 @@ import { KeyValuePipe, TitleCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, input } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AlertService } from '@core/services/alert/alert.service';
-import { Segment } from '@features/admin/interfaces/segment.interface';
+import { Segment } from '@shared/interfaces/segment.interface';
 import { TuiDay, TuiTime } from '@taiga-ui/cdk';
 import { TuiButton, TuiError, TuiIcon, TuiSurface, TuiTitle } from '@taiga-ui/core';
 import { TUI_VALIDATION_ERRORS, TuiAccordion } from '@taiga-ui/kit';

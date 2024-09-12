@@ -5,9 +5,3 @@ export interface SearchRouteParams {
   toLongitude: number;
   time: string;
 }
-
-export interface RouteParams {
-  rideId: string;
-  from: number;
-  to: number;
-}

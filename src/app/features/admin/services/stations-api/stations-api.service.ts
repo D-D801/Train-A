@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { NewStation } from '@features/admin/interfaces/new-station.interface';
-import { Station } from '@features/admin/interfaces/station-list-item.interface';
+import { Station } from '@shared/interfaces/station.interface';
 
 @Injectable({
   providedIn: 'root',

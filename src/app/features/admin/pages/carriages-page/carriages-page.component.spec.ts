@@ -4,8 +4,8 @@ import { provideHttpClient } from '@angular/common/http';
 import { CarriageApiService } from '@features/admin/services/carriage-api/carriage-api.service';
 import { AlertService } from '@core/services/alert/alert.service';
 import { of, throwError } from 'rxjs';
-import { Carriage } from '@features/admin/interfaces/carriage.interface';
 import { mockCarriage } from '@shared/constants/mock-data/mock-carriages.data';
+import { Carriage } from '@shared/interfaces/carriage.interface';
 import { CarriagesPageComponent } from './carriages-page.component';
 
 const mockCarriageApiService = {

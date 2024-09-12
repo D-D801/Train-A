@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Carriage } from '@features/admin/interfaces/carriage.interface';
+import { Carriage } from '@shared/interfaces/carriage.interface';
 
 @Injectable({
   providedIn: 'root',

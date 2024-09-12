@@ -3,9 +3,9 @@ import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AlertService } from '@core/services/alert/alert.service';
 import { StationsService } from '@core/services/stations/stations.service';
-import { ConnectedStation } from '@features/admin/interfaces/station-list-item.interface';
 import { StationsApiService } from '@features/admin/services/stations-api/stations-api.service';
 import { OrdersApiService } from '@features/orders/services/orders-api/orders-api.service';
+import { ConnectedStation } from '@shared/interfaces/station.interface';
 import { TuiPlatform } from '@taiga-ui/cdk';
 import { TuiIcon, TuiIconPipe, TuiSurface, TuiTitle } from '@taiga-ui/core';
 import { TuiCardLarge } from '@taiga-ui/layout';
