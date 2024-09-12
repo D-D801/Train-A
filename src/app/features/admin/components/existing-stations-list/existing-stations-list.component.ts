@@ -9,7 +9,7 @@ import { ConnectedStation } from '@shared/interfaces/station.interface';
 import { TuiPlatform } from '@taiga-ui/cdk';
 import { TuiIcon, TuiIconPipe, TuiSurface, TuiTitle } from '@taiga-ui/core';
 import { TuiCardLarge } from '@taiga-ui/layout';
-import { filter, switchMap, tap } from 'rxjs';
+import { filter, switchMap } from 'rxjs';
 
 @Component({
   selector: 'dd-existing-stations-list',
@@ -48,9 +48,7 @@ export class ExistingStationsListComponent {
           return !hasActiveRide;
         }),
         switchMap(() => this.stationsApiService.deleteStation(id)),
-        tap(() => {
-          this.stationsService.deleteStationFromList(id);
-        }),
+        switchMap(() => this.stationsService.addStations()),
         takeUntilDestroyed(this.destroy)
       )
       .subscribe({
