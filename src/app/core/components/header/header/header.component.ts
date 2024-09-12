@@ -51,14 +51,14 @@ export class HeaderComponent implements OnInit {
 
   protected readonly headerPages = computed(() => {
     if (!this.isLoggedIn()) {
-      return ['home', 'sign in'];
+      return ['home', 'sign in', 'sign up'];
     }
 
     if (this.role() === Role.manager) {
-      return ['home', 'profile', 'my orders', this.adminPages];
+      return ['home', 'profile', 'orders', this.adminPages];
     }
 
-    return ['home', 'profile', 'my orders'];
+    return ['home', 'profile', 'orders'];
   });
 
   protected activeElement = signal('home');
@@ -81,11 +81,7 @@ export class HeaderComponent implements OnInit {
   }
 
   protected updateActiveElement(currentUrl: string) {
-    const formattedUrl = currentUrl
-      .replace('/', '')
-      .replace('signin', 'sign in')
-      .replace('orders', 'my orders')
-      .split('/');
+    const formattedUrl = currentUrl.replace('/', '').replace('sign', 'sign ').split('/');
 
     if (this.headerPages().includes(formattedUrl[0])) {
       this.activeElement.set(formattedUrl[0]);
@@ -101,7 +97,7 @@ export class HeaderComponent implements OnInit {
   protected onClick(activeElement: string) {
     this.activeElement.set(activeElement);
 
-    const route = activeElement.replace('sign in', 'signin').replace('my orders', 'orders');
+    const route = activeElement.replace(' ', '');
 
     if (this.adminPages.includes(activeElement)) {
       this.router.navigate([`/admin/${route}`]);

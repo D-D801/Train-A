@@ -19,8 +19,6 @@
 
   @if (isLoggedIn()) {
     <button class="auth-button" appearance="primary" size="m" tuiButton (click)="logout()">Logout</button>
-  } @else {
-    <button class="auth-button" appearance="primary" size="m" tuiButton [routerLink]="['/signup']">Sign Up</button>
   }
 </header>
 
