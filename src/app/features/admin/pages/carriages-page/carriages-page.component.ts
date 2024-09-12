@@ -5,8 +5,8 @@ import { CarriagesService } from '@core/services/carriages/carriages.service';
 import { CarriageCardComponent } from '@features/admin/components/carriage-card/carriage-card.component';
 import { CarriageFormComponent } from '@features/admin/components/carriage-form/carriage-form.component';
 import { CarriagePreviewComponent } from '@features/admin/components/carriage-preview/carriage-preview.component';
-import { Carriage } from '@features/admin/interfaces/carriage.interface';
 import { CarriageApiService } from '@features/admin/services/carriage-api/carriage-api.service';
+import { Carriage } from '@shared/interfaces/carriage.interface';
 import { TuiButton } from '@taiga-ui/core';
 
 @Component({

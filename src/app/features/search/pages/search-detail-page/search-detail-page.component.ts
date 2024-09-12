@@ -4,7 +4,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertService } from '@core/services/alert/alert.service';
 import { CarriagePreviewComponent } from '@features/admin/components/carriage-preview/carriage-preview.component';
-import { RoadSection, Trip } from '@features/search/interfaces/search-route-response.interface';
 import { SearchApiService } from '@features/search/services/search-api/search-api.service';
 import { RideModalService } from '@shared/services/ride-modal.service';
 import { TuiChip, TuiTab, TuiTabs, TuiTabsWithMore } from '@taiga-ui/kit';
@@ -22,9 +21,10 @@ import { OrdersApiService } from '@features/orders/services/orders-api/orders-ap
 import { TuiButton, TuiIcon, TuiLoader } from '@taiga-ui/core';
 import { TuiHeader } from '@taiga-ui/layout';
 import { CURRENCY } from '@shared/constants/currency';
-import { Price } from '@features/admin/interfaces/segment.interface';
+import { Price, Segment } from '@shared/interfaces/segment.interface';
 import { OrderRequest } from '@features/orders/interfaces/order.request.interface';
 import { StationsService } from '@core/services/stations/stations.service';
+import { Trip } from '@features/search/interfaces/trip.interface';
 
 @Component({
   selector: 'dd-search-detail-page',
@@ -89,7 +89,7 @@ export class SearchDetailPageComponent {
 
   protected carriageList: CarriageList = {};
 
-  private segments: RoadSection[] = [];
+  private segments: Segment[] = [];
 
   public price: Price = {};
 
@@ -120,13 +120,13 @@ export class SearchDetailPageComponent {
       this.price = this.tripService.setPrices(this.segments);
 
       const longestSegmentIndex = this.segments
-        .map((segment, index) => ({ length: segment.occupiedSeats.length, index }))
+        .map((segment, index) => ({ length: segment.occupiedSeats?.length ?? 0, index }))
         .reduce((max, current) => (current.length > max.length ? current : max), { length: 0, index: -1 }).index;
 
       this.bookSeats =
         longestSegmentIndex > -1
           ? this.tripService.getOccupieSeatsInCarriages(
-              this.segments[longestSegmentIndex].occupiedSeats,
+              this.segments[longestSegmentIndex].occupiedSeats ?? [],
               ride.carriages
             )
           : [];

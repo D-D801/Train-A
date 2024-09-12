@@ -1,7 +1,7 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { CarriageApiService } from '@features/admin/services/carriage-api/carriage-api.service';
 import { switchMap, tap } from 'rxjs';
-import { Carriage } from '@features/admin/interfaces/carriage.interface';
+import { Carriage } from '@shared/interfaces/carriage.interface';
 import { AlertService } from '../alert/alert.service';
 
 @Injectable({

@@ -15,7 +15,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { AlertService } from '@core/services/alert/alert.service';
 import { RouteCardComponent } from '@features/admin/components/route-card/route-card.component';
-import { TrainRoute } from '@features/admin/interfaces/train-route.interface';
 import { RouteApiService } from '@features/admin/services/route-api/route-api.service';
 import { MIN_ROUTE_FORM_CONTROL_COUNT } from '@features/admin/constants/min-route-control-count';
 import { TuiValueChanges } from '@taiga-ui/cdk';
@@ -26,6 +25,7 @@ import { TuiSelectModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy'
 import { updateAvailableStations } from '@shared/utils/update-available-stations';
 import { CarriagesService } from '@core/services/carriages/carriages.service';
 import { StationsService } from '@core/services/stations/stations.service';
+import { TrainRoute } from '@shared/interfaces/train-route.interface';
 
 enum ControlsType {
   path = 'path',

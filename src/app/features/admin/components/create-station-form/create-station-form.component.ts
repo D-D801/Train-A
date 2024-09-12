@@ -9,7 +9,6 @@ import { LocationApiService } from '@features/admin/services/location-api/locati
 import { StationsApiService } from '@features/admin/services/stations-api/stations-api.service';
 import { latitudeValidator } from '@features/admin/validators/latitude.validator';
 import { longitudeValidator } from '@features/admin/validators/longitude.validator';
-import { CityInfo } from '@features/search/interfaces/city-info.interface';
 import { LocationService } from '@features/admin/services/location/location.service';
 import { SearchService } from '@features/search/services/search/search.service';
 import { TuiLet } from '@taiga-ui/cdk';
@@ -17,6 +16,7 @@ import { TuiButton, TuiDataList, TuiError } from '@taiga-ui/core';
 import { TUI_VALIDATION_ERRORS, TuiFieldErrorPipe } from '@taiga-ui/kit';
 import { TuiInputModule } from '@taiga-ui/legacy';
 import { debounceTime, filter, switchMap, tap } from 'rxjs';
+import { CityInfo } from '@shared/interfaces/city-info.interface';
 
 @Component({
   selector: 'dd-create-station-form',

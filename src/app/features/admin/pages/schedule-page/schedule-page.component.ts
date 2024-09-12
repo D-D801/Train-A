@@ -8,8 +8,8 @@ import { AsyncPipe, Location, NgFor } from '@angular/common';
 import { NewRideService } from '@features/admin/services/new-ride/new-ride.service';
 import { merge, Subject, switchMap, tap } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
-import { TrainRoute } from '@features/admin/interfaces/train-route.interface';
 import { CarriagesService } from '@core/services/carriages/carriages.service';
+import { TrainRoute } from '@shared/interfaces/train-route.interface';
 import { RideCardComponent } from '../../components/ride-card/ride-card.component';
 import { NewRideFormComponent } from '../../components/new-ride-form/new-ride-form.component';
 

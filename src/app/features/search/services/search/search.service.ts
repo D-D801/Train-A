@@ -1,12 +1,18 @@
 import { Injectable, signal } from '@angular/core';
-import { Station } from '@features/admin/interfaces/station-list-item.interface';
-import { CityInfo } from '@features/search/interfaces/city-info.interface';
 import { DepartureDateWithIds } from '@features/search/interfaces/filter-dates.interface';
-import {
-  SearchFromStation,
-  SearchRouteResponse,
-  SearchToStation,
-} from '@features/search/interfaces/search-route-response.interface';
+import { SearchRouteResponse } from '@features/search/interfaces/search-route-response.interface';
+import { CityInfo } from '@shared/interfaces/city-info.interface';
+import { Station } from '@shared/interfaces/station.interface';
+
+interface SearchFromStation {
+  stationId: number;
+  city: string;
+}
+
+interface SearchToStation {
+  stationId: number;
+  city: string;
+}
 
 @Injectable({
   providedIn: 'root',

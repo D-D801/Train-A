@@ -1,4 +1,4 @@
-import { ConnectedStation, Station } from '@features/admin/interfaces/station.interface';
+import { Station } from '@shared/interfaces/station.interface';
 
 function getAvailableStations({
   stations,
@@ -13,7 +13,7 @@ function getAvailableStations({
   formControlsPathValue: (number | null)[];
   allAvailableStations: { id: number }[];
 }) {
-  let availableStations: ConnectedStation[] = [];
+  let availableStations: { id: number }[] = [];
   const prevStation = index > 0 ? formControlsPathValue[index - 1] : null;
   const nextStation = index < formControlsPathValue.length - 1 ? formControlsPathValue[index + 1] : null;
   const prevStationConnect = prevStation ? stations[prevStation - 1]?.connectedTo || [] : [];

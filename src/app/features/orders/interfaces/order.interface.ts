@@ -1,4 +1,4 @@
-import { Ride } from '@features/search/interfaces/search-route-response.interface';
+import { Schedule } from '@shared/interfaces/schedule.interface';
 
 export interface Order {
   carriages: string[];
@@ -6,7 +6,7 @@ export interface Order {
   path: number[];
   rideId: number;
   routeId: number;
-  schedule: Ride;
+  schedule: Schedule;
   seatId: number;
   userId: number;
   status: 'active' | 'completed' | 'rejected' | 'canceled';

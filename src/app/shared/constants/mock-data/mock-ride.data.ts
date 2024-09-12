@@ -1,6 +1,5 @@
-import { Schedule } from '@features/admin/interfaces/schedule.interface';
-
-import { Segment } from '@features/admin/interfaces/segment.interface';
+import { Schedule } from '@shared/interfaces/schedule.interface';
+import { Segment } from '@shared/interfaces/segment.interface';
 
 export const mockSegments: Segment[] = [{ time: ['1', '1'], price: { car: 1 } }] as const;
 

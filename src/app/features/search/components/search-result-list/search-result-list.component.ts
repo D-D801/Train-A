@@ -12,9 +12,10 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { StationsService } from '@core/services/stations/stations.service';
-import { RoadSection, Trip } from '@features/search/interfaces/search-route-response.interface';
+import { Trip } from '@features/search/interfaces/trip.interface';
 import { SearchApiService } from '@features/search/services/search-api/search-api.service';
 import { FreeSeat, TripService } from '@features/search/services/trip/trip.service';
+import { Segment } from '@shared/interfaces/segment.interface';
 import { RideModalService } from '@shared/services/ride-modal.service';
 import { calculateStopDuration } from '@shared/utils/calculate-train-stop-duration';
 import { dateConverter } from '@shared/utils/date-converter';
@@ -98,7 +99,7 @@ export class SearchResultListComponent {
     return [...new Set(carriages)];
   };
 
-  public getPrice(segments: RoadSection[]) {
+  public getPrice(segments: Segment[]) {
     return this.tripService.setPrices(segments);
   }
 
@@ -116,14 +117,14 @@ export class SearchResultListComponent {
     return this.stationsService.getStations([station])[0];
   }
 
-  public getFreeSeats(segments: RoadSection[], carriages: string[]) {
+  public getFreeSeats(segments: Segment[], carriages: string[]) {
     const longestSegmentIndex = segments
-      .map((segment, index) => ({ length: segment.occupiedSeats.length, index }))
+      .map((segment, index) => ({ length: segment.occupiedSeats?.length ?? 0, index }))
       .reduce((max, current) => (current.length > max.length ? current : max), { length: 0, index: -1 }).index;
 
     const bookSeats =
       longestSegmentIndex > -1
-        ? this.tripService.getOccupieSeatsInCarriages(segments[longestSegmentIndex].occupiedSeats, carriages)
+        ? this.tripService.getOccupieSeatsInCarriages(segments[longestSegmentIndex].occupiedSeats ?? [], carriages)
         : [];
 
     const carriageList = this.tripService.groupCarriages(carriages);

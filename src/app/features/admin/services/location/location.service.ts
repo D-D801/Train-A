@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { CityWithCoordinates } from '@features/search/interfaces/city.interface';
+import { CityWithCoordinates } from '@features/admin/interfaces/city-with-coordinates.interface';
 
 @Injectable({
   providedIn: 'root',

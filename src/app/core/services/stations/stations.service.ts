@@ -1,7 +1,7 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { StationsApiService } from '@features/admin/services/stations-api/stations-api.service';
-import { Station } from '@features/admin/interfaces/station-list-item.interface';
 import { tap } from 'rxjs';
+import { Station } from '@shared/interfaces/station.interface';
 import { AlertService } from '../alert/alert.service';
 
 @Injectable({

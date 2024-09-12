@@ -1,10 +1,10 @@
 import { NgFor, AsyncPipe, NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, input, effect, output } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Carriage } from '@features/admin/interfaces/carriage.interface';
 import { TuiError, TuiButton } from '@taiga-ui/core';
 import { TuiFieldErrorPipe } from '@taiga-ui/kit';
 import { TuiInputModule, TuiInputNumberModule } from '@taiga-ui/legacy';
+import { Carriage } from '@shared/interfaces/carriage.interface';
 import { CarriagePreviewComponent } from '../carriage-preview/carriage-preview.component';
 
 @Component({
