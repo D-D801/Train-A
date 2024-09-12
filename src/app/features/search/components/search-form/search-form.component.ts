@@ -85,12 +85,12 @@ export class SearchFormComponent implements OnInit {
   public ngOnInit() {
     const { from, to } = this.searchForm.controls;
     from.valueChanges.pipe(takeUntilDestroyed(this.destroy)).subscribe(() => {
-      if (!this.from.value) return;
-      this.updateCities(this.from.value, 'from');
+      if (!from.value) return;
+      this.updateCities(from.value, 'from');
     });
     to.valueChanges.pipe(takeUntilDestroyed(this.destroy)).subscribe(() => {
-      if (!this.to.value) return;
-      this.updateCities(this.to.value, 'to');
+      if (!to.value) return;
+      this.updateCities(to.value, 'to');
     });
   }
 
@@ -119,8 +119,8 @@ export class SearchFormComponent implements OnInit {
     if (this.searchForm.invalid) return;
     let date = '';
 
-    if (this.date.value) {
-      const { day, month, year } = this.date.value;
+    if (this.controls.date.value) {
+      const { day, month, year } = this.controls.date.value;
       date = new Date(Date.UTC(year, month, day)).toISOString();
     }
 
@@ -159,15 +159,7 @@ export class SearchFormComponent implements OnInit {
       });
   }
 
-  public get from() {
-    return this.searchForm.controls.from;
-  }
-
-  public get to() {
-    return this.searchForm.controls.to;
-  }
-
-  public get date() {
-    return this.searchForm.controls.date;
+  public get controls() {
+    return this.searchForm.controls;
   }
 }

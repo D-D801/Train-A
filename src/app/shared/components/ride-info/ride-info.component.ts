@@ -35,6 +35,8 @@ export class RideInfoComponent {
 
   private readonly stationsService = inject(StationsService);
 
+  private readonly cdr = inject(ChangeDetectorRef);
+
   private readonly stations = this.stationsService.stations;
 
   public from = this.context.data.from;
@@ -43,7 +45,7 @@ export class RideInfoComponent {
 
   protected stationsInfo: RideInfo[] = [];
 
-  public constructor(private readonly cdr: ChangeDetectorRef) {
+  public constructor() {
     effect(() => {
       const allStations = this.stations();
 
@@ -61,7 +63,7 @@ export class RideInfoComponent {
         this.stationsInfo = path.map((cityId, index, array) =>
           this.getStationInfo({ cityId, index, pathLength: array.length, segments })
         );
-        cdr.markForCheck();
+        this.cdr.markForCheck();
       }
     });
   }

@@ -36,10 +36,6 @@ export class CarriagesPageComponent {
 
   public selectedCarriage: Carriage | null = null;
 
-  public loadCarriages() {
-    return this.carriageApiService.getCarriages();
-  }
-
   public onCreate() {
     this.selectedCarriage = null;
     this.showForm.set(true);

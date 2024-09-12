@@ -29,10 +29,6 @@ export class StationsService {
     );
   }
 
-  public deleteStationFromList(id: number) {
-    this._stations.update((stations) => stations.filter((station) => station.id !== id));
-  }
-
   public getStations(connectedStationsIds: number[]) {
     const stations = this.stations();
     return stations ? stations.filter((station: Station) => connectedStationsIds.includes(station.id)) : [];

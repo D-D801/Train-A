@@ -8,6 +8,23 @@ import { TuiButton, TuiLoader } from '@taiga-ui/core';
 import { TuiCarouselButtons, TuiCarouselComponent } from '@taiga-ui/kit';
 import { fromEvent, Observable, Subscription } from 'rxjs';
 
+const mobileWidth = 520;
+const middleWidth = 650;
+const tabletWidth = 800;
+
+function getItemsCountFromWidth(width: number) {
+  if (width < mobileWidth) {
+    return 2;
+  }
+  if (width < middleWidth) {
+    return 3;
+  }
+  if (width < tabletWidth) {
+    return 4;
+  }
+  return 5;
+}
+
 @Component({
   selector: 'dd-search-filter',
   standalone: true,
@@ -56,15 +73,8 @@ export class SearchFilterComponent implements OnInit {
   }
 
   private updateItemsCount(width: number) {
-    if (width < 520) {
-      this.itemsCount = 2;
-    } else if (width < 650) {
-      this.itemsCount = 3;
-    } else if (width < 800) {
-      this.itemsCount = 4;
-    } else {
-      this.itemsCount = 5;
-    }
+    this.itemsCount = getItemsCountFromWidth(width);
+
     this.cdr.detectChanges();
   }
 }
