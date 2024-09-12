@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, inject, effect } from '@angular/core';
 import { StationsService } from '@core/services/stations/stations.service';
 import { Station } from '@features/admin/interfaces/station.interface';
+import { LocationApiService } from '@features/admin/services/location-api/location-api.service';
 import { CityWithCoordinates } from '@features/search/interfaces/city.interface';
-import { LocationApiService } from '@features/search/services/location-api/location-api.service';
-import { LocationService } from '@features/search/services/location/location.service';
+import { LocationService } from '@features/admin/services/location/location.service';
 import * as L from 'leaflet';
 
 @Component({
