@@ -2,7 +2,7 @@ import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, input, OnInit } from '@angular/core';
 import { DepartureDateWithIds } from '@features/search/interfaces/filter-dates.interface';
 import { SearchFilterService } from '@features/search/services/search-filter/search-filter.service';
-import { dateConverter2 } from '@shared/utils/date-converter';
+import { convertToDate } from '@shared/utils/convertToDateWithTime';
 import { TuiItem } from '@taiga-ui/cdk';
 import { TuiButton, TuiLoader } from '@taiga-ui/core';
 import { TuiCarouselButtons, TuiCarouselComponent } from '@taiga-ui/kit';
@@ -44,7 +44,7 @@ export class SearchFilterComponent implements OnInit {
 
   public readonly filteredDates = input.required<DepartureDateWithIds[]>();
 
-  protected readonly dateConverter2 = dateConverter2;
+  protected readonly dateConverter2 = convertToDate;
 
   protected activeIndex = this.searchFilterService.activeTabIndex;
 

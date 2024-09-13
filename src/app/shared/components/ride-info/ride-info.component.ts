@@ -3,8 +3,8 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, effect, inject }
 import { StationsService } from '@core/services/stations/stations.service';
 import { ModalRideInfo } from '@shared/interfaces/route-info.interface';
 import { Segment } from '@shared/interfaces/segment.interface';
-import { calculateStopDuration } from '@shared/utils/calculate-train-stop-duration';
-import { formatTime } from '@shared/utils/format-date';
+import { calculateTrainStopDuration } from '@shared/utils/calculateTrainStopDuration';
+import { convertToTime } from '@shared/utils/convertToDateWithTime';
 import { TuiDialogContext, TuiIcon } from '@taiga-ui/core';
 import { POLYMORPHEUS_CONTEXT } from '@taiga-ui/polymorpheus';
 
@@ -82,10 +82,10 @@ export class RideInfoComponent {
       index > 0 && index < pathLength ? segments[index - 1].time[1] : segments[index].time[0];
 
     return {
-      departureTime: formatTime(departureTime),
-      arrivalTime: formatTime(arrivalTime),
+      departureTime: convertToTime(departureTime),
+      arrivalTime: convertToTime(arrivalTime),
       city: this.stationsService.getStationNameById(cityId),
-      stopDuration: index !== 0 ? calculateStopDuration(arrivalTimeToStation, departureTime) : 'First station',
+      stopDuration: index !== 0 ? calculateTrainStopDuration(arrivalTimeToStation, departureTime) : 'First station',
     };
   }
 }

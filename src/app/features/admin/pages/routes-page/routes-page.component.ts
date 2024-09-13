@@ -5,8 +5,9 @@ import { RouteCardComponent } from '@features/admin/components/route-card/route-
 import { RouteFormComponent } from '@features/admin/components/route-form/route-form.component';
 import { RouteApiService } from '@features/admin/services/route-api/route-api.service';
 import { TrainRoute } from '@shared/interfaces/train-route.interface';
+import { getDeletionConfirmationData } from '@shared/utils/getDeletionConfirmationData';
 import { TuiButton, TuiDialogService, TuiLoader, tuiLoaderOptionsProvider, TuiSurface } from '@taiga-ui/core';
-import { TUI_CONFIRM, TuiConfirmData } from '@taiga-ui/kit';
+import { TUI_CONFIRM } from '@taiga-ui/kit';
 import { TuiCardLarge } from '@taiga-ui/layout';
 import { filter, Subject, switchMap, tap } from 'rxjs';
 
@@ -85,18 +86,11 @@ export class RoutesPageComponent implements OnInit {
   }
 
   public onDelete(route: TrainRoute) {
-    const data: TuiConfirmData = {
-      content: 'Do you really want to delete this route ?',
-      yes: 'Delete',
-      no: 'Cancel',
-      appearance: 'accent',
-    };
-
     this.dialogs
       .open<boolean>(TUI_CONFIRM, {
         label: `Delete ${route.id} route.`,
         size: 's',
-        data,
+        data: getDeletionConfirmationData('route'),
       })
       .pipe(
         filter((response) => response),
