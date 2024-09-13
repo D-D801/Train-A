@@ -12,7 +12,7 @@ const mobileWidth = 520;
 const middleWidth = 650;
 const tabletWidth = 800;
 
-function getItemsCountFromWidth(width: number) {
+function getVisibleSlidesCountFromWidth(width: number) {
   if (width < mobileWidth) {
     return 2;
   }
@@ -73,7 +73,7 @@ export class SearchFilterComponent implements OnInit {
   }
 
   private updateItemsCount(width: number) {
-    this.itemsCount = getItemsCountFromWidth(width);
+    this.itemsCount = getVisibleSlidesCountFromWidth(width);
 
     this.cdr.detectChanges();
   }
