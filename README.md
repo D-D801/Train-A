@@ -30,7 +30,7 @@ The primary goal of this project is to develop a platform for managing train tri
 ## Backend
 
 ```
-@planess/train-a-backend
+@planess/train-a-backend v11
 ```
 Npm package that simulates backend functionality
 
