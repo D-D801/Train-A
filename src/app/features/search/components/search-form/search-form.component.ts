@@ -138,8 +138,8 @@ export class SearchFormComponent implements OnInit {
         next: (response) => {
           this.isLoading.set(false);
 
-          this.searchService.departureStation.set(response.from);
-          this.searchService.arrivalStation.set(response.to);
+          this.searchService.setDepartureStation(response.from);
+          this.searchService.setArrivalStation(response.to);
           const sortedRidesWidthDepartureDate = findDepartureDatesOfRide(response);
 
           this.endDateWithoutTime = sortedRidesWidthDepartureDate.at(-1)?.departureDate ?? '';
@@ -147,7 +147,7 @@ export class SearchFormComponent implements OnInit {
 
           const updatedDates = groupeRidesWithDates(dates, sortedRidesWidthDepartureDate);
 
-          this.searchService.setfilterDates(updatedDates);
+          this.searchService.setFilterDates(updatedDates);
 
           this.searchFilterService.setCarouselIndex(0);
           this.searchFilterService.setActiveTabIndex(date === updatedDates[0]?.departureDate ? 0 : null);
