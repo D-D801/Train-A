@@ -83,7 +83,7 @@ export class SearchFormComponent implements OnInit {
   });
 
   public ngOnInit() {
-    const { from, to } = this.searchForm.controls;
+    const { from, to } = this.controls;
     from.valueChanges.pipe(takeUntilDestroyed(this.destroy)).subscribe(() => {
       if (!from.value) return;
       this.updateCities(from.value, 'from');
