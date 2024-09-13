@@ -15,7 +15,7 @@ const months = [
 
 const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-export function dateConverter(date: string) {
+export function convertToDateWithTime(date: string) {
   const isoDate = new Date(date);
 
   const month = months[isoDate.getMonth()];
@@ -27,7 +27,7 @@ export function dateConverter(date: string) {
   return formattedDate;
 }
 
-export function dateConverter2(date: string) {
+export function convertToDate(date: string) {
   const isoDate = new Date(date);
 
   const month = months[isoDate.getMonth()];
@@ -37,10 +37,10 @@ export function dateConverter2(date: string) {
   return `${month} ${day} ${dayOfWeek}`;
 }
 
-export function convertDateToISODateWithoutTime(date: Date) {
-  const year = date.getUTCFullYear();
-  const month = date.getUTCMonth();
-  const day = date.getUTCDate();
+export function convertToTime(date: string): string {
+  const isoDate = new Date(date);
 
-  return new Date(Date.UTC(year, month, day)).toISOString();
+  const hours = isoDate.getUTCHours().toString().padStart(2, '0');
+  const minutes = isoDate.getUTCMinutes().toString().padStart(2, '0');
+  return `${hours}:${minutes}`;
 }

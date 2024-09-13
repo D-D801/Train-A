@@ -1,5 +1,5 @@
 import { SearchRouteResponse } from '@features/search/interfaces/search-route-response.interface';
-import { convertDateToISODateWithoutTime } from '@shared/utils/date-converter';
+import { convertDateToISODateWithoutTime } from '@shared/utils/convertDateToISODateWithoutTime';
 
 export function findDepartureDatesOfRide(searchRouteResponse: SearchRouteResponse) {
   const ridesWidthDepartureDate = searchRouteResponse.routes.map((route) => {

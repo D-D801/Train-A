@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, output } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Order } from '@features/orders/interfaces/order.interface';
@@ -7,7 +6,6 @@ import { TuiButton, TuiDialogService, TuiSurface, TuiTitle } from '@taiga-ui/cor
 import { TuiCardLarge, TuiHeader } from '@taiga-ui/layout';
 import { TuiCurrencyPipe } from '@taiga-ui/addon-commerce';
 import { CURRENCY } from '@shared/constants/currency';
-import { calculateStopDuration } from '@shared/utils/calculate-train-stop-duration';
 import { TUI_CONFIRM } from '@taiga-ui/kit';
 import { getDeletionConfirmationData } from '@shared/utils/getDeletionConfirmationData';
 import { filter, switchMap } from 'rxjs';
@@ -17,6 +15,7 @@ import { AuthService } from '@core/services/auth/auth.service';
 import { Role } from '@shared/enums/role.enum';
 import { StationsService } from '@core/services/stations/stations.service';
 import { TripService } from '@features/search/services/trip/trip.service';
+import { calculateTrainStopDuration } from '@shared/utils/calculateTrainStopDuration';
 
 @Component({
   selector: 'dd-order-card',
@@ -36,8 +35,6 @@ export class OrderCardComponent {
   protected readonly stationsService = inject(StationsService);
 
   private readonly authService = inject(AuthService);
-
-  private readonly httpClient = inject(HttpClient);
 
   private readonly tripService = inject(TripService);
 
@@ -84,7 +81,7 @@ export class OrderCardComponent {
 
   public duration() {
     if (!this.segments().length) return '';
-    return calculateStopDuration(this.segments()[this.segments().length - 1].time[1], this.segments()[0].time[0]);
+    return calculateTrainStopDuration(this.segments()[this.segments().length - 1].time[1], this.segments()[0].time[0]);
   }
 
   public onCancel(event: MouseEvent) {

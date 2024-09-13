@@ -1,4 +1,4 @@
-export function calculateStopDuration(arrival: string, departure: string): string {
+export function calculateTrainStopDuration(arrival: string, departure: string): string {
   const arrivalDate = new Date(arrival);
   const departureDate = new Date(departure);
   const diffMs = Math.abs(departureDate.getTime() - arrivalDate.getTime());

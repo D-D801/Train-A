@@ -4,7 +4,7 @@ import { CarriageList } from '@features/search/interfaces/carriage-list.interfac
 import { FreeSeat } from '@features/search/interfaces/free-seat.interface';
 import { BookSeats } from '@shared/interfaces/book-seats.interface';
 import { Price, Segment } from '@shared/interfaces/segment.interface';
-import { dateConverter } from '@shared/utils/date-converter';
+import { convertToDateWithTime } from '@shared/utils/convertToDateWithTime';
 
 interface SeatsPerCarriage {
   [key: string]: number;
@@ -22,7 +22,7 @@ function setPrices(segments: Segment[]): Price {
 function setTimes(segments: Segment[], time: string): string {
   if (!segments.length) return '';
   const date = time === 'start' ? segments[0].time[0] : segments[segments.length - 1].time[1];
-  return dateConverter(date);
+  return convertToDateWithTime(date);
 }
 
 function sumSeatsByType(seats: FreeSeat, type: string): number {

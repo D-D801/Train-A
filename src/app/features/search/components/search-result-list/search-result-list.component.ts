@@ -17,8 +17,8 @@ import { SearchApiService } from '@features/search/services/search-api/search-ap
 import { TripService } from '@features/search/services/trip/trip.service';
 import { Segment } from '@shared/interfaces/segment.interface';
 import { RideModalService } from '@shared/services/ride-modal.service';
-import { calculateStopDuration } from '@shared/utils/calculate-train-stop-duration';
-import { dateConverter } from '@shared/utils/date-converter';
+import { calculateTrainStopDuration } from '@shared/utils/calculateTrainStopDuration';
+import { convertToDateWithTime } from '@shared/utils/convertToDateWithTime';
 import { TuiPlatform } from '@taiga-ui/cdk';
 import { TuiButton, TuiIcon, TuiSurface, TuiTitle } from '@taiga-ui/core';
 import { TuiBlockStatus, TuiCardLarge, TuiHeader } from '@taiga-ui/layout';
@@ -78,11 +78,11 @@ export class SearchResultListComponent {
 
   public rides: Trip[] | null = null;
 
-  public getTravelTime = calculateStopDuration;
+  public getTravelTime = calculateTrainStopDuration;
 
   public getUniqueCarriages = getUniqueCarriages;
 
-  public convertTime = dateConverter;
+  public convertTime = convertToDateWithTime;
 
   public constructor() {
     effect(() => {
