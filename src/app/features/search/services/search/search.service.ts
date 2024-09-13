@@ -30,11 +30,17 @@ export class SearchService {
 
   public searchResult = this._searchResult.asReadonly();
 
-  public readonly filterDates = signal<DepartureDateWithIds[]>([]);
+  private readonly _filterDates = signal<DepartureDateWithIds[]>([]);
 
-  public readonly departureStation = signal<SearchFromStation | null>(null);
+  public filterDates = this._filterDates.asReadonly();
 
-  public readonly arrivalStation = signal<SearchToStation | null>(null);
+  private readonly _departureStation = signal<SearchFromStation | null>(null);
+
+  public departureStation = this._departureStation.asReadonly();
+
+  private readonly _arrivalStation = signal<SearchToStation | null>(null);
+
+  public arrivalStation = this._arrivalStation.asReadonly();
 
   public setCities(receivedCities: CityInfo[]) {
     this._cities.set(receivedCities);
@@ -48,15 +54,15 @@ export class SearchService {
     this._searchResult.set(result);
   }
 
-  public setfilterDates(result: DepartureDateWithIds[]) {
-    this.filterDates.set(result);
+  public setFilterDates(result: DepartureDateWithIds[]) {
+    this._filterDates.set(result);
   }
 
   public setDepartureStation(result: SearchFromStation) {
-    this.departureStation.set(result);
+    this._departureStation.set(result);
   }
 
   public setArrivalStation(result: SearchToStation) {
-    this.arrivalStation.set(result);
+    this._arrivalStation.set(result);
   }
 }
