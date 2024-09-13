@@ -81,7 +81,9 @@ export class OrderCardComponent {
 
   public duration() {
     if (!this.segments().length) return '';
-    return calculateTrainStopDuration(this.segments()[this.segments().length - 1].time[1], this.segments()[0].time[0]);
+    const departureDate = this.segments()[0].time[0];
+    const arrivalDate = this.segments()[this.segments().length - 1].time[1];
+    return calculateTrainStopDuration(arrivalDate, departureDate);
   }
 
   public onCancel(event: MouseEvent) {
