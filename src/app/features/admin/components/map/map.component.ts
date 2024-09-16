@@ -39,7 +39,7 @@ export class MapComponent implements OnDestroy {
 
   public constructor() {
     effect(() => {
-      if (this.stations()) {
+      if (this.stations().length) {
         this.updateMap(this.stations());
       }
     });
@@ -75,9 +75,7 @@ export class MapComponent implements OnDestroy {
     if (this.map) {
       this.cleanUpMap();
     }
-    setTimeout(() => {
-      this.initMap(stations);
-    }, 0);
+    this.initMap(stations);
   }
 
   private addMarkers(stations: Station[]): void {
@@ -143,7 +141,6 @@ export class MapComponent implements OnDestroy {
         },
       };
 
-      this.locationService.setIsClickedMap(true);
       this.locationService.setCitySignal(cityWithCoordinates);
 
       this.drawNewStationMarkerOnMap(lat, lng, cityWithCoordinates.title);
