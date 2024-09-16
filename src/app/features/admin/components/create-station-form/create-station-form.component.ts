@@ -87,10 +87,10 @@ export class CreateStationFormComponent implements OnInit {
   public constructor() {
     effect(() => {
       const city = this.city();
-      if (city && this.locationService.isClickedMap()) {
-        this.controls.cityName.setValue(city.title);
-        this.controls.latitude.setValue(city.coordinates.lat);
-        this.controls.longitude.setValue(city.coordinates.lng);
+      if (city) {
+        this.controls.cityName.setValue(city.title, { emitEvent: false });
+        this.controls.latitude.setValue(city.coordinates.lat, { emitEvent: false });
+        this.controls.longitude.setValue(city.coordinates.lng, { emitEvent: false });
       }
     });
   }
@@ -141,7 +141,6 @@ export class CreateStationFormComponent implements OnInit {
   }
 
   private setNewCityWithCoordinates() {
-    this.locationService.setIsClickedMap(false);
     const { latitude, longitude } = this.createStationForm.controls;
     if (!latitude.value || !longitude.value) return;
     const cityWithCoordinates = {
