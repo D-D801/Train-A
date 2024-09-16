@@ -125,6 +125,7 @@ export class RouteFormComponent {
     });
 
     this.form.controls.path.valueChanges.pipe(takeUntilDestroyed()).subscribe(() => {
+      if (!this.form.controls.path.length) return;
       if (!this.initializingForm) {
         if (this.form.controls.path.at(-1).value) this.addControl(ControlsType.path);
       }
@@ -134,6 +135,7 @@ export class RouteFormComponent {
     });
 
     this.form.controls.carriages.valueChanges.pipe(takeUntilDestroyed()).subscribe(() => {
+      if (!this.form.controls.carriages.length) return;
       if (!this.initializingForm) {
         if (this.form.controls.carriages.at(-1).value) this.addControl(ControlsType.carriages);
       }
