@@ -17,19 +17,18 @@
 </form>
 
 <ng-template #input let-title="title">
-  <tui-input
-    *tuiLet="cities() as cities"
-    [formControl]="$any(searchForm.controls)[title]"
-    class="tui-form__multi-field"
-  >
-    {{ title | titlecase }}
-    <input placeholder="Type city name" tuiTextfieldLegacy />
-    <ng-container *ngIf="cities?.length">
-      <tui-data-list *tuiDataList>
-        <button *ngFor="let city of cities; index as i" tuiOption [value]="city.city">
-          {{ city.city }}
-        </button>
-      </tui-data-list>
-    </ng-container>
-  </tui-input>
+  <div class="tui-form__multi-field">
+    <tui-input *tuiLet="cities() as cities" [formControl]="$any(searchForm.controls)[title]">
+      {{ title | titlecase }}
+      <input placeholder="Type city name" tuiTextfieldLegacy />
+      <ng-container *ngIf="cities?.length">
+        <tui-data-list *tuiDataList>
+          <button *ngFor="let city of cities; index as i" tuiOption [value]="city.city">
+            {{ city.city }}
+          </button>
+        </tui-data-list>
+      </ng-container>
+    </tui-input>
+    <tui-error [formControl]="$any(searchForm.controls)[title]" [error]="[] | tuiFieldError | async" />
+  </div>
 </ng-template>

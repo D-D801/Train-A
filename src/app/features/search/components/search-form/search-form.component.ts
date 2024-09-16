@@ -4,6 +4,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AlertService } from '@core/services/alert/alert.service';
 import { StationsService } from '@core/services/stations/stations.service';
+import { buildInErrors } from '@shared/constants/build-in-errors';
+import { connectedStationValidator } from '@shared/validators/connected-station.validator';
 import { SearchFilterComponent } from '@features/search/components/search-filter/search-filter.component';
 import { CityCoordinates } from '@features/search/interfaces/city-coordinates.interface';
 import { SearchApiService } from '@features/search/services/search-api/search-api.service';
@@ -16,8 +18,8 @@ import { getCurrentDate } from '@shared/utils/getCurrentDateTime';
 import { dateValidator } from '@shared/validators/date-time.validator';
 
 import { TuiDay, TuiLet } from '@taiga-ui/cdk';
-import { TuiButton, TuiDataList, TuiInitialsPipe, TuiTextfield } from '@taiga-ui/core';
-import { TuiDataListWrapper } from '@taiga-ui/kit';
+import { TuiButton, TuiDataList, TuiError, TuiInitialsPipe, TuiTextfield } from '@taiga-ui/core';
+import { TUI_VALIDATION_ERRORS, TuiDataListWrapper, TuiFieldErrorPipe } from '@taiga-ui/kit';
 import { TuiInputDateModule, TuiInputModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 
 type InputName = 'from' | 'to';
@@ -42,6 +44,14 @@ type InputName = 'from' | 'to';
     NgTemplateOutlet,
     TitleCasePipe,
     SearchFilterComponent,
+    TuiError,
+    TuiFieldErrorPipe,
+  ],
+  providers: [
+    {
+      provide: TUI_VALIDATION_ERRORS,
+      useValue: buildInErrors,
+    },
   ],
   templateUrl: './search-form.component.html',
   styleUrl: './search-form.component.scss',
@@ -77,8 +87,8 @@ export class SearchFormComponent implements OnInit {
   protected getCurrentDate = getCurrentDate;
 
   public searchForm = this.fb.group({
-    from: this.fb.control('', [Validators.required]),
-    to: this.fb.control('', [Validators.required]),
+    from: this.fb.control('', [Validators.required, connectedStationValidator(this.stationsService)]),
+    to: this.fb.control('', [Validators.required, connectedStationValidator(this.stationsService)]),
     date: this.fb.control<TuiDay>(TuiDay.currentUtc(), [Validators.required, dateValidator()]),
   });
 

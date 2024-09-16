@@ -17,7 +17,7 @@ import { TUI_VALIDATION_ERRORS, TuiFieldErrorPipe } from '@taiga-ui/kit';
 import { TuiInputModule } from '@taiga-ui/legacy';
 import { debounceTime, filter, switchMap, tap } from 'rxjs';
 import { CityInfo } from '@shared/interfaces/city-info.interface';
-import { connectedStationValidator } from '@features/admin/validators/connected-station.validator';
+import { connectedStationValidator } from '@shared/validators/connected-station.validator';
 
 @Component({
   selector: 'dd-create-station-form',
