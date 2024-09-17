@@ -31,7 +31,7 @@
               <div
                 class="seat"
                 [ngClass]="{
-                  selected: isSeatSelected(seatNumber) && options().isClick,
+                  selected: isSeatSelected(seatNumber) && !isSeatReserved(seatNumber),
                   reserved: isSeatReserved(seatNumber),
                   clickable: options().isClick && !isSeatReserved(seatNumber),
                 }"
