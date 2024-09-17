@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, effect, inject, input, OnInit } from '@angular/core';
 import { DepartureDateWithIds } from '@features/search/interfaces/filter-dates.interface';
 import { SearchFilterService } from '@features/search/services/search-filter/search-filter.service';
 import { convertToDate } from '@shared/utils/convertToDateWithTime';
@@ -34,15 +34,15 @@ function getVisibleSlidesCountFromWidth(width: number) {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchFilterComponent implements OnInit {
-  public resizeObservable$: Observable<Event> = fromEvent(window, 'resize');
-
-  public resizeSubscription$!: Subscription;
+  public readonly filteredDates = input.required<DepartureDateWithIds[]>();
 
   private readonly cdr = inject(ChangeDetectorRef);
 
   private readonly searchFilterService = inject(SearchFilterService);
 
-  public readonly filteredDates = input.required<DepartureDateWithIds[]>();
+  public resizeObservable$: Observable<Event> = fromEvent(window, 'resize');
+
+  public resizeSubscription$!: Subscription;
 
   protected readonly dateConverter2 = convertToDate;
 
@@ -55,6 +55,13 @@ export class SearchFilterComponent implements OnInit {
   }
 
   public itemsCount = 5;
+
+  public constructor() {
+    effect(() => {
+      this.itemsCount = 5;
+      this.updateItemsFromDatesCount();
+    });
+  }
 
   public ngOnInit() {
     this.updateItemsCount(window.innerWidth);
@@ -75,6 +82,14 @@ export class SearchFilterComponent implements OnInit {
   private updateItemsCount(width: number) {
     this.itemsCount = getVisibleSlidesCountFromWidth(width);
 
+    this.updateItemsFromDatesCount();
+
     this.cdr.detectChanges();
+  }
+
+  private updateItemsFromDatesCount() {
+    if (this.filteredDates().length < this.itemsCount) {
+      this.itemsCount = this.filteredDates().length;
+    }
   }
 }
