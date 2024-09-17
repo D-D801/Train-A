@@ -127,6 +127,7 @@
 
 .price {
   flex: 1;
+  flex-wrap: wrap;
 
   @media #{$tui-mobile} {
     flex-direction: column;
