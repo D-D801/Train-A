@@ -14,14 +14,17 @@ import { TuiCardLarge, TuiHeader } from '@taiga-ui/layout';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CarriagePreviewComponent {
-  public options = input<{ isClick: boolean; isShowTitle: boolean }>({
+  public options = input<{ isClick: boolean; isShowTitle: boolean; bookSeatWithOrderPanel: boolean }>({
     isClick: false,
     isShowTitle: true,
+    bookSeatWithOrderPanel: false,
   });
 
   public carriage = input.required<Carriage | null>();
 
   public bookSeats = input<BookSeats[]>();
+
+  public bookSeatsWithOrderPanel = input<BookSeats[]>();
 
   public seatSelected = output<{ seatNumber: number; carriageType: string }>();
 
@@ -37,6 +40,9 @@ export class CarriagePreviewComponent {
         if (this.bookSeats()) {
           this.updateReservedSeats();
         }
+        if (this.options().bookSeatWithOrderPanel) {
+          this.updateReservedSeats(this.bookSeatsWithOrderPanel());
+        }
         if (this.carriage()) {
           this.updateSeatNumbers();
         }
@@ -45,9 +51,9 @@ export class CarriagePreviewComponent {
     );
   }
 
-  private updateReservedSeats() {
+  private updateReservedSeats(bookSeat: BookSeats[] = []) {
     this.reservedSeats.clear();
-    const bookSeats = this.bookSeats();
+    const bookSeats = bookSeat.length > 0 ? bookSeat : this.bookSeats();
     if (!bookSeats) return;
 
     bookSeats
