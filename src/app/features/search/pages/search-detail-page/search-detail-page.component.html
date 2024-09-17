@@ -58,6 +58,7 @@
               [carriage]="carriagesService.getCarriageByCode(type.key) ?? null"
               [options]="options()"
               [bookSeats]="getFilteredSeats(carriage.index)"
+              [bookSeatsWithOrderPanel]="options().bookSeatWithOrderPanel ? getFilteredSeats(carriage.index) : []"
               (seatSelected)="handleSeatSelected($event, carriage.index)"
             ></dd-carriage-preview>
           </div>

@@ -78,7 +78,7 @@ export class SearchDetailPageComponent {
 
   public orderId = signal(0);
 
-  public options = signal({ isClick: true, isShowTitle: false });
+  public options = signal({ isClick: true, isShowTitle: false, bookSeatWithOrderPanel: false });
 
   protected readonly isLoading = signal(false);
 
@@ -238,7 +238,8 @@ export class SearchDetailPageComponent {
     orderObservable.subscribe({
       next: ({ id }) => {
         this.orderId.set(id);
-        this.loadRide();
+        this.bookSeats = this.tripService.getOccupieSeatsInCarriages([seat], this.ride()?.carriages ?? []);
+        this.options().bookSeatWithOrderPanel = true;
         this.isBookSeat.update((value) => !value);
         this.alert.open({ message: 'Seat booked successfully', label: 'Info:', appearance: 'success' });
       },
