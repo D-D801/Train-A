@@ -1,5 +1,9 @@
 # TrainA
 
+## Deploy
+
+[TrainA](https://dd801.netlify.app)
+
 ## General
 
 This platform is designed to manage train trips efficiently. It provides the following pages:
@@ -13,6 +17,11 @@ This platform is designed to manage train trips efficiently. It provides the fol
 - Stations management
 - Carriages/Cars management
 - Route management including Ride management
+
+To access Manager pages, please log in with the admin credentials:
+
+**Email:** admin@admin.com  
+**Password:** my-password
 
 ## Goals
 
