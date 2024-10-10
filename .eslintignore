@@ -1,0 +1,9 @@
+node_modules/
+
+dist/
+
+!**/*.ts
+
+*.config.js
+
+setup-jest.ts

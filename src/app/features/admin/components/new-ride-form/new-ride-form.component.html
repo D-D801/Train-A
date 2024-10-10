@@ -1,0 +1,48 @@
+<div tuiCardLarge tuiSurface="elevated" class="overflow-visible">
+  <form [formGroup]="rideForm" (ngSubmit)="rideForm.valid && onSubmit()">
+    <div tuiHeader class="sticky-header">
+      <h2 tuiTitle>New Ride</h2>
+      <div tuiAccessories>
+        <button tuiButton size="m" type="submit" [disabled]="rideForm.invalid">Save New Ride</button>
+      </div>
+    </div>
+    <div formArrayName="segments">
+      @for (segment of path(); track segment; let i = $index) {
+        @if (i !== path().length - 1) {
+          <div [formGroupName]="i" class="station-card-container">
+            <div class="stations">
+              <h4>{{ stationsService.getStationNameById(path()[i]) }}</h4>
+              <div class="station-divider"></div>
+              <h4>{{ stationsService.getStationNameById(path()[i + 1]) }}</h4>
+            </div>
+
+            <div class="time" formArrayName="time">
+              <div class="input">
+                <tui-input-date-time class="input" [formControlName]="0" [min]="minDate" placeholder="Select departure">
+                  Departure:</tui-input-date-time
+                >
+                <tui-error [formControlName]="0" [error]="[] | tuiFieldError | async" />
+              </div>
+              <div class="input">
+                <tui-input-date-time class="input" [formControlName]="1" [min]="minDate" placeholder="Select arrival">
+                  Arrival:</tui-input-date-time
+                >
+                <tui-error [formControlName]="1" [error]="[] | tuiFieldError | async" />
+              </div>
+            </div>
+
+            <div class="price" formGroupName="price">
+              <h4>Prices:</h4>
+              @for (key of carriages(); track key) {
+                <tui-input-number class="input" [formControlName]="key" [tuiTextfieldPrefix]="'USD' | tuiCurrency">
+                  {{ key }}:
+                </tui-input-number>
+                <tui-error [formControlName]="key" [error]="[] | tuiFieldError | async" />
+              }
+            </div>
+          </div>
+        }
+      }
+    </div>
+  </form>
+</div>

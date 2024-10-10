@@ -1,0 +1,37 @@
+<form class="tui-form__row" [formGroup]="carriageForm">
+  <div class="tui-form__row">
+    <tui-input formControlName="name">
+      Name
+      <input tuiTextfieldLegacy />
+    </tui-input>
+    <tui-error formControlName="name" [error]="[] | tuiFieldError | async" />
+  </div>
+  <div class="tui-form__row">
+    <tui-input-number [min]="min" class="input" formControlName="rows"> Rows </tui-input-number>
+    <tui-error formControlName="rows" [error]="[] | tuiFieldError | async" />
+  </div>
+  <div class="tui-form__row">
+    <tui-input-number [min]="min" class="input" formControlName="leftSeats"> LeftSeats </tui-input-number>
+    <tui-error formControlName="leftSeats" [error]="[] | tuiFieldError | async" />
+  </div>
+  <div class="tui-form__row">
+    <tui-input-number [min]="min" class="input" formControlName="rightSeats"> RightSeats </tui-input-number>
+    <tui-error formControlName="rightSeats" [error]="[] | tuiFieldError | async" />
+  </div>
+
+  @if (carriageForm.valid) {
+    <dd-carriage-preview class="preview" [carriage]="carriageForm.getRawValue()"></dd-carriage-preview>
+  }
+
+  <div class="tui-form__buttons tui-form__buttons_align_end">
+    <button appearance="primary" size="m" tuiButton (click)="onSubmit()">
+      @if (carriage()?.code) {
+        Update
+      } @else {
+        Save
+      }
+    </button>
+
+    <button appearance="error" size="m" tuiButton (click)="onCancel()">Cancel</button>
+  </div>
+</form>

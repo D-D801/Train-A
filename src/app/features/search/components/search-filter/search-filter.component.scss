@@ -1,0 +1,70 @@
+:host ::ng-deep {
+  .carousel.disable-padding {
+    .t-item {
+      padding: 0 0.4rem !important;
+    }
+  }
+}
+
+.wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 2rem 0;
+}
+
+.carousel {
+  flex-shrink: 0;
+  width: 45rem;
+}
+
+.item {
+  cursor: pointer;
+
+  height: 100%;
+  padding: 0.3rem;
+
+  border: 1px solid var(--tui-border-normal);
+  border-radius: 1rem;
+}
+
+.title {
+  margin: 0 0 1rem;
+}
+
+.active {
+  background-color: var(--tui-background-base);
+  border-color: var(--tui-background-accent-1);
+}
+
+.rides-count {
+  font-size: 12px;
+}
+
+@media (width <= 830px) {
+  .carousel {
+    width: 34rem;
+  }
+}
+
+@media (width <= 700px) {
+  .carousel {
+    width: 28rem;
+  }
+}
+
+@media (width <= 600px) {
+  .carousel {
+    width: 26rem;
+  }
+}
+
+@media (width <= 520px) {
+  .carousel {
+    width: 16.5rem;
+  }
+}
+
+[tuiAppearance][data-appearance='secondary'] {
+  background: none;
+}

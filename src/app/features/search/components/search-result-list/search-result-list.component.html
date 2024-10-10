@@ -1,0 +1,96 @@
+@if (searchResult().routes.length) {
+  @if (rides && rides.length > 0) {
+    @for (trip of rides; track trip.rideId) {
+      <div tuiPlatform="web">
+        <div
+          tuiCardLarge
+          tuiSurface="elevated"
+          [routerLink]="['/trip', trip.rideId]"
+          [queryParams]="{ from: searchResult().from.stationId, to: searchResult().to.stationId }"
+          class="card"
+        >
+          <header tuiHeader>
+            <h2 tuiTitle>Ride {{ trip.rideId }}</h2>
+          </header>
+          @let departureIndex = trip.path.indexOf(searchResult().from.stationId);
+          @let arrivalIndex = trip.path.indexOf(searchResult().to.stationId) - 1;
+          @if (arrivalIndex >= 0 && departureIndex >= 0) {
+            <section class="info-container">
+              <div class="info">
+                <div class="time-section">
+                  <div class="time-info">
+                    <span class="time-point">{{ convertTime(trip.schedule.segments[departureIndex].time[0]) }}</span>
+                    <span class="line"></span>
+                    <span class="duration">{{
+                      getTravelTime(
+                        trip.schedule.segments[arrivalIndex].time[1],
+                        trip.schedule.segments[departureIndex].time[0]
+                      )
+                    }}</span>
+                    <span class="line"></span>
+                    <span class="time-point">{{ convertTime(trip.schedule.segments[arrivalIndex].time[1]) }}</span>
+                  </div>
+                  <div class="station-info">
+                    <span>{{ searchResult().from.city }}</span>
+                    <span>{{ searchResult().to.city }}</span>
+                  </div>
+                </div>
+
+                <div class="details-section">
+                  <div class="route">
+                    <tui-icon class="accessories" icon="@tui.bus" />
+                    {{ getStation(trip.path[0]).city }} -> {{ getStation(trip.path[trip.path.length - 1]).city }}
+                  </div>
+                  <button
+                    appearance="primary"
+                    size="xs"
+                    tuiButton
+                    (click)="showRouteModal(searchResult().from.stationId, searchResult().to.stationId, trip, $event)"
+                  >
+                    Route
+                  </button>
+                </div>
+
+                <div class="details-section price">
+                  @let segments = trip.schedule.segments.slice(departureIndex, arrivalIndex + 1);
+                  @let freeSeats = getFreeSeats(segments, trip.carriages);
+                  @let uniqueCarriageTypes = getUniqueCarriages(trip.carriages);
+                  @let carriageTypes = getCarriageTypes(uniqueCarriageTypes);
+                  @for (type of carriageTypes | keyvalue; track type.key) {
+                    @for (carriage of getCarriageListForType(uniqueCarriageTypes, type.key); track carriage.index) {
+                      <div class="item">
+                        <span class="carriage"
+                          >{{ type.value[0].carriage }}: <tui-icon class="accessories seat" icon="@tui.armchair" />
+                          {{ totalSeatsForType(freeSeats, type.key) }}</span
+                        >
+                        <span
+                          ><strong>${{ getPrice(segments)[type.key] }}</strong></span
+                        >
+                      </div>
+                    }
+                  }
+                </div>
+              </div>
+            </section>
+          }
+        </div>
+      </div>
+    }
+  } @else {
+    <tui-block-status>
+      <h4>No rides available</h4>
+      <p class="text">
+        No seats on direct trains are available right now, but there's always hope. Try again later or travel with a
+        transfer.
+      </p>
+    </tui-block-status>
+  }
+} @else {
+  <tui-block-status>
+    <h4>No rides available</h4>
+    <p class="text">
+      No seats on direct trains are available right now, but there's always hope. Try again later or travel with a
+      transfer.
+    </p>
+  </tui-block-status>
+}

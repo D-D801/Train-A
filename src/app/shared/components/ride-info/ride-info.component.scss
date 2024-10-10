@@ -1,0 +1,90 @@
+@import '@taiga-ui/core/styles/taiga-ui-local';
+
+$height-line: 5rem;
+$shift-up: -0.8rem;
+$icon-size: 24px;
+
+:host {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 1rem;
+}
+
+.route-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+
+  .line-item:first-child {
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+
+.time-box {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  justify-content: space-between;
+
+  height: $height-line;
+}
+
+.line {
+  display: flex;
+}
+
+.line-item {
+  flex: 1;
+}
+
+.line:last-child {
+  height: 0;
+  margin-top: $shift-up;
+}
+
+.marker-box {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  width: 5rem;
+}
+
+.first-line-size {
+  align-self: end;
+  height: calc($height-line - 1rem);
+}
+
+.last-line-size {
+  align-self: start;
+  height: calc($height-line - 1rem);
+}
+
+.lift-up {
+  margin-top: $shift-up;
+}
+
+.connecting-line {
+  position: relative;
+  border: 1px solid;
+}
+
+.station-color {
+  color: var(--tui-status-neutral);
+  border-color: var(--tui-status-neutral);
+}
+
+.current-station-color {
+  color: var(--tui-info);
+  border-color: var(--tui-info);
+}
+
+.map-pin {
+  position: absolute;
+  top: -1.25rem;
+  left: calc(50% - ($icon-size / 2));
+
+  padding: 2px 0 3px;
+
+  background-color: var(--tui-background-base);
+}

@@ -1,0 +1,84 @@
+@import '@taiga-ui/core/styles/taiga-ui-local';
+
+:host {
+  padding: 16px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 40rem;
+
+  @media #{$tui-mobile} {
+    width: 20rem;
+  }
+}
+
+.time-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.time-info {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  @media #{$tui-mobile} {
+    flex-direction: column;
+  }
+}
+
+.time-point {
+  position: relative;
+  padding: 0;
+  font-weight: bold;
+}
+
+.time-point:last-of-type {
+  text-align: right;
+}
+
+.line {
+  flex-grow: 1;
+  height: 2px;
+  margin: 0 1rem;
+  background-color: var(--tui-text-tertiary);
+
+  @media #{$tui-mobile} {
+    width: 1px;
+    height: 1rem;
+    margin: 0;
+  }
+}
+
+.duration {
+  font-size: 12px;
+  color: var(--tui-status-neutral);
+  text-align: center;
+}
+
+.station-info {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  font-size: 14px;
+}
+
+.details-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.carriage-info,
+.seat-price-info {
+  display: flex;
+}
+
+.seat-price-info {
+  justify-content: space-between;
+}

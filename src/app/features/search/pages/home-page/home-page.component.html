@@ -1,0 +1,11 @@
+<h2>It’s more than just a trip</h2>
+<dd-search-form></dd-search-form>
+
+<div class="background-map"></div>
+
+@if (filterDates().length) {
+  <dd-search-filter [filteredDates]="filterDates()"></dd-search-filter>
+}
+@if (searchResultParams(); as params) {
+  <dd-search-result-list [searchResult]="params"></dd-search-result-list>
+}

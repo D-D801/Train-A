@@ -1,0 +1,16 @@
+<div class="station-card-container">
+  <div class="stations">
+    <h4>{{ stationsService.getStationNameById(station()[0]) }}</h4>
+    <div class="station-divider"></div>
+    <h4>{{ stationsService.getStationNameById(station()[1]) }}</h4>
+  </div>
+
+  <div class="time">
+    <dd-editable-form [form]="timeForm" [typeInputs]="'date-time'" [save]="saveSegment()"></dd-editable-form>
+  </div>
+
+  <div class="price">
+    <h4>Prices:</h4>
+    <dd-editable-form [form]="priceForm" [typeInputs]="'price'" [save]="saveSegment()"></dd-editable-form>
+  </div>
+</div>

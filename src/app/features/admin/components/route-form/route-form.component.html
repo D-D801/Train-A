@@ -1,0 +1,81 @@
+<div tuiCardLarge tuiSurface="elevated" class="overflow-visible">
+  <form class="form" [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div tuiHeader="m" class="form-header">
+      @let route = trainRoute();
+      <h3 tuiTitle>Route {{ route ? route.id : '' }}</h3>
+
+      <div tuiAccessories>
+        <button size="m" tuiButton type="submit" [disabled]="!isStationValid() || !isCarriageValid()">
+          {{ route ? 'Update' : 'Save' }}
+        </button>
+      </div>
+    </div>
+    <div class="form-columns">
+      <div class="form-rows tui-form__row_multi-fields" formArrayName="path">
+        <div tuiHeader="xs">
+          <h6 tuiTitle>Stations</h6>
+        </div>
+        @for (station of form.controls.path.controls; track $index) {
+          <tui-loader class="loader" size="m" [overlay]="true" [showLoader]="!stations()[$index]">
+            <tui-select [formControl]="$any(station)" [valueContent]="selectTemplate" tuiTextfieldSize="m">
+              Station
+              <tui-data-list-wrapper
+                *tuiDataList
+                [itemContent]="selectTemplate"
+                [items]="connectedToStations()[$index]"
+              />
+            </tui-select>
+          </tui-loader>
+        }
+        <div class="from-buttons">
+          <button
+            class="button"
+            size="s"
+            tuiButton
+            type="button"
+            (click)="removeControl(ControlsType.path)"
+            [disabled]="form.controls.path.length <= MIN_ROUTE_FORM_CONTROL_COUNT"
+          >
+            <tui-icon icon="@tui.minus" />
+          </button>
+          <button class="button" size="s" tuiButton type="button" (click)="resetStations(ControlsType.path)">
+            Reset
+          </button>
+        </div>
+      </div>
+
+      <div class="form-rows" formArrayName="carriages">
+        <div tuiHeader="xs">
+          <h6 tuiTitle>Carriages</h6>
+        </div>
+        @for (station of form.controls.carriages.controls; track $index) {
+          <tui-select [formControl]="$any(station)" [valueContent]="selectTemplate" tuiTextfieldSize="m">
+            Carriage type
+            <tui-data-list-wrapper *tuiDataList [itemContent]="selectTemplate" [items]="carriageNames()" />
+          </tui-select>
+        }
+        <div class="from-buttons">
+          <button
+            class="button"
+            size="s"
+            tuiButton
+            type="button"
+            (click)="removeControl(ControlsType.carriages)"
+            [disabled]="form.controls.carriages.length <= MIN_ROUTE_FORM_CONTROL_COUNT"
+          >
+            <tui-icon icon="@tui.minus" />
+          </button>
+          <button class="button" size="s" tuiButton type="button" (click)="resetStations(ControlsType.carriages)">
+            Reset
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<ng-template #selectTemplate let-value>
+  <span>
+    {{ value }}
+  </span>
+</ng-template>

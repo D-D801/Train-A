@@ -1,0 +1,37 @@
+<header tuiHeader="m" class="wrapper">
+  <dd-logo></dd-logo>
+  <tui-tabs-with-more
+    underline="var(--tui-background-accent-1)"
+    class="tabs"
+    [activeItemIndex]="activeItemIndex"
+    [moreContent]="more"
+  >
+    @for (tab of headerPages(); track tab) {
+      @if (isString(tab)) {
+        <button *tuiItem tuiTab (click)="onClick(tab)">
+          {{ tab | titlecase }}
+        </button>
+      } @else {
+        <button *tuiItem tuiChevron tuiTab [tuiDropdown]="dropdown" [(tuiDropdownOpen)]="open">Admin</button>
+      }
+    }
+  </tui-tabs-with-more>
+
+  @if (isLoggedIn()) {
+    <button class="auth-button" appearance="primary" size="m" tuiButton (click)="logout()">Logout</button>
+  }
+</header>
+
+<ng-template #dropdown let-close>
+  <tui-data-list>
+    @for (adminPage of adminPages; track adminPage) {
+      <button tuiOption (click)="onClick(adminPage); close()">
+        {{ adminPage | titlecase }}
+      </button>
+    }
+  </tui-data-list>
+</ng-template>
+
+<ng-template #more>
+  <tui-icon icon="@tui.ellipsis" />
+</ng-template>

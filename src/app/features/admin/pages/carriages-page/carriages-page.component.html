@@ -1,0 +1,15 @@
+<button class="create-btn" appearance="primary" size="m" tuiButton (click)="onCreate()">Create</button>
+
+@if (showForm()) {
+  <div>
+    <dd-carriage-form
+      [carriage]="selectedCarriage"
+      (submitForm)="onSubmit($event)"
+      (cancelForm)="onCancel()"
+    ></dd-carriage-form>
+  </div>
+}
+
+@for (carriage of allCarriages(); track carriage.code) {
+  <dd-carriage-card [carriage]="carriage" (editCarriage)="onEdit($event)"></dd-carriage-card>
+}

@@ -1,0 +1,6 @@
+@if (carriage()) {
+  <div tuiCardLarge="normal" tuiSurface="elevated">
+    <dd-carriage-preview [carriage]="carriage()"></dd-carriage-preview>
+    <button class="edit-btn" appearance="primary" size="s" tuiButton (click)="onEdit(carriage())">Edit</button>
+  </div>
+}

@@ -1,0 +1,47 @@
+@if (isEditMode()) {
+  <form class="wrapper" [formGroup]="form()" (ngSubmit)="saveForm()">
+    <div class="inputs">
+      @for (controlName of form().controls | keyvalue; track $index) {
+        @switch (typeInputs()) {
+          @case ('text') {
+            <tui-input class="input" [formControlName]="controlName.key">
+              {{ controlName.key | titlecase }}
+              <input [placeholder]="controlName.key | titlecase" tuiTextfieldLegacy />
+            </tui-input>
+          }
+          @case ('date-time') {
+            <tui-input-date-time class="input" [formControlName]="controlName.key">
+              {{ controlName.key | titlecase }}</tui-input-date-time
+            >
+          }
+          @case ('price') {
+            <tui-input-number
+              class="input"
+              [formControlName]="controlName.key"
+              [tuiTextfieldPrefix]="currency | tuiCurrency"
+            >
+              {{ controlName.key | titlecase }}
+            </tui-input-number>
+          }
+        }
+        <tui-error [formControlName]="controlName.key" [error]="[] | tuiFieldError | async" />
+      }
+    </div>
+    <button tuiIconButton appearance="icon" iconStart="@tui.save" size="m" type="submit">Save</button>
+  </form>
+} @else {
+  <div class="wrapper">
+    <div class="inputs">
+      @for (controlName of form().controls | keyvalue; track $index) {
+        <div>
+          <span class="label">{{ controlName.key | titlecase }}:</span>
+          {{ isPrice() }}{{ form().get(controlName.key)?.value }}
+        </div>
+      }
+    </div>
+
+    <button tuiIconButton appearance="icon" iconStart="@tui.pencil" size="s" type="button" (click)="enableEditMode()">
+      Edit
+    </button>
+  </div>
+}

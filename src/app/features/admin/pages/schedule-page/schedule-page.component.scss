@@ -1,0 +1,35 @@
+@import '@taiga-ui/core/styles/taiga-ui-local';
+
+:host {
+  width: 100%;
+}
+
+.loader {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+
+  box-sizing: border-box;
+  padding: 2rem;
+
+  @media #{$tui-tablet} {
+    padding: 1rem;
+  }
+}
+
+.title {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.create-button {
+  flex-grow: 0;
+  align-self: flex-end;
+  max-width: max-content;
+}
+
+h2 {
+  font-size: 1.6rem;
+  text-align: center;
+}

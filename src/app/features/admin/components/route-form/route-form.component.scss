@@ -1,0 +1,44 @@
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.overflow-visible {
+  overflow: visible;
+}
+
+.form-header {
+  position: sticky;
+  z-index: 1;
+  top: 0;
+
+  padding: 0.5rem 0;
+
+  background-color: var(--tui-background-elevation-1);
+  border-bottom: 1px solid var(--tui-background-neutral-2);
+}
+
+.form-columns {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: space-evenly;
+  margin: 0.5rem 0;
+}
+
+.form-rows {
+  display: flex;
+  flex: 0 1 20rem;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.from-buttons {
+  display: flex;
+  gap: 0.4rem;
+  justify-content: center;
+  min-width: 2rem;
+}
+
+.button {
+  align-self: center;
+}

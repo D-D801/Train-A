@@ -1,0 +1,20 @@
+<ng-container *ngIf="trainRoute() as route">
+  <header tuiHeader>
+    <h2 tuiTitle>Route {{ route.id }}</h2>
+
+    <aside tuiAccessories>
+      <tui-icon class="accessories" icon="@tui.pen" (click)="edit.emit(route.id)" />
+      <tui-icon class="accessories" icon="@tui.bus" [routerLink]="['/admin/routes', route.id]" />
+      <tui-icon class="accessories" icon="@tui.trash" (click)="delete.emit(route)" />
+    </aside>
+  </header>
+
+  <section class="card-description">
+    <span class="subtitle">Cities:</span>
+    <span>{{ stationsService.getStationNamesByIds(route.path).join(' ➝ ') }}</span>
+  </section>
+  <section class="card-description">
+    <span class="subtitle">Carriages:</span>
+    <span>{{ carriagesService.getCarriageNamesByCodes(route.carriages).join(' - ') }}</span>
+  </section>
+</ng-container>

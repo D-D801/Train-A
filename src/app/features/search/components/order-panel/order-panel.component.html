@@ -1,0 +1,10 @@
+<tui-push *tuiPush="open()" (close)="close()">
+  <div class="push">
+    <div>Car: {{ selectedOrder().carriageNumber }}, Seat: {{ selectedOrder().seatNumber }}</div>
+    <div>{{ currency }} {{ selectedOrder().price }}</div>
+  </div>
+
+  <div class="action">
+    <button tuiButton appearance="primary" type="button" class="btn" (click)="handlerBookSeat()">Book seat</button>
+  </div>
+</tui-push>

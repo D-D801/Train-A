@@ -1,0 +1,19 @@
+@use '../../../../../styles/station-card';
+
+@import '@taiga-ui/core/styles/taiga-ui-local';
+
+.price,
+.time {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.time {
+  @media #{$tui-tablet} {
+    flex-direction: row;
+  }
+
+  @media #{$tui-mobile} {
+    flex-direction: column;
+  }
+}

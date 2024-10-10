@@ -1,0 +1,15 @@
+:host {
+  width: 30rem;
+}
+
+.link {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  font: var(--tui-font-text-m);
+
+  &_registration {
+    font-weight: bold;
+    color: var(--tui-text-primary);
+  }
+}

@@ -1,0 +1,47 @@
+@let routeInfo = routeInformation();
+<tui-loader [showLoader]="isLoading()">
+  <div class="loader">
+    @if (routeInfo) {
+      <div class="title">
+        <button
+          tuiIconButton
+          appearance="icon"
+          iconStart="@tui.chevron-left"
+          size="m"
+          type="submit"
+          (click)="navigationBack()"
+        >
+          Back
+        </button>
+        <h2>Route {{ routeInfo.id }}</h2>
+      </div>
+      <button
+        class="create-button"
+        appearance="primary"
+        size="m"
+        tuiButton
+        (click)="newRideService.toggleNewRideForm()"
+      >
+        Create new ride
+      </button>
+
+      @if (newRideService.isOpenNewRideForm()) {
+        <dd-new-ride-form
+          [path]="routeInfo.path"
+          [carriages]="carriagesService.getCarriageNamesByCodes(carriages())"
+          [routeId]="routeInfo.id"
+          (updateRouteInfo)="updateRouteInfo($event)"
+        ></dd-new-ride-form>
+      }
+
+      @for (rideCard of routeInfo.schedule; track rideCard.rideId) {
+        <dd-ride-card
+          [ride]="rideCard"
+          [routeId]="routeInfo.id"
+          [path]="routeInfo.path"
+          (updateRouteInfo)="updateRouteInfo($event)"
+        ></dd-ride-card>
+      }
+    }
+  </div>
+</tui-loader>

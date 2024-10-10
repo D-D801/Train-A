@@ -1,0 +1,92 @@
+@import './app/theme/variables';
+@import '@taiga-ui/core/styles/taiga-ui-local';
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgb(0 0 0 / 30%);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgb(0 0 0 / 50%);
+}
+
+.time .wrapper .inputs {
+  flex-direction: column-reverse;
+}
+
+.profile .wrapper .inputs {
+  font-size: 1rem;
+}
+
+.profile div.wrapper {
+  margin: 1.5rem 0;
+}
+
+.profile .wrapper .label {
+  display: block;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 2fr 2fr;
+  gap: 3rem;
+
+  margin-top: 2rem;
+  padding: 0 2rem 2rem;
+
+  border-bottom: 1px solid var(--tui-status-info-pale-hover);
+}
+
+[tuiCardLarge].overflow-visible {
+  overflow: visible;
+}
+
+[tuiHeader].sticky-header {
+  position: sticky;
+  z-index: 1;
+  top: 0;
+
+  display: flex;
+  align-items: center;
+
+  padding: 0.5rem 0;
+
+  background-color: var(--tui-background-elevation-1);
+  border-bottom: 1px solid var(--tui-background-neutral-2);
+}
+
+.time .wrapper .inputs {
+  flex-direction: column-reverse;
+
+  @media #{$tui-tablet} {
+    flex-direction: row-reverse;
+    width: 90%;
+  }
+
+  @media #{$tui-mobile} {
+    flex-direction: column-reverse;
+  }
+}
+
+.time .wrapper tui-error {
+  display: none;
+}
+
+.time .wrapper .inputs .input {
+  @media #{$tui-tablet} {
+    width: 100%;
+  }
+
+  @media #{$tui-mobile} {
+    width: auto;
+  }
+}

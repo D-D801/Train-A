@@ -1,0 +1,28 @@
+<tui-accordion>
+  <div tuiCardLarge tuiSurface="elevated" class="overflow-visible">
+    @let segments = ride().segments;
+    @if (segments.length > 0) {
+      <tui-accordion-item [open]="false">
+        <div tuiHeader>
+          <h3 tuiTitle>Ride {{ ride().rideId }}</h3>
+          <aside tuiAccessories>
+            <button tuiIconButton appearance="icon" iconStart="@tui.trash-2" size="m" (click)="deleteRide($event)">
+              Delete
+            </button>
+          </aside>
+        </div>
+
+        <ng-template tuiAccordionItemContent>
+          @for (segment of segments; track $index; let currentSegmentIndex = $index) {
+            <dd-station-card
+              [station]="[path()[currentSegmentIndex], path()[currentSegmentIndex + 1]]"
+              [ids]="{ routeId: routeId(), rideId: ride().rideId }"
+              [segments]="segments"
+              [currentSegmentIndex]="currentSegmentIndex"
+            ></dd-station-card>
+          }
+        </ng-template>
+      </tui-accordion-item>
+    }
+  </div>
+</tui-accordion>

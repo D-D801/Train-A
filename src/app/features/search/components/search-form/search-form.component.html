@@ -1,0 +1,34 @@
+<form class="tui-form__row_multi-fields" [formGroup]="searchForm" (ngSubmit)="search()">
+  <ng-container [ngTemplateOutlet]="input" [ngTemplateOutletContext]="{ title: 'from' }"></ng-container>
+  <ng-container [ngTemplateOutlet]="input" [ngTemplateOutletContext]="{ title: 'to' }"></ng-container>
+  <tui-input-date class="tui-form__multi-field" formControlName="date" [min]="getCurrentDate()">
+    Choose date
+  </tui-input-date>
+  <button
+    class="tui-form__multi-field tui-form__button submit"
+    tuiButton
+    appearance="primary"
+    size="l"
+    type="submit"
+    [disabled]="isLoading() || searchForm.invalid"
+  >
+    Search
+  </button>
+</form>
+
+<ng-template #input let-title="title">
+  <div class="tui-form__multi-field">
+    <tui-input *tuiLet="cities() as cities" [formControl]="$any(searchForm.controls)[title]">
+      {{ title | titlecase }}
+      <input placeholder="Type city name" tuiTextfieldLegacy />
+      <ng-container *ngIf="cities?.length">
+        <tui-data-list *tuiDataList>
+          <button *ngFor="let city of cities; index as i" tuiOption [value]="city.city">
+            {{ city.city }}
+          </button>
+        </tui-data-list>
+      </ng-container>
+    </tui-input>
+    <tui-error [formControl]="$any(searchForm.controls)[title]" [error]="[] | tuiFieldError | async" />
+  </div>
+</ng-template>

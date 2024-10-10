@@ -1,0 +1,28 @@
+:host {
+  width: 100%;
+  height: 100%;
+}
+
+.wrapper {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+
+  width: 100%;
+  height: 100%;
+}
+
+.inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  justify-content: space-between;
+
+  width: 70%;
+  height: 100%;
+}
+
+.label {
+  font-weight: 700;
+}

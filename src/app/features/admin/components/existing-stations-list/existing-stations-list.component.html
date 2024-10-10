@@ -1,0 +1,26 @@
+@for (station of stations(); track station.id) {
+  <div tuiPlatform="web">
+    <div tuiCardLarge tuiSurface="elevated" class="tui-space_vertical-4">
+      <header tuiHeader>
+        <div tuiTitle="m">{{ station.city }}</div>
+        <tui-icon class="accessories" icon="@tui.trash" (click)="deleteStation(station.id)" />
+      </header>
+
+      <section class="card-description">
+        <div><span class="subtitle">Latitude: </span>{{ station.latitude }}</div>
+        <div><span class="subtitle">Longitude: </span>{{ station.longitude }}</div>
+      </section>
+      <section class="card-description">
+        <span class="subtitle">Connected to:</span>
+        <span>
+          @for (connectedStation of getStations(station.connectedTo); let last = $last; track connectedStation.id) {
+            {{ connectedStation.city }}
+            @if (!last) {
+              <span> - </span>
+            }
+          }
+        </span>
+      </section>
+    </div>
+  </div>
+}

@@ -1,0 +1,66 @@
+@import '@taiga-ui/core/styles/taiga-ui-local';
+
+.station-card-container {
+  display: grid;
+  grid-template-columns: 1fr 2fr 2fr;
+  gap: 3rem;
+
+  margin-top: 2rem;
+  padding: 0 2rem 2rem;
+
+  border-bottom: 1px solid var(--tui-status-info-pale-hover);
+
+  @media #{$tui-tablet} {
+    grid-template-columns: 2fr;
+    gap: 1rem;
+  }
+
+  @media #{$tui-mobile} {
+    grid-template-columns: 2fr;
+    padding: 0 0.5rem 0.5rem;
+  }
+}
+
+.stations,
+.time,
+.price {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: space-between;
+
+  width: 100%;
+}
+
+.stations {
+  display: flex;
+  align-items: start;
+  width: 100%;
+
+  @media #{$tui-tablet} {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.station {
+  margin: 0;
+}
+
+.station-divider {
+  width: 1px;
+  height: 100%;
+  margin: 0.5rem;
+  background-color: var(--tui-text-tertiary);
+
+  @media #{$tui-tablet} {
+    width: 100%;
+    height: 1px;
+    margin: 0 0.5rem;
+  }
+}
+
+.input {
+  width: 100%;
+}

@@ -1,0 +1,17 @@
+@use '../../../../../styles/station-card';
+
+:host {
+  margin-top: 1rem;
+}
+
+.stations h4 {
+  margin: 0;
+}
+
+.price h4 {
+  margin-top: 0;
+}
+
+.input {
+  flex-grow: 1;
+}
